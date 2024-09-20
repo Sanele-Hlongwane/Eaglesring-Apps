@@ -34,9 +34,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid receiverId format' }, { status: 400 });
     }
 
-    // Check if the receiver exists in the database
+    // Fetch the receiver with related entrepreneur and investor profiles
     const receiver = await prisma.user.findUnique({
       where: { id: receiverIdNumber },
+      include: {
+        entrepreneurProfile: true, // Include entrepreneur profile if it exists
+        investorProfile: true,     // Include investor profile if it exists
+      },
     });
 
     if (!receiver) {
@@ -51,6 +55,20 @@ export async function POST(request: NextRequest) {
         receiverId: receiver.id,
       },
     });
+
+    // Create a notification for the receiver
+// Create a notification for the receiver
+const notificationData: any = {
+  content: `${sender.name} has sent you a connection request.`,
+  userId: receiver.id,  // Set the receiver's user ID
+};
+
+// Save the notification in the database
+await prisma.notification.create({
+  data: notificationData,
+});
+
+
 
     return NextResponse.json({ message: 'Friend request sent successfully' }, { status: 200 });
   } catch (error) {

@@ -67,7 +67,8 @@ export async function POST(request: NextRequest) {
 
   try {
     const existingUser = await prisma.user.findUnique({
-      where: { clerkId: user.id },
+      where: { clerkId: user.id, role: "ENTREPRENEUR" },
+      
     });
 
     if (!existingUser) {
@@ -79,7 +80,7 @@ export async function POST(request: NextRequest) {
       where: { userId: existingUser.id },
     });
 
-    if (!entrepreneurProfile) {
+    if (!entrepreneurProfile ) {
       entrepreneurProfile = await prisma.entrepreneurProfile.create({
         data: {
           userId: existingUser.id,
@@ -88,13 +89,14 @@ export async function POST(request: NextRequest) {
           businessStage,
           linkedinUrl,
           revenue,
+          imageUrl,
         },
       });
     } else {
       // Update entrepreneur profile
       await prisma.entrepreneurProfile.update({
         where: { userId: existingUser.id },
-        data: { bio, company, businessStage, linkedinUrl, revenue },
+        data: { bio, company, businessStage, linkedinUrl, revenue, imageUrl },
       });
     }
 

@@ -4,23 +4,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LoadingDots from "@/components/ui/LoadingDots"
-import {
-  FaUser,
-  FaUsers,
-  FaPaperPlane,
-  FaCheckCircle,
-  FaTimesCircle,
-  FaTrashAlt,
-  FaSearch,
-  FaInbox,
-  FaBuilding,
-  FaDollarSign,
-  FaTag,
-  FaInfoCircle,
-} from "react-icons/fa";
+import LoadingDots from "@/components/ui/LoadingDots";
+import AcceptedRequestsPage from "@/components/Accepted"; 
 import Loader from "@/components/Loader";
 import EmptyState from "@/components/EmptyState";
+import { FaBuilding, FaInfoCircle, FaTag, FaDollarSign, FaCheckCircle, FaTimesCircle, FaTrashAlt } from "react-icons/fa";
 
 interface Profile {
   id: number;
@@ -52,10 +40,10 @@ const OpportunitiesPage = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
   const [receivedRequests, setReceivedRequests] = useState<FriendRequest[]>([]);
-  const [activeTab, setActiveTab] = useState<"all" | "sent" | "received">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "sent" | "received" | "accepted">("all"); // Added "accepted" tab
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [loadingId, setLoadingId] = useState<number | null>(null); // Loading state for buttons
+  const [loadingId, setLoadingId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [roleFilter, setRoleFilter] = useState<string>("");
 
@@ -96,26 +84,25 @@ const OpportunitiesPage = () => {
       }
     };
 
-    if (activeTab !== "all") {
+    if (activeTab !== "all" && activeTab !== "accepted") {
       fetchRequests();
     }
   }, [activeTab]);
 
   const sendFriendRequest = async (receiverId: number) => {
-    setLoadingId(receiverId); // Set loading state for button
+    setLoadingId(receiverId);
     try {
       await axios.post("/api/send-friend-request", { receiverId });
       toast.success("Friend request sent!");
       if (activeTab === "all") {
         const response = await axios.get("/api/users");
-        // Shuffle profiles to randomize the collection
         const shuffledProfiles = response.data.sort(() => Math.random() - 0.5);
         setProfiles(shuffledProfiles);
       }
     } catch (err) {
       toast.error("Failed to send friend request");
     } finally {
-      setLoadingId(null); // Reset loading state for button
+      setLoadingId(null);
     }
   };
 
@@ -181,6 +168,10 @@ const OpportunitiesPage = () => {
 
   const renderContent = () => {
     if (loading) return <Loader />;
+
+    if (activeTab === "accepted") {
+      return <AcceptedRequestsPage />;
+    }
 
     const dataToDisplay =
       activeTab === "all"
@@ -268,9 +259,21 @@ const OpportunitiesPage = () => {
                   </button>
                 )}
                 {(activeTab === "sent" || activeTab === "received") && item.status === "ACCEPTED" && (
-                  <a href={`/pitches/${item.id}`} className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700">
-                    View Pitches
-                  </a>
+                  <div className="p-4">
+                    <h1 className="text-2xl font-bold">{item.title}</h1>
+                    <a
+                      href={`/pitches/${item.id}`}
+                      className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700"
+                    >
+                      View Pitches
+                    </a>
+                    <a
+                      href={`/chat/${item.id}`}
+                      className="mt-4 ml-4 bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700"
+                    >
+                      Message
+                    </a>
+                  </div>
                 )}
                 {(activeTab === "sent" || activeTab === "received") && (
                   <div className="mt-4 flex space-x-4">
@@ -359,6 +362,12 @@ const OpportunitiesPage = () => {
           className={`px-4 py-2 rounded-lg ${activeTab === "received" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"} shadow-md ml-2`}
         >
           Received Requests
+        </button>
+        <button
+          onClick={() => setActiveTab("accepted")}
+          className={`px-4 py-2 rounded-lg ${activeTab === "accepted" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-800"} shadow-md ml-2`}
+        >
+          Accepted
         </button>
       </div>
       {renderContent()}

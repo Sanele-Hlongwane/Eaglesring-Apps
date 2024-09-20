@@ -12,7 +12,6 @@ import { Footer } from "@/components/Footer";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
 import { Toaster } from "@/components/ui/toaster";
-import { DailyProvider, useCallObject } from '@daily-co/daily-react';
 
 export const metadata: Metadata = {
   title: {
@@ -39,7 +38,7 @@ export default function RootLayout({
 }) {
   return (
     <html suppressHydrationWarning lang="en">
-     <ClerkProvider
+      <ClerkProvider
         appearance={{
           layout: {
             socialButtonsVariant: "iconButton", 
@@ -60,9 +59,9 @@ export default function RootLayout({
             colorShimmer: "#444444"
           },
           elements: {
-            formButtonPrimary: 'bg-blue-600 text-white border border-blue-800 hover:bg-blue-700 hover:border-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-lg px-4 py-2 transition duration-300 ease-in-out', // Blue button with smooth transitions
-            formButtonSecondary: 'bg-gray-600 text-gray-200 border border-gray-700 hover:bg-gray-700 hover:border-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-lg px-4 py-2 transition duration-300 ease-in-out', // Dark gray secondary button
-            formInput: 'border border-gray-500 p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-400', // Dark gray input field
+            formButtonPrimary: 'bg-blue-600 text-white border border-blue-800 hover:bg-blue-700 hover:border-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-300 rounded-lg px-4 py-2 transition duration-300 ease-in-out', 
+            formButtonSecondary: 'bg-gray-600 text-gray-200 border border-gray-700 hover:bg-gray-700 hover:border-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-lg px-4 py-2 transition duration-300 ease-in-out', 
+            formInput: 'border border-gray-500 p-3 rounded-lg bg-gray-700 text-gray-200 placeholder-gray-400', 
             formLink: 'text-blue-600 hover:underline hover:text-blue-400',
             formError: 'text-red-500 font-bold',
             formSuccess: 'text-green-500 font-bold',
@@ -85,22 +84,20 @@ export default function RootLayout({
           )}
         >
           <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
-            <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-700 ">
+            <div className="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-700">
               <Navbar />
-              <main className="flex-grow w-full py-8">
-                <div className="container mx-auto  px-4 sm:px-6 lg:px-8">
+              <main >
                 <Toaster />
-                  <ToastContainer
-                    position="top-right"
-                    autoClose={5000}
-                    hideProgressBar={false}
-                    closeOnClick
-                    pauseOnHover
-                    draggable
-                    pauseOnFocusLoss
-                  />
-                  {children}
-                </div>
+                <ToastContainer
+                  position="top-right"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  closeOnClick
+                  pauseOnHover
+                  draggable
+                  pauseOnFocusLoss
+                />
+                {children}
               </main>
               <Footer />
             </div>

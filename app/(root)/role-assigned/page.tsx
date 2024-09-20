@@ -8,16 +8,15 @@ export default function SuccessPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect after a delay
     const timer = setTimeout(() => {
-      router.push("/"); // Redirect to home or another page
-    }, 4000); // Adjust the delay as needed
+      router.push("/pricing"); 
+    }, 4000);
 
     return () => clearTimeout(timer); // Cleanup timer on unmount
   }, [router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center textt-sm justify-center min-h-screen">
       <div className="p-8 rounded-lg border-1 border-blue-200 space-y-6 max-w-md">
         <div className="flex justify-center">
           <svg
@@ -34,10 +33,11 @@ export default function SuccessPage() {
               d="M5 13l4 4L19 7"
             />
           </svg>
-        </div>
-        <h1 className={`${title()} text-center text-4xl font-extrabold text-gold dark:text-gold`}>
+        
+        <h1 className={`${title()} text-center text-sm font-bold `}>
           Success!
         </h1>
+        </div>
         <p className="text-gray-600 dark:text-gray-300 text-center text-xl">
           Your role has been successfully assigned. You will be redirected shortly.
         </p>

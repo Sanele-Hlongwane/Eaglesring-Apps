@@ -67,7 +67,7 @@ if (loading) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Team Member 1 */}
-          <div className="border rounded-lg shadow-lg p-6">
+          <div className="border rounded-lg p-6">
             <h3 className="text-xl font-semibold mb-2">John Doe</h3>
             <p className="text-lg mb-4">Founder & CEO</p>
             <p className="text-lg mb-4">
@@ -85,7 +85,7 @@ if (loading) {
           </div>
           
           {/* Team Member 2 */}
-          <div className="border rounded-lg shadow-lg p-6">
+          <div className="border rounded-lg  p-6">
             <h3 className="text-xl font-semibold mb-2">Jane Smith</h3>
             <p className="text-lg mb-4">Chief Technology Officer</p>
             <p className="text-lg mb-4">
@@ -103,7 +103,7 @@ if (loading) {
           </div>
           
           {/* Team Member 3 */}
-          <div className="border rounded-lg shadow-lg p-6">
+          <div className="border rounded-lg  p-6">
             <h3 className="text-xl font-semibold mb-2">Emily Johnson</h3>
             <p className="text-lg mb-4">Head of Investor Relations</p>
             <p className="text-lg mb-4">

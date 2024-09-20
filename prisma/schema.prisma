@@ -31,6 +31,39 @@ model User {
   interests             Interest[]
   sentFriendRequests    FriendRequest[]       @relation("SentFriendRequests")
   receivedFriendRequests FriendRequest[]      @relation("ReceivedFriendRequests")
+  notifications         Notification[]        @relation("UserNotifications")
+  Notification          Notification[]
+}
+
+model Notification {
+  id             Int        @id @default(autoincrement())
+  content        String
+  userId         Int        // Foreign key to the User model
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade) // Relation to User
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  User           User[]     @relation("UserNotifications")
+}
+
+model Message {
+  id                   Int                   @id @default(autoincrement())
+  content              String
+  senderId             Int
+  receiverId           Int
+  sender               User                  @relation("MessageSender", fields: [senderId], references: [id])
+  receiver             User                  @relation("MessageReceiver", fields: [receiverId], references: [id])
+  status               MessageStatus         @default(SENT) 
+  sentAt               DateTime              @default(now())
+  receivedAt           DateTime?
+  readAt               DateTime?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+}
+
+enum MessageStatus {
+  SENT
+  RECEIVED
+  READ
 }
 
 enum Stage {
@@ -59,9 +92,6 @@ model Pitch {
   User User[]
 }
 
-
-
-
 model EntrepreneurProfile {
   id                    Int                   @id @default(autoincrement())
   userId                Int                   @unique
@@ -76,7 +106,6 @@ model EntrepreneurProfile {
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
   investments           Investment[]
-  notifications         Notification[]        // Added field for notifications
   revenue               Float?                // Added revenue field
   investmentOpportunities InvestmentOpportunity[] // Added field for investment opportunities
 }
@@ -100,8 +129,6 @@ enum FriendRequestStatus {
   REJECTED
 }
 
-
-
 model InvestmentOpportunity {
   id                   Int                   @id @default(autoincrement())
   title                String
@@ -124,20 +151,6 @@ model InvestorProfile {
   feedbacks             Feedback[]            // Feedback given by the investor
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
-  notifications         Notification[]        // Add this line
-}
-
-
-
-model Message {
-  id                   Int                   @id @default(autoincrement())
-  content              String
-  senderId             Int
-  receiverId           Int
-  sender               User                  @relation("MessageSender", fields: [senderId], references: [id])
-  receiver             User                  @relation("MessageReceiver", fields: [receiverId], references: [id])
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
 }
 
 model Investment {
@@ -181,13 +194,4 @@ model Interest {
   updatedAt            DateTime              @updatedAt
 }
 
-model Notification {
-  id                   Int                   @id @default(autoincrement())
-  content              String
-  entrepreneurId       Int
-  investorId           Int
-  entrepreneur         EntrepreneurProfile   @relation(fields: [entrepreneurId], references: [id])
-  investor             InvestorProfile       @relation(fields: [investorId], references: [id])
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
-}
+

@@ -11,23 +11,27 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 
   try {
-    // Fetch entrepreneur's pitches by using entrepreneurId from EntrepreneurProfile model
-    const pitches = await prisma.pitch.findMany({
+    // Fetch entrepreneur's profile and pitches by using userId from EntrepreneurProfile model
+    const entrepreneurProfile = await prisma.entrepreneurProfile.findUnique({
       where: {
-        entrepreneurId: id, // Use entrepreneurId to fetch related pitches
+        userId: id, // Use userId to find the entrepreneur profile
       },
       include: {
-        entrepreneur: true, // Include the entrepreneur profile details
+        pitches: true, // Include the pitches related to the entrepreneur profile
       },
     });
 
-    if (pitches.length === 0) {
-      return NextResponse.json({ message: "No pitches found for this entrepreneur." }, { status: 404 });
+    if (!entrepreneurProfile) {
+      return NextResponse.json({ message: "Entrepreneur profile not found." }, { status: 404 });
     }
 
-    return NextResponse.json(pitches);
+    // Return both entrepreneur profile and pitches
+    return NextResponse.json({
+      entrepreneur: entrepreneurProfile,
+      pitches: entrepreneurProfile.pitches,
+    });
   } catch (error) {
-    console.error('Error fetching pitches:', error);
-    return NextResponse.json({ error: 'Failed to fetch pitches.' }, { status: 500 });
+    console.error('Error fetching entrepreneur profile and pitches:', error);
+    return NextResponse.json({ error: 'Failed to fetch entrepreneur profile and pitches.' }, { status: 500 });
   }
 }

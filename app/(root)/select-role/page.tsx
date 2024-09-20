@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
+import LoadingDots from "@/components/ui/LoadingDots"; // Import LoadingDots component
 
 export default function SelectRole() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -12,6 +13,7 @@ export default function SelectRole() {
   const { user, isLoaded, isSignedIn } = useUser();
   const [userName, setUserName] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // New state for button loading
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 3000);
@@ -37,6 +39,8 @@ export default function SelectRole() {
     }
 
     if (window.confirm(`Do you want to save ${roleName} as your role? This cannot be changed.`)) {
+      setIsSubmitting(true); // Set loading state to true
+
       try {
         const response = await fetch('/api/assign-role', {
           method: 'POST',
@@ -58,6 +62,8 @@ export default function SelectRole() {
       } catch (error) {
         toast.error('Failed to assign role');
         console.error(error);
+      } finally {
+        setIsSubmitting(false); // Reset loading state
       }
     }
   };
@@ -67,7 +73,7 @@ export default function SelectRole() {
   }
 
   return (
-    <div className="max-w-md mx-auto my-20 p-6 bg-white dark:bg-black rounded-xl border-2 border-blue-500 shadow-md space-y-4">
+    <div className="max-w-md mx-auto  my-20 p-6 bg-gray-400 dark:bg-gray-800 rounded-xl space-y-4">
       {isLoaded && isSignedIn && (
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
           Welcome to Eagles Ring, {userName}!
@@ -80,7 +86,7 @@ export default function SelectRole() {
             Role
           </label>
           <select
-            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             id="role"
             name="role"
           >
@@ -92,8 +98,9 @@ export default function SelectRole() {
         <button
           className="mt-4 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 dark:bg-yellow-600 dark:hover:bg-yellow-700"
           type="submit"
+          disabled={isSubmitting} // Disable button while submitting
         >
-          Assign Role
+          {isSubmitting ? <LoadingDots /> : 'Assign Role'} {/* Show loading dots when submitting */}
         </button>
       </form>
     </div>

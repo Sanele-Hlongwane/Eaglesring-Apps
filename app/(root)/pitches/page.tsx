@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import Pusher from "pusher-js";
 import { v4 as uuidv4 } from "uuid"; // For generating unique file names
 import supabase from "@/lib/supabaseClient"; // Adjust this import based on your setup
-import { FaCalendarAlt, FaDownload, FaMapMarkerAlt, FaMoneyBillWave, FaVideo } from "react-icons/fa";
+import { FaCalendarAlt, FaDownload, FaMapMarkerAlt, FaMoneyBillWave, FaTimes, FaVideo } from "react-icons/fa";
 import LoadingDots from "@/components/ui/LoadingDots";
+import EmptyState from "@/components/EmptyState";
 
 interface Pitch {
   updatedAt: string; // Using string for ISO date format
@@ -136,31 +137,43 @@ export default function PitchesPage() {
 
   const handleUpdate = async (id: number) => {
     if (!selectedPitch) return;
-    setLoading(true); 
+    setLoading(true);
 
     try {
-      const response = await fetch(`/api/create-pitch/${selectedPitch.id}`, {
+      const response = await fetch(`/api/create-pitch/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(selectedPitch),
+        body: JSON.stringify({
+          title: selectedPitch.title,
+          description: selectedPitch.description,
+          fundingGoal: selectedPitch.fundingGoal,
+        }),
       });
 
       if (!response.ok) {
         const errorMessage = await response.text();
         throw new Error(errorMessage || "Failed to update pitch");
       }
-      setLoading(false); 
+
+      setPitches((prevPitches) => 
+        prevPitches.map((pitch) => 
+          pitch.id === id ? { ...pitch, ...selectedPitch } : pitch
+        )
+      );
+
+      setLoading(false);
       setSelectedPitch(null);
       setIsEditing(false);
       toast.success("Pitch updated successfully");
-      router.refresh();
+
+      router.refresh(); // Refresh the page
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to update pitch";
       setSelectedPitch(null);
       setIsEditing(false);
-      setLoading(false); 
+      setLoading(false);
       toast.error(errorMessage);
     }
   };
@@ -190,25 +203,36 @@ export default function PitchesPage() {
   };
 
   return (
-    <div className="min-h-screen p-8">
-      <div className="max-w-7xl mx-auto py-10">
-        <h2 className="text-4xl font-extrabold mb-8 text-center">Pitches Management</h2>
-        <div className="flex justify-center mb-8">
-          <button
-            onClick={() => setActiveTab("overview")}
-            className={`px-6 py-3 border-2 border-gray-800 text-gray-800 rounded-full ${activeTab === "overview" ? "bg-gray-800 text-white" : "bg-transparent"} hover:bg-gray-800 hover:text-white transition-colors duration-300`}
-          >
-            Overview
-          </button>
-          <button
-            onClick={() => setActiveTab("add")}
-            className={`px-6 py-3 border-2 border-gray-800 text-gray-800 rounded-full ${activeTab === "add" ? "bg-gray-800 text-white" : "bg-transparent"} hover:bg-gray-800 hover:text-white transition-colors duration-300`}
-          >
-            Add Pitch
-          </button>
+    <div className="min-h-screen text-sm ">
+      <div className="max-w-7xl mx-auto">
+        <div className="fixed inset-x-0 top-16 z-10 flex flex-col items-center space-y-4 bg-white dark:bg-gray-800 p-4 shadow-lg">
+          <div className="flex justify-end w-full">
+            <a
+              href="/profile"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            >
+              Edit Profile
+            </a>
+          </div>
+          <h2 className="text-2xl md:text-4xl font-extrabold text-center">Pitches Management</h2>
+
+          <div className="flex justify-center mb-8 space-x-4">
+            <button
+              onClick={() => setActiveTab("overview")}
+              className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 ${activeTab === "overview" ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"} focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setActiveTab("add")}
+              className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 ${activeTab === "add" ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"} focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300`}
+            >
+              Add Pitch
+            </button>
+          </div>
         </div>
-        
-        {/* Render based on active tab */}
+
+        <div className="pt-40 pb-10 m-10"> 
         {activeTab === "overview" && (
           <div className="p-6 rounded-lg">
             {/* Pitches List */}
@@ -231,6 +255,14 @@ export default function PitchesPage() {
                             }}
                             className="space-y-6"
                           >
+                            <div className="relative">
+                              {/* "X" Close/Cancel Button */}
+                              <button
+                                onClick={() => setIsEditing(false)}
+                                className="absolute top-[-90px] right-[-30px] text-red-500 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
+                              >
+                                <FaTimes size={24} />
+                              </button>
                             {/* Editable Fields */}
                             <div className="flex flex-col md:flex-row md:space-x-6">
                               <div className="w-full">
@@ -246,7 +278,7 @@ export default function PitchesPage() {
                                       title: e.target.value,
                                     })
                                   }
-                                  className="border p-2 rounded w-full"
+                                  className="border p-2 rounded w-full bg-gray-100 dark:bg-gray-700"
                                   required
                                 />
                               </div>
@@ -263,7 +295,7 @@ export default function PitchesPage() {
                                       fundingGoal: parseFloat(e.target.value),
                                     })
                                   }
-                                  className="border p-2 rounded w-full"
+                                  className="border p-2 rounded w-full bg-gray-100 dark:bg-gray-700"
                                   required
                                 />
                               </div>
@@ -281,7 +313,7 @@ export default function PitchesPage() {
                                     description: e.target.value,
                                   })
                                 }
-                                className="border p-2 rounded w-full"
+                                className="border p-2 rounded w-full bg-gray-100 dark:bg-gray-700"
                                 required
                               />
                             </div>
@@ -343,6 +375,7 @@ export default function PitchesPage() {
                                   No attachments available.
                                 </p>
                               )}
+                            </div>
                             </div>
 
                             {/* Save/Cancel Buttons */}
@@ -414,13 +447,13 @@ export default function PitchesPage() {
 
                     {/* Expandable Details Section */}
                     {expandedPitchId === pitch.id && !isEditing && (
-                      <div className="mt-6 p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto rounded-lg">
+                      <div className="mt-6  lg:p-8 max-w-xm mx-auto rounded-lg">
                         {/* Pitch Details */}
-                        <p className="text-gray-900 dark:text-gray-100 text-2xl font-bold mb-4">
+                        <p className="text-gray-900 dark:text-gray-100 text-xl font-bold mb-4">
                           Details for:{" "}
                           <span className="text-indigo-600">{pitch.title}</span>
                         </p>
-                        <p className="text-gray-700 dark:text-gray-300 text-lg mb-4">
+                        <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">
                           {pitch.description ||
                             "No description provided for this pitch."}
                         </p>
@@ -470,7 +503,7 @@ export default function PitchesPage() {
                   </li>
                 ))
               ) : (
-                <p>No pitches available.</p>
+                <EmptyState message="No pitches available try creating it or contact us if you having trouble."/>
               )}
             </ul>
           </div>
@@ -486,21 +519,23 @@ export default function PitchesPage() {
               className="space-y-6"
             >
               <div>
-                <label className="block text-gray-700">Title</label>
+                <label className="block text-gray-700 dark:text-gray-200">Title</label>
                 <input
                   type="text"
                   value={newPitch.title}
                   onChange={(e) => setNewPitch({ ...newPitch, title: e.target.value })}
-                  className="border p-2 rounded w-full"
+                  placeholder="Enter title of your pitch..."
+                  className="border p-2 rounded w-full border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
               </div>
               <div>
-                <label className="block text-gray-700">Description</label>
+                <label className="block text-gray-700 dark:text-gray-200">Description</label>
                 <textarea
                   value={newPitch.description}
                   onChange={(e) => setNewPitch({ ...newPitch, description: e.target.value })}
-                  className="border p-2 rounded w-full"
+                  placeholder="Enter description for your pitch..."
+                  className="border p-2 rounded w-full border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                   required
                 />
               </div>
@@ -526,7 +561,7 @@ export default function PitchesPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-gray-700">Video File</label>
+                <label className="block text-gray-700 dark:text-gray-200">Video file (File must be 50MB or less)</label>
                 <input
                   type="file"
                   onChange={(e) => {
@@ -536,32 +571,54 @@ export default function PitchesPage() {
                   className="border p-2 rounded w-full"
                 />
                 {videoFile && (
-                  <video controls className="mt-2 w-full">
+                  <video
+                    controls
+                    className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+                    style={{ maxHeight: "500px" }}
+                  >
                     <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
                     Your browser does not support the video tag.
                   </video>
                 )}
-              </div>
-              <div>
-                <label className="block text-gray-700">Attachments</label>
-                <input
-                  type="file"
-                  multiple
-                  onChange={(e) => setAttachmentFiles(Array.from(e.target.files || []))}
-                  className="border p-2 rounded w-full"
-                />
-                {attachmentFiles.length > 0 && (
-                  <div className="mt-2">
-                    {attachmentFiles.map((file, index) => (
-                      <div key={index} className="flex items-center justify-between mb-2">
-                        <a href={URL.createObjectURL(file)} target="_blank" rel="noopener noreferrer" className="text-blue-600">
-                          {file.name}
-                        </a>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                </div>
+                <div>
+                  <label className="block text-gray-700 dark:text-gray-200">Attachments (Files must be 50MB or less)</label>
+                  <input
+                    type="file"
+                    multiple
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files || []);
+                      const validFiles: File[] = []; // Explicitly define the type as File[]
+                      const invalidFiles: File[] = []; // Explicitly define the type as File[]
+                      
+                      files.forEach(file => {
+                        if (file.size <= 50 * 1024 * 1024) { // 50MB in bytes
+                          validFiles.push(file);
+                        } else {
+                          invalidFiles.push(file);
+                        }
+                      });
+                      
+                      if (invalidFiles.length > 0) {
+                        alert(`Some files are too large. Please ensure each file is 50MB or less.`);
+                      }
+                      
+                      setAttachmentFiles(validFiles);
+                    }}
+                    className="border p-2 rounded w-full"
+                  />
+                  {attachmentFiles.length > 0 && (
+                    <div className="mt-2">
+                      {attachmentFiles.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between mb-2">
+                          <a href={URL.createObjectURL(file)} target="_blank" rel="noopener noreferrer" className="text-blue-600">
+                            {file.name}
+                          </a>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               <div>
                 <button
                   type="submit"
@@ -574,6 +631,7 @@ export default function PitchesPage() {
             </form>
           </div>
         )}
+         </div>
       </div>
     </div>
   );

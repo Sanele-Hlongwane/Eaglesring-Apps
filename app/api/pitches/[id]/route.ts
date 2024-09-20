@@ -50,10 +50,7 @@ export async function PUT(req: NextRequest) {
 
   try {
     const { title, description, 
-      fundingGoal,
-      stage,
-      country,
-      city,} = await req.json();
+      fundingGoal,} = await req.json();
 
     if (!title || !description) {
       return NextResponse.json(
@@ -68,9 +65,6 @@ export async function PUT(req: NextRequest) {
         title,
         description,
         fundingGoal,
-        stage,
-        country,
-        city,
       },
     });
 

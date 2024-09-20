@@ -49,11 +49,11 @@ export async function PUT(req: NextRequest) {
   }
 
   try {
-    const { title, description } = await req.json();
+    const { title, description, fundingGoal } = await req.json();
 
-    if (!title || !description) {
+    if (!title || !description || !fundingGoal) {
       return NextResponse.json(
-        { error: "Title and description are required" },
+        { error: "Title, description, and funding goal are required" },
         { status: 400 }
       );
     }
@@ -63,6 +63,7 @@ export async function PUT(req: NextRequest) {
       data: {
         title,
         description,
+        fundingGoal: parseFloat(fundingGoal), // Ensure it's a number
       },
     });
 
@@ -72,6 +73,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "Failed to update pitch" }, { status: 500 });
   }
 }
+
 
 export async function DELETE(req: NextRequest) {
   const url = new URL(req.url);

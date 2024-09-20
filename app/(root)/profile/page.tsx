@@ -155,15 +155,19 @@ export default function EntrepreneurProfilePage() {
                     disabled={isUploading}
                 />
                 </div>
-              <div className="flex flex-col space-y-2">
-                <label className="text-lg font-medium text-gray-800 dark:text-gray-300 flex items-center space-x-2">
-                  <FaUpload className="text-blue-600 dark:text-blue-400" size={24} />
-                  <span>Upload New Image</span>
-                </label>
-                {isUploading && <p className="text-sm text-gray-600 dark:text-gray-400">Uploading...</p>}
-              </div>
+                <div className="flex flex-col space-y-2">
+                  <label className="text-lg md:text-base sm:text-xs font-medium text-gray-800 dark:text-gray-300 flex items-center space-x-2">
+                    <FaUpload className="text-blue-600 dark:text-blue-400" size={24} />
+                    <span className="hidden sm:inline">Click on image to change it</span>
+                    <span className="sm:hidden text-xs">Click image to change</span>
+                  </label>
+                  {isUploading && (
+                    <p className="text-sm md:text-xs text-gray-600 dark:text-gray-400">
+                      Uploading...
+                    </p>
+                  )}
+                </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Bio</label>
@@ -176,7 +180,7 @@ export default function EntrepreneurProfilePage() {
                 />
               </div>
               <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Company</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Company Name</label>
                 <input
                   type="text"
                   value={company}

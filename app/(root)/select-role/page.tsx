@@ -13,7 +13,7 @@ export default function SelectRole() {
   const { user, isLoaded, isSignedIn } = useUser();
   const [userName, setUserName] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false); // New state for button loading
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 3000);
@@ -39,7 +39,7 @@ export default function SelectRole() {
     }
 
     if (window.confirm(`Do you want to save ${roleName} as your role? This cannot be changed.`)) {
-      setIsSubmitting(true); // Set loading state to true
+      setIsSubmitting(true);
 
       try {
         const response = await fetch('/api/assign-role', {
@@ -63,7 +63,7 @@ export default function SelectRole() {
         toast.error('Failed to assign role');
         console.error(error);
       } finally {
-        setIsSubmitting(false); // Reset loading state
+        setIsSubmitting(false);
       }
     }
   };
@@ -82,9 +82,6 @@ export default function SelectRole() {
       <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Select Role</h3>
       <form ref={formRef} onSubmit={handleRoleAssignment}>
         <div className="relative">
-          <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-            Role
-          </label>
           <select
             className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             id="role"
@@ -96,11 +93,11 @@ export default function SelectRole() {
           </select>
         </div>
         <button
-          className="mt-4 w-full inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 dark:bg-yellow-600 dark:hover:bg-yellow-700"
+          className="mt-4 inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700 dark:bg-green-600 dark:hover:bg-green-700"
           type="submit"
-          disabled={isSubmitting} // Disable button while submitting
+          disabled={isSubmitting}
         >
-          {isSubmitting ? <LoadingDots /> : 'Assign Role'} {/* Show loading dots when submitting */}
+          {isSubmitting ? <LoadingDots /> : 'Assign Role'}
         </button>
       </form>
     </div>

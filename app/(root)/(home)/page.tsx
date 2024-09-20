@@ -211,17 +211,9 @@ export default function DashboardPage() {
     return (
       <div className="relative min-h-screen ">
         <main className="flex flex-col items-center justify-center w-full h-full px-6 py-16 text-center">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-          Dashboard
-        </h1>
-        <p className="text-base sm:text-lg md:text-xl mb-8">
-          Welcome to your dashboard! Manage your business and investment opportunities here.
-        </p>
-
+        <EntrepreneurProfile data={data?.profile} onEdit={() => handleEdit(data?.profile)} />
         <ProposalsAnalytics />
         <NotificationsAlerts alerts={data?.alerts} />
-          <EntrepreneurProfile data={data?.profile} onEdit={() => handleEdit(data?.profile)} />
-          
           
         </main>
       </div>

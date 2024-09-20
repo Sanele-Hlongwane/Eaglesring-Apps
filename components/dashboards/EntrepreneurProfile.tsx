@@ -1,8 +1,9 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
 
 interface EntrepreneurProfile {
   id: number;
@@ -26,11 +27,13 @@ const businessStages = [
   "Mature",
 ];
 
-const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({ data, onEdit }) => {
+const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
+  data,
+  onEdit,
+}) => {
   const { user } = useUser();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter(); // Initialize router
   const [formData, setFormData] = useState<EntrepreneurProfile>(data || { id: 0 });
-  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (data) {
@@ -38,15 +41,13 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({ data, onEdit 
     }
   }, [data]);
 
-  useEffect(() => {
-    if (isModalOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
-  }, [isModalOpen]);
+  const handleEditClick = () => {
+    router.push("/profile"); // Redirect to /profile
+  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -67,7 +68,6 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({ data, onEdit 
         const result = await response.json();
         toast.success(result.message || "Profile updated successfully!");
         onEdit(result.profile);
-        setIsModalOpen(false);
       } else {
         const errorData = await response.json();
         toast.error(errorData.error || "Failed to update profile");
@@ -79,129 +79,53 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({ data, onEdit 
   };
 
   return (
-    <div className="w-full mx-auto mb-8 p-8">
-      <div className="flex items-center space-x-6 mb-8">
+    <div className="w-full mx-auto mb-12 p-8 bg-gradient-to-br from-gray-100 via-gray-300 to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 shadow-2xl rounded-lg ">
+    
+      <div className="flex items-center space-x-8 mb-12">
         {user?.imageUrl && (
           <img
             src={user.imageUrl}
             alt="Profile"
-            className="w-24 h-24 rounded-full border-4 border-gradient-to-r from-blue-500 to-blue-700 shadow-xl"
+            className="w-32 h-32 rounded-full border-8 border-gradient-to-r from-blue-500 to-green-500 shadow-2xl"
           />
         )}
         <div>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold">{user?.firstName} {user?.lastName}</h2>
-          <p className="text-xl md:text-2xl lg:text-3xl xl:text-4xl text-gray-800 dark:text-gray-300">{data?.company || 'N/A'}</p>
+          <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white animate-pulse">
+            {user?.firstName} {user?.lastName}
+          </h2>
+          <p className="text-2xl lg:text-3xl font-bold text-blue-700 italic">
+            {data?.company || "Company Unavailable"}
+          </p>
+          <p className="mt-2 text-lg text-gray-500">6 Years of Experience</p>
         </div>
       </div>
 
-      <div className="p-8 rounded-xl shadow-lg border border-gray-800">
-        <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl mb-4">
-          <strong className="text-blue-400">Bio:</strong> {data?.bio || "N/A"}
-        </p>
-        <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl mb-4">
-          <strong className="text-blue-400">Company:</strong> {data?.company || "N/A"}
-        </p>
-        <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl mb-4">
-          <strong className="text-blue-400">Business Stage:</strong>{" "}
-          <span className="text-gray-400 dark:text-gray-400">{data?.businessStage || "N/A"}</span>
-        </p>
-        <p className="text-lg md:text-xl lg:text-2xl xl:text-3xl mb-4">
-          <strong className="text-blue-400">Funding History:</strong>{" "}
-          <span className="text-gray-400 dark:text-gray-400">{data?.fundingHistory || "N/A"}</span>
-        </p>
+      <div className="p-8 rounded-xl shadow-inner bg-white dark:bg-gray-900 border border-gray-500">
+        <div className="space-y-6">
+          <p className="text-lg lg:text-xl text-gray-700 dark:text-gray-300">
+            <strong className="text-blue-500">Bio: </strong>
+            {data?.bio || "N/A"}
+          </p>
+          <p className="text-lg lg:text-xl text-gray-700 dark:text-gray-300">
+            <strong className="text-blue-500">Company: </strong>
+            {data?.company || "N/A"}
+          </p>
+          <p className="text-lg lg:text-xl text-gray-700 dark:text-gray-300">
+            <strong className="text-blue-500">Business Stage: </strong>
+            <span className="text-gray-500">{data?.businessStage || "N/A"}</span>
+          </p>
+          <p className="text-lg lg:text-xl text-gray-700 dark:text-gray-300">
+            <strong className="text-blue-500">Funding History: </strong>
+            <span className="text-gray-500">{data?.fundingHistory || "N/A"}</span>
+          </p>
+        </div>
         <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-4 rounded-full mt-6 shadow-md hover:from-blue-600 hover:to-blue-800 transition-transform transform hover:scale-105"
-          aria-label="Edit Profile"
+          onClick={handleEditClick} // Change to handleEditClick
+          className="mt-4 inline-flex items-center justify-center px-4 py-2 border border-gray-800 dark:gray-100 shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700 dark:bg-green-600 dark:hover:bg-green-700"
         >
           Edit Profile
         </button>
       </div>
-
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-80"
-          role="dialog"
-          aria-labelledby="modal-title"
-          aria-modal="true"
-        >
-          <div
-            ref={modalRef}
-            className="bg-gray-300 dark:bg-gray-700 p-8 rounded-xl shadow-2xl w-full max-w-lg border border-gray-800"
-            onClick={(e) => {
-              if (e.target === modalRef.current) {
-                setIsModalOpen(false);
-              }
-            }}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') {
-                setIsModalOpen(false);
-              }
-            }}
-            aria-label="Close modal"
-          >
-            <h3 id="modal-title" className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-blue-400 mb-6">
-              Edit Entrepreneur Profile
-            </h3>
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 gap-6">
-                <input
-                  type="text"
-                  name="bio"
-                  placeholder="Bio"
-                  value={formData.bio || ""}
-                  onChange={handleChange}
-                  className="border border-gray-700 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                />
-                <input
-                  type="text"
-                  name="company"
-                  placeholder="Company"
-                  value={formData.company || ""}
-                  onChange={handleChange}
-                  className="border border-gray-700 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                />
-                <select
-                  name="businessStage"
-                  value={formData.businessStage || ""}
-                  onChange={handleChange}
-                  className="border border-gray-700 p-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
-                >
-                  <option value="" disabled>Select Business Stage</option>
-                  {businessStages.map(stage => (
-                    <option key={stage} value={stage}>{stage}</option>
-                  ))}
-                </select>
-                <input
-                  type="text"
-                  name="fundingHistory"
-                  placeholder="Funding History (Read-Only)"
-                  value={data?.fundingHistory || ""}
-                  readOnly
-                  className="border border-gray-700 p-4 rounded-lg"
-                />
-                <div className="flex space-x-4">
-                  <button
-                    type="submit"
-                    className="bg-gradient-to-r from-green-500 to-green-700 px-8 py-4 rounded-full shadow-lg hover:from-green-600 hover:to-green-800 transition-transform transform hover:scale-105"
-                  >
-                    Save Changes
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsModalOpen(false)}
-                    className="bg-gradient-to-r from-red-500 to-red-700 px-8 py-4 rounded-full shadow-lg hover:from-red-600 hover:to-red-800 transition-transform transform hover:scale-105"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       <ToastContainer />
     </div>

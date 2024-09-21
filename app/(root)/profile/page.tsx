@@ -254,15 +254,12 @@ export default function EntrepreneurProfilePage() {
                 />
               </div>
 
-              <div>
-                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Funding History</label>
-                <textarea
-                  value={fundingHistory}
-                  onChange={(e) => setFundingHistory(e.target.value)}
-                  placeholder="Detail your funding history..."
-                  className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
-                  rows={5}
-                />
+              <div
+                className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800"
+                style={{ whiteSpace: "pre-wrap" }} // Preserves line breaks
+              >
+                
+                {fundingHistory || "No funding history provided."}
               </div>
             </div>
 

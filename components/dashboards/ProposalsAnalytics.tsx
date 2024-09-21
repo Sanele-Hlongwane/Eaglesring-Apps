@@ -123,7 +123,7 @@ export default function ProposalsAnalytics() {
 
         {data ? (
           <div className="space-y-6 md:space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
               {[
                 { label: "Total Pitches", value: data.pitchesCount },
                 { label: "Total Investments", value: data.investmentsCount },
@@ -131,7 +131,7 @@ export default function ProposalsAnalytics() {
                 { label: "Total Interests", value: data.interestsCount },
               ].map((stat) => (
                 <div key={stat.label} className="p-4 md:p-6 rounded-lg shadow-xl border border-gray-200 bg-white dark:bg-gray-800">
-                  <p className="text-xl md:text-2xl font-semibold text-gray-700 dark:text-gray-300">{stat.label}</p>
+                  <p className="text-xl md:text-xl font-semibold text-gray-700 dark:text-gray-300">{stat.label}</p>
                   <p className="text-3xl md:text-4xl font-bold text-gold-500">{stat.value}</p>
                 </div>
               ))}

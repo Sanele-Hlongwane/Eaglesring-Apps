@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { useRouter } from "next/navigation";
+import { FaUser, FaBuilding, FaRocket, FaDollarSign } from "react-icons/fa";
 
 interface EntrepreneurProfile {
   id: number;
@@ -18,21 +19,12 @@ interface EntrepreneurProfileProps {
   onEdit: (data: EntrepreneurProfile) => void;
 }
 
-const businessStages = [
-  "Idea",
-  "Prototype",
-  "Early Stage",
-  "Growth",
-  "Expansion",
-  "Mature",
-];
-
 const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
   data,
   onEdit,
 }) => {
   const { user } = useUser();
-  const router = useRouter(); // Initialize router
+  const router = useRouter();
   const [formData, setFormData] = useState<EntrepreneurProfile>(data || { id: 0 });
 
   useEffect(() => {
@@ -42,19 +34,11 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
   }, [data]);
 
   const handleEditClick = () => {
-    router.push("/profile"); // Redirect to /profile
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    router.push("/profile");
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
       const response = await fetch("/api/entrepreneur-profile", {
         method: "POST",
@@ -79,53 +63,53 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
   };
 
   return (
-    <div className="w-full mx-auto mb-12 p-8 bg-gradient-to-br from-gray-100 via-gray-300 to-gray-100 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 shadow-2xl rounded-lg ">
-    
-      <div className="flex items-center space-x-8 mb-12">
+    <div className="w-full mx-auto p-4 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-lg">
+      <div className="flex items-center mb-4">
         {user?.imageUrl && (
           <img
             src={user.imageUrl}
             alt="Profile"
-            className="w-32 h-32 rounded-full border-8 border-gradient-to-r from-blue-500 to-green-500 shadow-2xl"
+            className="w-20 h-20 rounded-full border-4 border-gradient-to-r from-blue-500 to-green-500 shadow-md"
           />
         )}
         <div>
-          <h2 className="text-4xl lg:text-5xl font-extrabold text-gray-900 dark:text-white animate-pulse">
+          <h2 className="text-2xl lg:text-4xl ml-4 font-extrabold text-gray-900 dark:text-white animate-pulse">
             {user?.firstName} {user?.lastName}
           </h2>
           <p className="text-2xl lg:text-3xl font-bold text-blue-700 italic">
             {data?.company || "Company Unavailable"}
           </p>
-          <p className="mt-2 text-lg text-gray-500">6 Years of Experience</p>
         </div>
       </div>
 
-      <div className="p-8 rounded-xl shadow-inner bg-white dark:bg-gray-900 border border-gray-500">
-        <div className="space-y-6">
-          <p className="text-lg lg:text-xl text-gray-700 dark:text-gray-300">
-            <strong className="text-blue-500">Bio: </strong>
-            {data?.bio || "N/A"}
-          </p>
-          <p className="text-lg lg:text-xl text-gray-700 dark:text-gray-300">
-            <strong className="text-blue-500">Company: </strong>
-            {data?.company || "N/A"}
-          </p>
-          <p className="text-lg lg:text-xl text-gray-700 dark:text-gray-300">
-            <strong className="text-blue-500">Business Stage: </strong>
-            <span className="text-gray-500">{data?.businessStage || "N/A"}</span>
-          </p>
-          <p className="text-lg lg:text-xl text-gray-700 dark:text-gray-300">
-            <strong className="text-blue-500">Funding History: </strong>
-            <span className="text-gray-500">{data?.fundingHistory || "N/A"}</span>
-          </p>
+      <div className="grid grid-cols-1 gap-2">
+        <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <FaUser className="text-blue-500 mr-2" />
+          <span>{data?.bio || "N/A"}</span>
         </div>
-        <button
-          onClick={handleEditClick} // Change to handleEditClick
-          className="mt-4 inline-flex items-center justify-center px-4 py-2 border border-gray-800 dark:gray-100 shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700 dark:bg-green-600 dark:hover:bg-green-700"
-        >
-          Edit Profile
-        </button>
+
+        <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <FaBuilding className="text-blue-500 mr-2" />
+          <span>{data?.company || "N/A"}</span>
+        </div>
+
+        <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <FaRocket className="text-blue-500 mr-2" />
+          <span className="text-green-600">{data?.businessStage || "N/A"}</span>
+        </div>
+
+        <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <FaDollarSign className="text-blue-500 mr-2" />
+          <span className="text-yellow-600">{data?.fundingHistory || "N/A"}</span>
+        </div>
       </div>
+
+      <button
+        onClick={handleEditClick}
+        className="mt-4 w-full py-2 border border-gray-800 text-white bg-gradient-to-r from-green-500 to-green-600 rounded-md hover:scale-105 transition-transform"
+      >
+        Edit Profile
+      </button>
 
       <ToastContainer />
     </div>

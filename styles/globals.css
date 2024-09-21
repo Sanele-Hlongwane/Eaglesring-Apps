@@ -4,28 +4,27 @@
 
 body {
   font-family: var(--font-sans);
-  font-weight: 400; /* Adjust to suit your design */
-  font-style: normal; /* Adjust to suit your design */
+  font-weight: 400; 
+  font-style: normal;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
-  font-weight: 700; /* Adjust to suit your design */
+  font-weight: 700;
 }
 
 code, pre {
   font-family: var(--font-mono);
-  font-weight: 400; /* Adjust to suit your design */
+  font-weight: 400; 
 }
 
 .clerk-wrapper {
-  border: 2px solid #0E78F9; /* Blue border color */
-  padding: 20px; /* Adjust padding as needed */
-  border-radius: 8px; /* Optional: rounded corners */
-  background-color: black; /* Ensures the background matches */
+  border: 2px solid #0E78F9; 
+  padding: 20px; 
+  border-radius: 8px; 
+  background-color: black;
 }
 
-/* styles.css or in your global.css file */
 .invert-on-dark {
 transition: filter 0.3s ease;
 }

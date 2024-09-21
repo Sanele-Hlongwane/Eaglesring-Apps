@@ -10,6 +10,7 @@ interface EntrepreneurProfile {
   id: number;
   bio?: string;
   company?: string;
+  revenue?: number;
   businessStage?: string;
   fundingHistory?: string;
 }
@@ -63,7 +64,7 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
   };
 
   return (
-    <div className="w-full mx-auto p-4 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-lg">
+    <div className="w-full mx-auto p-1 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-lg">
       <div className="flex items-center mb-4">
         {user?.imageUrl && (
           <img
@@ -73,45 +74,46 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
           />
         )}
         <div>
-          <h2 className="text-2xl lg:text-4xl ml-4 font-extrabold text-gray-900 dark:text-white animate-pulse">
+          <h2 className="text-xl lg:text-2xl ml-4 font-extrabold text-gray-900 dark:text-white animate-pulse">
             {user?.firstName} {user?.lastName}
           </h2>
-          <p className="text-2xl lg:text-3xl font-bold text-blue-700 italic">
+          <p className="text-l lg:text-xl font-bold text-blue-700 italic">
             {data?.company || "Company Unavailable"}
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-2">
-        <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <FaUser className="text-blue-500 mr-2" />
-          <span>{data?.bio || "N/A"}</span>
-        </div>
+      <div className="mb-6">
+        <p className="text-xs text-gray-800 dark:text-gray-300 mt-2">{data?.bio || "N/A"}</p>
+      </div>
 
+      <div className="grid grid-cols-1 gap-4">
         <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <label className="block text-lg font-semibold mr-4">Company:</label>
           <FaBuilding className="text-blue-500 mr-2" />
           <span>{data?.company || "N/A"}</span>
         </div>
 
         <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <FaRocket className="text-blue-500 mr-2" />
-          <span className="text-green-600">{data?.businessStage || "N/A"}</span>
+          <label className="block text-lg font-semibold mr-4">Annual Revenue:</label>
+          <FaDollarSign className="text-green-500 mr-2" />
+          <span>{new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR' }).format(data?.revenue || 0)}</span>
         </div>
 
         <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <FaDollarSign className="text-blue-500 mr-2" />
-          <span className="text-yellow-600">{data?.fundingHistory || "N/A"}</span>
+          <label className="block text-lg font-semibold mr-4">Stage:</label>
+          <FaRocket className="text-blue-500 mr-2" />
+          <span className="text-green-600">{data?.businessStage || "N/A"}</span>
         </div>
       </div>
 
       <button
         onClick={handleEditClick}
-        className="mt-4 w-full py-2 border border-gray-800 text-white bg-gradient-to-r from-green-500 to-green-600 rounded-md hover:scale-105 transition-transform"
+        className="mt-4 w-full py-2 border border-gray-800 text-white bg-gradient-to-r from-green-500 to-green-600 rounded-md transition-transform hover:bg-gradient-to-r hover:from-green-400 hover:to-green-500"
+
       >
         Edit Profile
       </button>
-
-      <ToastContainer />
     </div>
   );
 };

@@ -87,7 +87,7 @@ const AcceptedRequestsPage = () => {
 
                 {user.role === "ENTREPRENEUR" && user.entrepreneurProfile && (
                   <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-blue-500 transition-transform transform hover:scale-105">
-                    <div className="mb-4">
+                    <div className="mb-2">
                       <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Company:</h4>
                       <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                         <FaBuilding className="text-blue-500 mr-2" />

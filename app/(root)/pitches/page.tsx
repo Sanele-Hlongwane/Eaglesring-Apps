@@ -4,18 +4,18 @@ import { useState, useEffect, ChangeEvent } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import Pusher from "pusher-js";
-import { v4 as uuidv4 } from "uuid"; // For generating unique file names
-import supabase from "@/lib/supabaseClient"; // Adjust this import based on your setup
+import { v4 as uuidv4 } from "uuid";
+import supabase from "@/lib/supabaseClient";
 import { FaCalendarAlt, FaDownload, FaMapMarkerAlt, FaMoneyBillWave, FaTimes, FaVideo } from "react-icons/fa";
 import LoadingDots from "@/components/ui/LoadingDots";
 import EmptyState from "@/components/EmptyState";
 
 interface Pitch {
-  updatedAt: string; // Using string for ISO date format
+  updatedAt: string;
   id: number;
   title: string;
   description: string;
-  createdAt: string; // Using string for ISO date format
+  createdAt: string;
   videoUrl?: string;
   attachments?: string[];
   fundingGoal?: number;
@@ -163,12 +163,11 @@ export default function PitchesPage() {
         )
       );
 
-      setLoading(false);
       setSelectedPitch(null);
       setIsEditing(false);
       toast.success("Pitch updated successfully");
-
-      router.refresh(); // Refresh the page
+      setLoading(false);
+      router.refresh();
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : "Failed to update pitch";
       setSelectedPitch(null);
@@ -214,8 +213,6 @@ export default function PitchesPage() {
               Edit Profile
             </a>
           </div>
-          <h2 className="text-2xl md:text-4xl font-extrabold text-center">Pitches Management</h2>
-
           <div className="flex justify-center mb-8 space-x-4">
             <button
               onClick={() => setActiveTab("overview")}
@@ -232,7 +229,7 @@ export default function PitchesPage() {
           </div>
         </div>
 
-        <div className="pt-40 pb-10 m-10"> 
+        <div className="pt-40 pb-10"> 
         {activeTab === "overview" && (
           <div className="p-6 rounded-lg">
             {/* Pitches List */}
@@ -256,14 +253,12 @@ export default function PitchesPage() {
                             className="space-y-6"
                           >
                             <div className="relative">
-                              {/* "X" Close/Cancel Button */}
                               <button
                                 onClick={() => setIsEditing(false)}
                                 className="absolute top-[-90px] right-[-30px] text-red-500 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
                               >
                                 <FaTimes size={24} />
                               </button>
-                            {/* Editable Fields */}
                             <div className="flex flex-col md:flex-row md:space-x-6">
                               <div className="w-full">
                                 <label className="block text-gray-700 dark:text-gray-200">
@@ -286,18 +281,22 @@ export default function PitchesPage() {
                                 <label className="block text-gray-700 dark:text-gray-200">
                                   Funding Goal
                                 </label>
-                                <input
-                                  type="number"
-                                  value={selectedPitch?.fundingGoal || ""}
-                                  onChange={(e) =>
-                                    setSelectedPitch({
-                                      ...selectedPitch,
-                                      fundingGoal: parseFloat(e.target.value),
-                                    })
-                                  }
-                                  className="border p-2 rounded w-full bg-gray-100 dark:bg-gray-700"
-                                  required
-                                />
+                                <div className="mt-4">
+                                  <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Funding Goal (in ZAR)</label>
+                                  <input
+                                    type="number"
+                                    value={selectedPitch?.fundingGoal || ""}
+                                    onChange={(e) =>
+                                      setSelectedPitch({
+                                        ...selectedPitch,
+                                        fundingGoal: parseFloat(e.target.value),
+                                      })
+                                    }
+                                    placeholder="Enter funding goal"
+                                    className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
+                                    required
+                                  />
+                                </div>
                               </div>
                             </div>
 
@@ -453,11 +452,9 @@ export default function PitchesPage() {
                           Details for:{" "}
                           <span className="text-indigo-600">{pitch.title}</span>
                         </p>
-                        <p className="text-gray-700 dark:text-gray-300 text-sm mb-4">
-                          {pitch.description ||
-                            "No description provided for this pitch."}
+                        <p className="text-gray-700 dark:text-gray-300 text-sm mb-4 whitespace-pre-line">
+                          {pitch.description }
                         </p>
-
                         {/* Video Section */}
                         {pitch.videoUrl && (
                           <div className="mb-6">

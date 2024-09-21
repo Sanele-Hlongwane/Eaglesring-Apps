@@ -16,7 +16,7 @@ export default function SuccessPage() {
   }, [router]);
 
   return (
-    <div className="flex items-center textt-sm justify-center min-h-screen">
+    <div className="flex items-center textt-sm justify-center h-screen">
       <div className="p-8 rounded-lg border-1 border-blue-200 space-y-6 max-w-md">
         <div className="flex justify-center">
           <svg

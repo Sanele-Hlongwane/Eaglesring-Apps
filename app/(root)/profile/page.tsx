@@ -157,7 +157,7 @@ export default function EntrepreneurProfilePage() {
         <Loader />
       ) : (
         <div className="max-w-7xl mx-auto shadow-2xl rounded-xl bg-gradient-to-b from-gray-300 to-gray-100 dark:from-gray-800 dark:to-gray-600 p-8">
-          <h1 className="text-4xl md:text-6xl font-extrabold text-center text-gray-900 dark:text-white mb-10">
+          <h1 className="text-xl md:text-2xl font-extrabold text-center text-gray-900 dark:text-white mb-10">
             <FaPencilAlt className="inline-block text-green-600 dark:text-green-400 mr-3" />
             Edit Your Profile
           </h1>
@@ -232,7 +232,7 @@ export default function EntrepreneurProfilePage() {
                   type="url"
                   value={linkedinUrl}
                   onChange={(e) => setLinkedinUrl(e.target.value)}
-                  placeholder="LinkedIn profile"
+                  placeholder="https://linkedin.com/in/your_profile"
                   className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
                 />
                 {linkedinUrl && (
@@ -244,22 +244,22 @@ export default function EntrepreneurProfilePage() {
               </div>
 
               <div>
-                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Revenue (in ZAR)</label>
+                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Annual Revenue (in ZAR)</label>
                 <input
                   type="number"
                   value={revenue}
                   onChange={(e) => setRevenue(Number(e.target.value))}
-                  placeholder="Annual revenue"
                   className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
                 />
+                <p className="mt-2 text-lg text-green-700 dark:text-green-500">
+                  Annual Revenue: R{new Intl.NumberFormat('en-ZA').format(revenue)}
+                </p>
               </div>
-
               <div
                 className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800"
-                style={{ whiteSpace: "pre-wrap" }} // Preserves line breaks
+                style={{ whiteSpace: "pre-wrap" }}
               >
-                
-                {fundingHistory || "No funding history provided."}
+                {fundingHistory}
               </div>
             </div>
 

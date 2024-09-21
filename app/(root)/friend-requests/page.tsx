@@ -312,7 +312,7 @@ const ProfilesPage = () => {
                   </div>
                 )}
                 {(activeTab === 'sent' || activeTab === 'received') && (
-                  <div className="mt-4 text-gray-600 dark:text-gray-300">
+                  <div className="mt-4 w-full text-gray-600 dark:text-gray-300">
                     <p>Status: 
                       <span className={`font-semibold ${item.status === 'PENDING' ? 'text-yellow-600 dark:text-yellow-500' : item.status === 'ACCEPTED' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
                         {item.status}
@@ -347,95 +347,93 @@ const ProfilesPage = () => {
         ))}
       </div>
     </div>
-
     );
   };
 
   return (
     <div className="container mx-auto p-6">
-  <nav className="fixed inset-x-0 top-16 z-10 flex flex-col items-center space-y-4 bg-white dark:bg-gray-800 p-4 shadow-lg">
-    <div className="flex flex-col items-center lg:flex-row lg:justify-between lg:space-x-8">
-      {/* Navigation Links */}
-      <div className="flex space-x-4 lg:space-x-6">
-        <a
-          href="#all"
-          onClick={() => setActiveTab("all")}
-          className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeTab === "all"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-          }`}
-        >
-          <FaUsers className="inline-block mr-2" /> All Profiles
-        </a>
-        <a
-          href="#sent"
-          onClick={() => setActiveTab("sent")}
-          className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeTab === "sent"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-          }`}
-        >
-          <FaPaperPlane className="inline-block mr-2" /> Sent
-        </a>
-        <a
-          href="#received"
-          onClick={() => setActiveTab("received")}
-          className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeTab === "received"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-          }`}
-        >
-          <FaInbox className="inline-block mr-2" /> Received
-        </a>
-        <a
-          href="#accepted"
-          onClick={() => setActiveTab("accepted")}
-          className={`px-5 py-2 rounded-lg text-sm font-medium transition-colors ${
-            activeTab === "accepted"
-              ? "bg-blue-600 text-white shadow-lg"
-              : "bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-          }`}
-        >
-          <FaCheckCircle className="inline-block mr-2" /> Accepted
-        </a>
-      </div>
+      <nav className="fixed inset-x-0 top-16 z-10 flex flex-col items-center space-y-4 bg-gray-200 dark:bg-gray-800 p-4 shadow-lg">
+        <div className="flex flex-col items-center lg:flex-row lg:justify-between lg:space-x-8">
+          {/* Navigation Links */}
+          <div className="flex space-x-4 lg:space-x-6">
+            <a
+              href="#all"
+              onClick={() => setActiveTab("all")}
+                
+              className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 
+                ${activeTab === "all" 
+                  ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" 
+                  : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"} focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300`
+                }
+            >
+              <FaUsers className="inline-block mr-2" /> All Profiles
+            </a>
+            <a
+              href="#sent"
+              onClick={() => setActiveTab("sent")}
+              className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 
+                ${activeTab === "sent" 
+                  ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" 
+                  : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"} focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300
+                `}
+            >
+              <FaPaperPlane className="inline-block mr-2" /> Sent
+            </a>
+            <a
+              href="#received"
+              onClick={() => setActiveTab("received")}
+              className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 
+                ${activeTab === "received" 
+                  ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" 
+                  : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"
+                } focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300
+              `}
+            >
+              <FaInbox className="inline-block mr-2" /> Received
+            </a>
+            <a
+              href="#accepted"
+              onClick={() => setActiveTab("accepted")}
+              className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 
+                ${activeTab === "accepted" 
+                  ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" 
+                  : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"
+                } focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300
+              `}
+            >
+              <FaCheckCircle className="inline-block mr-2" /> Accepted
+            </a>
+          </div>
 
-      {/* Search and Filter */}
-      <div className="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto mt-4 lg:mt-0">
-        <div className="relative flex-1 mb-4 lg:mb-0">
-          <input
-            type="text"
-            placeholder="Search profiles..."
-            className="w-full p-3 border rounded-lg shadow-md focus:outline-none transition-all duration-300 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-          <FaSearch className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
+          <div className="flex flex-col lg:flex-row lg:space-x-4 w-full lg:w-auto mt-4 lg:mt-0">
+            <div className="relative flex-1 mb-4 lg:mb-0">
+              <input
+                type="text"
+                placeholder="Search profiles..."
+                className="w-full p-3 border rounded-lg shadow-md focus:outline-none transition-all duration-300 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <FaSearch className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
+            </div>
+
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+              className="p-3 border border-gray-500 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+            >
+              <option value="">Filter by role</option>
+              <option value="entrepreneur">Entrepreneur</option>
+              <option value="investor">Investor</option>
+            </select>
+          </div>
         </div>
+      </nav>
 
-        <select
-          value={roleFilter}
-          onChange={(e) => setRoleFilter(e.target.value)}
-          className="p-3 border border-gray-500 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-        >
-          <option value="">Filter by role</option>
-          <option value="entrepreneur">Entrepreneur</option>
-          <option value="investor">Investor</option>
-        </select>
+      <div className="pt-40 pb-10 m-10">
+        {renderContent()}
       </div>
     </div>
-  </nav>
-
-  {/* Adding padding to avoid content being hidden under the fixed navbar */}
-   <div className="pt-40 pb-10 m-10">
-    {renderContent()}
-  </div>
-</div>
-
-  
   );
 };
 

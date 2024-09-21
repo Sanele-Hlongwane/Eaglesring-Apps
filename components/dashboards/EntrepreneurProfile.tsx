@@ -4,7 +4,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { FaUser, FaBuilding, FaRocket, FaDollarSign } from "react-icons/fa";
+import { FaUser, FaBuilding, FaRocket, FaDollarSign, FaMoneyBillWave } from "react-icons/fa";
 
 interface EntrepreneurProfile {
   id: number;
@@ -96,7 +96,7 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
 
         <div className="flex items-center text-gray-700 dark:text-gray-300">
           <label className="block text-lg font-semibold mr-4">Annual Revenue:</label>
-          <FaDollarSign className="text-green-500 mr-2" />
+          <FaMoneyBillWave className="text-green-500 mr-2" />
           <span>{new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR' }).format(data?.revenue || 0)}</span>
         </div>
 

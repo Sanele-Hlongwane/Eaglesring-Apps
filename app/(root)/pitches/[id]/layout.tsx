@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: Readonly<{children: ReactNode}>) => {
   return (
     <main >
-        <section >
+        <section className="w-full">
           <div className="w-full text-xs md:s">{children}</div>
         </section>
     </main>

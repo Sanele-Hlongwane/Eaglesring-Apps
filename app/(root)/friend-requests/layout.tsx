@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 
 const Layout = ({ children }: Readonly<{children: ReactNode}>) => {
   return (
-    <main>
+    <main className='w-full'>
 
-          <div >{children}</div>
+          <div className='w-full'>{children}</div>
     </main>
   );
 };

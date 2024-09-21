@@ -4,7 +4,7 @@ import StreamVideoProvider from '@/providers/StreamClientProvider';
 
 const RootLayout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
-    <main className='text-xs md:s'>
+    <main className='text-xs md:text-base font-roboto'>
       {children}
     </main>
   );

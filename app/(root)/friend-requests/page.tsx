@@ -19,6 +19,7 @@ import {
   FaDollarSign,
   FaTag,
   FaInfoCircle,
+  FaMoneyBillWave,
 } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import EmptyState from "@/components/EmptyState";
@@ -101,7 +102,7 @@ const ProfilesPage = () => {
   }, [activeTab]);
 
   const sendFriendRequest = async (receiverId: number) => {
-    setLoadingId(receiverId); // Set loading state for button
+    setLoadingId(receiverId);
     try {
       await axios.post("/api/send-friend-request", { receiverId });
       toast.success("Friend request sent!");
@@ -114,47 +115,59 @@ const ProfilesPage = () => {
     } catch (err) {
       toast.error("Failed to send friend request");
     } finally {
-      setLoadingId(null); // Reset loading state for button
+      setLoadingId(null);
     }
   };
 
   const handleAcceptRequest = async (requestId: number) => {
+    setLoadingId(requestId);
     try {
       await axios.post(`/api/friend-requests/${requestId}/accept`);
       toast.success('Friend request accepted!');
+      setLoadingId(null);
       refreshRequests();
     } catch (err) {
       toast.error('Failed to accept friend request');
+      setLoadingId(null);
     }
   };
 
   const handleDeclineRequest = async (requestId: number) => {
+    setLoadingId(requestId);
     try {
       await axios.post(`/api/friend-requests/${requestId}/reject`);
       toast.success('Friend request rejected!');
+      setLoadingId(null);
       refreshRequests();
     } catch (err) {
       toast.error('Failed to reject friend request');
+      setLoadingId(null);
     }
   };
 
   const handleDeleteRequest = async (requestId: number) => {
+    setLoadingId(requestId);
     try {
       await axios.delete(`/api/friend-requests/${requestId}/delete`);
       toast.success('Friend request deleted!');
+      setLoadingId(null);
       refreshRequests();
     } catch (err) {
       toast.error('Failed to delete friend request');
+      setLoadingId(null);
     }
   };
 
   const handleRemoveRequest = async (requestId: number) => {
+    setLoadingId(requestId);
     try {
       await axios.delete(`/api/friend-requests/${requestId}/remove`);
       toast.success('Friend request removed!');
+      setLoadingId(null);
       refreshRequests();
     } catch (err) {
       toast.error('Failed to remove friend request');
+      setLoadingId(null);
     }
   };
 
@@ -197,8 +210,8 @@ const ProfilesPage = () => {
     }
 
     return (
-      <div className="space-y-6 text-xs">
-        <div className="grid gap-6 grid-cols-1 xm-grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="w-full m-0 space-y-6 text-xs">
+        <div className="grid gap-1 grid-cols-1 xm-grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
           {dataToDisplay.map((item: any) => (
             <div
               key={item.id}
@@ -208,45 +221,61 @@ const ProfilesPage = () => {
             <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md">
               {item.role}
             </div>
-          <div className="flex  text-sm flex-col items-center">
-            {item.imageUrl && (
-              <img
-                src={item.imageUrl}
-                alt={item.name}
-                className="w-28 h-28 rounded-full border-4 border-blue-600 shadow-md object-cover"
-              />
-            )}
-            <div className="mt-4 text-center">
-              <h2 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
-                {item.name}
-              </h2>
-              <p className="text-base text-gray-700 dark:text-gray-300 mb-2">
-                {item.email}
-              </p>
-              {item.entrepreneurProfile && (
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg mb-4 border-t-2 border-gray-900 dark:border-gray-300">
-              <div className="flex items-center mb-2">
-                <FaBuilding className="text-gray-600 mr-2" />
-                <h3 className="text-smfont-bold text-gray-900 dark:text-gray-100">Company:</h3>
-              </div>
-              <p className="text-gray-800 dark:text-gray-300 mb-2">{item.entrepreneurProfile.company}</p>
-              <div className="flex items-center mb-2">
-                <FaInfoCircle className="text-gray-600 mr-2" />
-                <h3 className="text-smfont-bold text-gray-900 dark:text-gray-100">Bio:</h3>
-              </div>
-              <p className="text-gray-700 dark:text-gray-400 mb-2">{item.entrepreneurProfile.bio}</p>
-              <div className="flex items-center mb-2">
-                <FaTag className="text-gray-600 mr-2" />
-                <h3 className="text-smfont-bold text-gray-900 dark:text-gray-100">Business Stage:</h3>
-              </div>
-              <p className="text-gray-700 dark:text-gray-400 mb-2">{item.entrepreneurProfile.businessStage}</p>
-              <div className="flex items-center">
-                <FaDollarSign className="text-gray-600 mr-2" />
-                <h3 className="text-smfont-bold text-gray-900 dark:text-gray-100">Revenue:</h3>
-              </div>
-              <p className="text-gray-700 dark:text-gray-400">{item.entrepreneurProfile.revenue}</p>
-            </div>
-          )}
+              <div className="flex  text-sm flex-col items-center">
+                {item.imageUrl && (
+                  <img
+                    src={item.imageUrl}
+                    alt={item.name}
+                    className="w-28 h-28 rounded-full border-4 border-blue-600 shadow-md object-cover"
+                  />
+                )}
+                <div className="mt-4 text-center">
+                  <h2 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                    {item.name}
+                  </h2>
+                  <p className="text-base text-gray-700 dark:text-gray-300 mb-2">
+                    {item.email}
+                  </p>
+                  {item.entrepreneurProfile && (
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-blue-500 transition-transform transform hover:scale-105">
+                    <div className="mb-2">
+                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Company:</h4>
+                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                        <FaBuilding className="text-blue-500 mr-2" />
+                        <span className="text-gray-800 dark:text-gray-300">{item.entrepreneurProfile.company}</span>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Bio:</h4>
+                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                        <FaInfoCircle className="text-blue-500 mr-2" />
+                        <span className="text-gray-700 dark:text-gray-400">{item.entrepreneurProfile.bio}</span>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Business Stage:</h4>
+                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                        <FaTag className="text-blue-500 mr-2" />
+                        <span className="text-gray-700 dark:text-gray-400">{item.entrepreneurProfile.businessStage}</span>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Revenue:</h4>
+                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                        <FaMoneyBillWave className="mr-2 text-green-600 dark:text-green-400" />
+                        <span className="font-semibold">Funding Goal:</span>
+                        <span className="ml-2">
+                          {item.fundingGoal !== undefined 
+                            ? `R${new Intl.NumberFormat('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(item.fundingGoal)}`
+                            : "N/A"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
                 {item.investorProfile && (
                   <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
                     <p className="font-semibold text-gray-800 dark:text-gray-100">Investment Strategy:</p>
@@ -305,7 +334,7 @@ const ProfilesPage = () => {
                         <LoadingDots />
                       ) : (
                         <>
-                          <FaTrashAlt className="inline-block mr-2" /> Remove Request
+                          <a className="inline-block mr-2" /> Remove Request
                         </>
                       )}
                     </button>
@@ -409,8 +438,8 @@ const ProfilesPage = () => {
             <div className="relative flex-1 mb-4 lg:mb-0">
               <input
                 type="text"
-                placeholder="Search profiles..."
-                className="w-full p-3 border rounded-lg shadow-md focus:outline-none transition-all duration-300 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                placeholder="Name or Email..."
+                className="w-full p-3 border rounded-lg shadow-md focus:outline-none transition-all duration-300 bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -420,7 +449,7 @@ const ProfilesPage = () => {
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="p-3 border border-gray-500 rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+              className="p-3 border border-gray-500 rounded-lg shadow-lg bg-white dark:bg-gray-900 dark:border-gray-600 dark:text-white"
             >
               <option value="">Filter by role</option>
               <option value="entrepreneur">Entrepreneur</option>

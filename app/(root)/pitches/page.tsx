@@ -408,9 +408,12 @@ export default function PitchesPage() {
                                 Last edited:{" "}
                                 {new Date(pitch.updatedAt).toLocaleString()}
                               </span>
-                              <span className="flex items-center mr-4">
-                                <FaMoneyBillWave className="mr-1" />
-                                Funding Goal: R{pitch.fundingGoal?.toFixed(2)}
+                              <span className="flex items-center mr-4 p-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-lg shadow-md">
+                                <FaMoneyBillWave className="mr-2 text-green-600 dark:text-green-400" />
+                                <span className="font-semibold">Funding Goal:</span>
+                                <span className="ml-2">
+                                  R{pitch.fundingGoal?.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
                               </span>
                             </div>
                           </div>

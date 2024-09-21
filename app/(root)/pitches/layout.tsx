@@ -13,7 +13,7 @@ const Layout = ({ children }: Readonly<{children: ReactNode}>) => {
   return (
     <main>
 
-      <div className="flex">
+      <div className="w-full">
           <div className="w-full">{children}</div>
       </div>
     </main>

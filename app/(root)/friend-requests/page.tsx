@@ -301,45 +301,30 @@ const ProfilesPage = () => {
                   <div className="mt-4 flex justify-center space-x-4">
                     <button
                       onClick={() => handleAcceptRequest(item.id)}
-                      className="bg-green-600 dark:bg-green-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700 dark:hover:bg-green-400 transition-colors relative"
+                      className="bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition-colors"
                       disabled={loadingId === item.id}
                     >
                       {loadingId === item.id ? (
                         <LoadingDots />
                       ) : (
-                        <>
-                          <FaCheckCircle className="inline-block mr-2" /> Accept
-                        </>
+                        <span>Accept</span>
                       )}
                     </button>
+
                     <button
                       onClick={() => handleDeclineRequest(item.id)}
-                      className="bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition-colors relative"
+                      className="bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition-colors"
                       disabled={loadingId === item.id}
                     >
                       {loadingId === item.id ? (
                         <LoadingDots />
                       ) : (
-                        <>
-                          <FaTimesCircle className="inline-block mr-2" /> Decline
-                        </>
-                      )}
-                    </button>
-                    <button
-                      onClick={() => handleRemoveRequest(item.id)}
-                      className="bg-red-600 dark:bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 dark:hover:bg-red-400 transition-colors relative"
-                      disabled={loadingId === item.id}
-                    >
-                      {loadingId === item.id ? (
-                        <LoadingDots />
-                      ) : (
-                        <>
-                          <a className="inline-block mr-2" /> Remove Request
-                        </>
+                        <span>Decline</span>
                       )}
                     </button>
                   </div>
                 )}
+
                 {(activeTab === 'sent' || activeTab === 'received') && (
                   <div className="mt-4 w-full text-gray-600 dark:text-gray-300">
                     <p>Status: 

@@ -49,25 +49,26 @@ export async function POST(request: NextRequest) {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 }
+    );
   }
 
   const {
     title,
     description,
+    videoUrl,
+    attachments,
     fundingGoal,
-    currentFunding,
-    stage,
-    locationCountry,
-    locationCity,
-    tags,
-    status,
-    videoFile,
-    attachmentFiles
   } = await request.json();
 
-  if (!title || !description) {
-    return NextResponse.json({ error: "Title and description are required" }, { status: 400 });
+
+  if (!title || !description ) {
+    return NextResponse.json(
+      { error: "Title and description are required" },
+      { status: 400 }
+    );
   }
 
   try {
@@ -76,7 +77,10 @@ export async function POST(request: NextRequest) {
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User profile not found" },
+        { status: 404 }
+      );
     }
 
     let entrepreneurProfile = await prisma.entrepreneurProfile.findUnique({
@@ -87,7 +91,7 @@ export async function POST(request: NextRequest) {
       entrepreneurProfile = await prisma.entrepreneurProfile.create({
         data: {
           userId: existingUser.id,
-          bio: "",
+          bio: "Hey there, I am new entrepreneur here to get funds for my company.",  // Placeholder bio for now
         },
       });
     }
@@ -96,12 +100,22 @@ export async function POST(request: NextRequest) {
       data: {
         title,
         description,
+        videoUrl,
+        attachments,
         fundingGoal,
-        attachments: attachmentFiles || [],  // Ensure attachmentFiles is handled
         entrepreneurId: entrepreneurProfile.id,
-        videoUrl: videoFile // Assuming videoFile is a URL or needs conversion
       },
     });
+    
+    // Notify the user that the pitch was successfully created
+    await prisma.notification.create({
+      data: {
+        content: `Your pitch "${newPitch.title}" has been created successfully.`,
+        userId: existingUser.id,  // Send the notification to the entrepreneur
+      },
+    });
+
+    console.debug(`Notification sent to user ID ${existingUser.id}: "Your pitch "${newPitch.title}" has been created successfully."`);
 
     return NextResponse.json({
       message: 'Pitch created successfully',
@@ -109,6 +123,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error creating pitch:', error);
-    return NextResponse.json({ error: "Failed to create pitch" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create pitch" },
+      { status: 500 }
+    );
   }
 }

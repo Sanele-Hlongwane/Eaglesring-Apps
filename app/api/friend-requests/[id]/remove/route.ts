@@ -15,7 +15,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     const clerkId = user.id;
 
-    // Fetch the receiver user from the database using clerkId
+    // Fetch the receiver (current user) from the database using clerkId
     const receiver = await prisma.user.findUnique({
       where: { clerkId: clerkId },
     });
@@ -31,8 +31,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const friendRequest = await prisma.friendRequest.findUnique({
       where: {
         senderId_receiverId: {
-          senderId: senderId,
-          receiverId: receiver.id,
+          senderId: receiver.id,
+          receiverId: senderId,
         },
       },
     });
@@ -48,17 +48,38 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     await prisma.friendRequest.delete({
       where: {
         senderId_receiverId: {
-          senderId: senderId,
-          receiverId: receiver.id,
+          senderId: receiver.id,
+          receiverId: senderId,
         },
       },
     });
 
-    console.debug(`Friend request with Sender ID ${senderId} removed`);
+    console.debug(`Friend request with Sender ID ${senderId} deleted`);
+
+    // Fetch the sender's details
+    const sender = await prisma.user.findUnique({
+      where: { id: senderId },
+    });
+
+    if (!sender) {
+      console.error('Sender user not found');
+      return NextResponse.json({ error: 'Sender user not found' }, { status: 404 });
+    }
+
+    // Create a notification for the sender, notifying them that their friend request was deleted
+    await prisma.notification.create({
+      data: {
+        content: `${receiver.name} has deleted your friend request. You can resend it if you wish.`,
+        userId: senderId, // Send the notification to the sender
+      },
+    });
+
+    console.debug(`Notification sent to Sender ID ${senderId}: "${receiver.name} has deleted your friend request. You can resend it if you wish."`);
+
     return NextResponse.json({ success: true });
 
   } catch (error) {
-    console.error('Error removing friend request:', error);
-    return NextResponse.json({ error: 'Failed to remove friend request', details: (error as any).message }, { status: 500 });
+    console.error('Error deleting friend request:', error);
+    return NextResponse.json({ error: 'Failed to delete friend request', details: (error as any).message }, { status: 500 });
   }
 }

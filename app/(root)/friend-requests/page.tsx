@@ -267,9 +267,9 @@ const ProfilesPage = () => {
                       <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                         <FaMoneyBillWave className="mr-2 text-green-600 dark:text-green-400" />
                         <span className="font-semibold">Funding Goal:</span>
-                        <span className="ml-2">
-                          {item.fundingGoal !== undefined 
-                            ? `R${new Intl.NumberFormat('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(item.fundingGoal)}`
+                        <span className="text-green-700 text-bold dark:text-green-800">
+                          R{item.entrepreneurProfile.revenue
+                            ? item.entrepreneurProfile.revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
                             : "N/A"}
                         </span>
                       </div>

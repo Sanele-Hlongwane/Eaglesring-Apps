@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaBuilding, FaInfoCircle, FaTag, FaDollarSign } from "react-icons/fa";
+import { FaBuilding, FaInfoCircle, FaTag, FaDollarSign, FaMoneyBillWave } from "react-icons/fa";
 import { useToast } from "@/components/ui/use-toast";
 import EmptyState from "@/components/EmptyState";
+import Loader from "@/components/Loader"; // Import your loading dots component
 
 interface UserProfile {
   id: number;
@@ -31,6 +32,7 @@ interface InvestorProfile {
 
 const AcceptedRequestsPage = () => {
   const [acceptedRequests, setAcceptedRequests] = useState<UserProfile[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // State for loading
   const { toast } = useToast();
 
   const fetchAcceptedRequests = async () => {
@@ -43,12 +45,22 @@ const AcceptedRequestsPage = () => {
         description: "Failed to fetch accepted requests",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false); // Set loading to false after fetching
     }
   };
 
   useEffect(() => {
     fetchAcceptedRequests();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader />
+      </div>
+    );
+  }
 
   if (acceptedRequests.length === 0) {
     return <EmptyState message={"No accepted requests found."} />;
@@ -57,7 +69,7 @@ const AcceptedRequestsPage = () => {
   return (
     <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
       {acceptedRequests.map((request) => {
-        const user = request; // Directly use the fetched request data
+        const user = request;
 
         return (
           <div
@@ -114,9 +126,11 @@ const AcceptedRequestsPage = () => {
                     <div className="mb-4">
                       <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Revenue:</h4>
                       <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaDollarSign className="text-blue-500 mr-2" />
-                        <span className="text-gray-700 dark:text-gray-400">
-                          R{user.entrepreneurProfile.revenue?.toLocaleString() || "N/A"}
+                        <FaMoneyBillWave className="text-blue-500 mr-2" />
+                        <span className="text-green-700 dark:text-green-800">
+                          R{user.entrepreneurProfile.revenue
+                            ? user.entrepreneurProfile.revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                            : "N/A"}
                         </span>
                       </div>
                     </div>
@@ -149,7 +163,7 @@ const AcceptedRequestsPage = () => {
 
                 {user.role === "ENTREPRENEUR" && (
                   <a
-                    href={`/pitches/${user.id}`} // Use user.id to navigate to pitches
+                    href={`/pitches/${user.id}`} 
                     className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700"
                   >
                     View Pitches

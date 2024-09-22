@@ -145,7 +145,7 @@ export default function Notifications() {
                 {filteredNotifications.map((notification) => (
                   <li
                     key={notification.id}
-                    className="bg-gray-400 dark:bg-gray-600 rounded-lg shadow-md p-4 transition-transform transform hover:scale-105 border-l-4 border-indigo-500"
+                    className="bg-gray-400 dark:bg-gray-600 rounded-lg shadow-md p-4 border-l-4 border-indigo-500"
                   >
                     <p className="text-lg font-semibold text-gray-900 dark:text-gray-200">
                       {notification.content}

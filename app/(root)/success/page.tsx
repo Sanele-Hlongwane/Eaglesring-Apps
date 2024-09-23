@@ -6,9 +6,8 @@ const Success = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect after 3 seconds or handle any post-subscription logic
     const timer = setTimeout(() => {
-      router.push("/pricing");
+      router.push("/");
     }, 3000);
 
     return () => clearTimeout(timer);

@@ -541,9 +541,11 @@ export default function PitchesPage() {
     srcLang="en" // Adjust the language code as necessary
     label="English" // Label for the track
     default // Optional: set as default if you want it to show by default
+    src="" // Placeholder to satisfy the requirement
   />
   Your browser does not support the video tag.
 </video>
+
 
 
   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-30 pointer-events-none"></div>
@@ -624,23 +626,25 @@ export default function PitchesPage() {
       accept="video/*"
     />
     {videoFile && (
-     <video
-     controls
-     className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-     style={{ maxHeight: "500px" }}
-   >
-     <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
-   
-     {/* Add the track element for captions or subtitles */}
-     <track
-       kind="subtitles" // or "captions" depending on your use case
-       srcLang="en" // Adjust the language code as necessary
-       label="English" // Label for the track
-       default // Optional: set as default if you want it to show by default
-     />
-   
-     Your browser does not support the video tag.
-   </video>
+    <video
+  controls
+  className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+  style={{ maxHeight: "500px" }}
+>
+  <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
+  
+  {/* Add the track element for captions or subtitles */}
+  <track
+    kind="subtitles" // or "captions" depending on your use case
+    src="" // Placeholder to satisfy the requirement
+    srcLang="en" // Adjust the language code as necessary
+    label="English" // Label for the track
+    default // Optional: set as default if you want it to show by default
+  />
+  
+  Your browser does not support the video tag.
+</video>
+
    
     
     )}

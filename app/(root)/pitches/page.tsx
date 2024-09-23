@@ -319,58 +319,64 @@ export default function PitchesPage() {
 
     {/* Read-Only Video Section */}
     <div>
-      <label className="block text-gray-700 dark:text-gray-200">Video (view only)</label>
-      {pitch.videoUrl ? (
-        <div className="mt-2">
-          <video
-            src={pitch.videoUrl}
-            controls
-            className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-            style={{ maxHeight: "500px" }}
-          >
-            <track kind="captions" srcLang="en" />
-          </video>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
-            You cannot edit the video. To change it, delete the pitch and create a new one.
-          </p>
-        </div>
-      ) : (
-        <p className="text-gray-500 dark:text-gray-400">No video available.</p>
-      )}
+  <label className="block text-gray-700 dark:text-gray-200" htmlFor="video">
+    Video (view only)
+  </label>
+  {pitch.videoUrl ? (
+    <div className="mt-2">
+      <video
+        id="video" // Add an id to associate with the label
+        src={pitch.videoUrl}
+        controls
+        className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+        style={{ maxHeight: "500px" }}
+      >
+        <track kind="captions" srcLang="en" />
+      </video>
+      <p className="text-gray-500 dark:text-gray-400 mt-2">
+        You cannot edit the video. To change it, delete the pitch and create a new one.
+      </p>
     </div>
+  ) : (
+    <p className="text-gray-500 dark:text-gray-400">No video available.</p>
+  )}
+</div>
+
 
     {/* Read-Only Attachments Section */}
     <div>
-      <label className="block text-gray-700 dark:text-gray-200">Attachments (view only)</label>
-      {pitch.attachments && pitch.attachments.length > 0 ? (
-        <div className="mt-2">
-          <ul className="space-y-3">
-            {pitch.attachments.map((attachment, index) => (
-              <li key={index} className="flex items-center space-x-2">
-                <FaDownload className="text-blue-600" />
-                <a
-                  href={attachment}
-                  download
-                  className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium transition-colors duration-300"
-                  aria-label={`Download ${attachment.split("/").pop()}`}
-                >
-                  {attachment.split("/").pop()}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
-            You cannot edit the attachments. To change them, delete the pitch and create a new one.
-          </p>
-        </div>
-      ) : (
-        <p className="text-gray-500 dark:text-gray-400">No attachments available.</p>
-      )}
+  <input type="hidden" id="attachments" />
+  <label htmlFor="attachments" className="block text-gray-700 dark:text-gray-200">
+    Attachments (view only)
+  </label>
+  {pitch.attachments && pitch.attachments.length > 0 ? (
+    <div className="mt-2">
+      <ul className="space-y-3">
+        {pitch.attachments.map((attachment, index) => (
+          <li key={index} className="flex items-center space-x-2">
+            <FaDownload className="text-blue-600" />
+            <a
+              href={attachment}
+              download
+              className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium transition-colors duration-300"
+              aria-label={`Download ${attachment.split("/").pop()}`}
+            >
+              {attachment.split("/").pop()}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p className="text-gray-500 dark:text-gray-400 mt-2">
+        You cannot edit the attachments. To change them, delete the pitch and create a new one.
+      </p>
     </div>
-  </div>
+  ) : (
+    <p className="text-gray-500 dark:text-gray-400">No attachments available.</p>
+  )}
+</div>
+
 
   {/* Save/Cancel Buttons */}
-  <div>
     <button
       type="submit"
       disabled={loading}
@@ -531,14 +537,14 @@ export default function PitchesPage() {
   autoPlay={false}
 >
   <track
-    kind="subtitles" // Use "captions" for captions if needed
-    src="/path-to-your-subtitles.vtt" // Update this path to your WebVTT file
+    kind="subtitles" // Use "captions" if you want it for captions
     srcLang="en" // Adjust the language code as necessary
     label="English" // Label for the track
     default // Optional: set as default if you want it to show by default
   />
   Your browser does not support the video tag.
 </video>
+
 
   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-30 pointer-events-none"></div>
 </div>
@@ -618,24 +624,24 @@ export default function PitchesPage() {
       accept="video/*"
     />
     {videoFile && (
-      <video
-      controls
-      className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-      style={{ maxHeight: "500px" }}
-    >
-      <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
-      
-      {/* Add the track element for captions or subtitles */}
-      <track
-        kind="subtitles" // or "captions" depending on your use case
-        src="/path-to-your-subtitles.vtt" // Update this path to your WebVTT file
-        srcLang="en" // Adjust the language code as necessary
-        label="English" // Label for the track
-        default // Optional: set as default if you want it to show by default
-      />
-      
-      Your browser does not support the video tag.
-    </video>
+     <video
+     controls
+     className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+     style={{ maxHeight: "500px" }}
+   >
+     <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
+   
+     {/* Add the track element for captions or subtitles */}
+     <track
+       kind="subtitles" // or "captions" depending on your use case
+       srcLang="en" // Adjust the language code as necessary
+       label="English" // Label for the track
+       default // Optional: set as default if you want it to show by default
+     />
+   
+     Your browser does not support the video tag.
+   </video>
+   
     
     )}
   </div>

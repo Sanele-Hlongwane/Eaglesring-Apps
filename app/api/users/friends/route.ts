@@ -15,13 +15,13 @@ export async function GET(req: NextRequest) {
   }
 
   try {
-    // Convert user.id to an integer
-    const userId = parseInt(user.id, 10);
+    // Use user.id directly as it should be a string
+    const clerkId = user.id;
 
     const friends = await prisma.user.findMany({
       where: {
         NOT: {
-          id: userId,
+          clerkId: clerkId,
         },
       },
       select: {
@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(friends);
   } catch (error) {
+    console.error('Error fetching friends:', error); // Added logging for debugging
     return NextResponse.json(
       { error: "Failed to fetch friends" },
       { status: 500 }

@@ -1,18 +1,18 @@
-import { NextResponse } from "next/server";  // Fix single to double quotes
-import Stripe from "stripe";  // Fix single to double quotes
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",  // Fix single to double quotes
+  apiVersion: "2024-06-20",
 });
 
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
-    const email = url.searchParams.get("email");  // Fix single to double quotes
+    const email = url.searchParams.get("email");
 
     if (!email) {
       return NextResponse.json(
-        { message: "Email is required" },  // Fix single to double quotes
+        { message: "Email is required" },
         { status: 400 }
       );
     }
@@ -25,24 +25,27 @@ export async function GET(request: Request) {
 
     const customer = customers.data[0];
     if (!customer) {
-      return NextResponse.json({ message: "Customer not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Customer not found" },
+        { status: 404 }
+      );
     }
 
     // Retrieve subscriptions
     const subscriptions = await stripe.subscriptions.list({
       customer: customer.id,
-      status: "all",  // Fix single to double quotes
+      status: "all",
     });
 
     // Find the active subscription
     const activeSubscription = subscriptions.data.find(
-      (sub) => sub.status === "active"  // Fix single to double quotes
+      (sub) => sub.status === "active"
     );
 
     // Retrieve payment methods
     const paymentMethods = await stripe.paymentMethods.list({
       customer: customer.id,
-      type: "card",  // Fix single to double quotes
+      type: "card",
     });
 
     // Map payment methods to include last 4 digits and expiration date
@@ -62,7 +65,7 @@ export async function GET(request: Request) {
       paymentMethods: paymentMethodsWithDetails,
     });
   } catch (err) {
-    console.error("Error fetching subscription:", err);  // Fix single to double quotes
+    console.error("Error fetching subscription:", err);
     return NextResponse.json({ message: (err as Error).message }, { status: 500 });
   }
 }

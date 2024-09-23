@@ -193,14 +193,13 @@ const EntrepreneurPitchesPage = () => {
             className="mt-4 cursor-pointer text-green-600 hover:text-green-700 transition-colors"
           >
             {expandedPitchId === pitch.id ? "▲ Show Less" : "▼ View More"}
-          </div>
+            </div>
 
-          {expandedPitchId === pitch.id && (
-            <div className=" p-4 rounded-xl shadow-md border-t-2 border-gray-900 dark:border-gray-300 mt-4">
-            <p className="text-xs font-semibold text-gray-800 dark:text-gray-300 whitespace-pre-line">
-              {pitch.description}
-            </p>
-
+            {expandedPitchId === pitch.id && (
+              <div className=" p-4 rounded-xl shadow-md border-t-2 border-gray-900 dark:border-gray-300 mt-4">
+              <p className="text-xs font-semibold text-gray-800 dark:text-gray-300 whitespace-pre-line">
+                {pitch.description}
+              </p>
 
               {pitch.videoUrl && (
                 <div className="mt-4 ">

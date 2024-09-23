@@ -1,78 +1,199 @@
-import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import { currentUser } from "@clerk/nextjs/server";
+generator client {
+  provider = "prisma-client-js"
+}
 
-const prisma = new PrismaClient();
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
-export async function GET(request: Request) {
-  const user = await currentUser();
+enum Role {
+  ENTREPRENEUR
+  INVESTOR
+}
 
-  if (!user) {
-    console.error("No user found. Please log in.");
-    return NextResponse.json(
-      { error: "User not found. Please log in." },
-      { status: 401 },
-    );
-  }
+model User {
+  id                    Int                   @id @default(autoincrement())
+  clerkId               String                @unique
+  email                 String                @unique
+  name                  String?
+  imageUrl              String?
+  role                  Role
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  messagesSent          Message[]             @relation("MessageSender")
+  messagesReceived      Message[]             @relation("MessageReceiver")
+  investments           Investment[]
+  entrepreneurProfile   EntrepreneurProfile?
+  investorProfile       InvestorProfile?
+  pitches               Pitch[]
+  feedbacks             Feedback[]
+  interests             Interest[]
+  sentFriendRequests    FriendRequest[]       @relation("SentFriendRequests")
+  receivedFriendRequests FriendRequest[]      @relation("ReceivedFriendRequests")
+  notifications         Notification[]        @relation("UserNotifications")
+  Notification          Notification[]
+}
 
-  try {
-    console.log(`Current User Clerk ID: ${user.id}`);
+model Notification {
+  id             Int        @id @default(autoincrement())
+  content        String
+  userId         Int        // Foreign key to the User model
+  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade) // Relation to User
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  User           User[]     @relation("UserNotifications")
+}
 
-    // Use Clerk ID to find the corresponding User in the database
-    const dbUser = await prisma.user.findUnique({
-      where: {
-        clerkId: user.id, // Map Clerk ID to your database User
-      },
-    });
+model Message {
+  id                   Int                   @id @default(autoincrement())
+  content              String
+  senderId             Int
+  receiverId           Int
+  sender               User                  @relation("MessageSender", fields: [senderId], references: [id])
+  receiver             User                  @relation("MessageReceiver", fields: [receiverId], references: [id])
+  status               MessageStatus         @default(SENT) 
+  sentAt               DateTime              @default(now())
+  receivedAt           DateTime?
+  readAt               DateTime?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+}
 
-    if (!dbUser) {
-      console.error("No corresponding database user found.");
-      return NextResponse.json(
-        { error: "Database user not found." },
-        { status: 404 },
-      );
-    }
+enum MessageStatus {
+  SENT
+  RECEIVED
+  READ
+}
 
-    const userId = dbUser.id; // Use the numeric user ID from your database
-    console.log(`User ID for Query: ${userId}`);
+enum Stage {
+  IDEA
+  VALIDATION
+  MVP
+  GROWTH
+  SCALING
+  EXIT
+}
 
-    // Fetch all friend requests where the current user is either the sender or the receiver
-    const friendRequests = await prisma.friendRequest.findMany({
-      where: {
-        OR: [{ senderId: userId }, { receiverId: userId }],
-      },
-    });
+model Pitch {
+  id                   Int                   @id @default(autoincrement())
+  title                String
+  description          String
+  entrepreneurId       Int
+  entrepreneur         EntrepreneurProfile   @relation(fields: [entrepreneurId], references: [id])
+  feedbacks            Feedback[]
+  interests            Interest[]
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  fundingGoal          Float?
+  attachments          String[]
+  videoUrl             String?
 
-    // Extract the user IDs of users for whom friend requests have been sent or received
-    const excludedUserIds = friendRequests.flatMap((request) =>
-      [request.senderId, request.receiverId].filter((id) => id !== userId),
-    );
+  User User[]
+}
 
-    console.log(
-      "Users with sent or received friend requests:",
-      excludedUserIds,
-    );
+model EntrepreneurProfile {
+  id                    Int                   @id @default(autoincrement())
+  userId                Int                   @unique
+  user                  User                  @relation(fields: [userId], references: [id])
+  bio                   String?
+  company               String?
+  businessStage         String?
+  fundingHistory        String?
+  linkedinUrl           String?
+  imageUrl              String?               // Field for storing image URL
+  pitches               Pitch[]               // Pitches submitted by the entrepreneur
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  investments           Investment[]
+  revenue               Float?                // Added revenue field
+  investmentOpportunities InvestmentOpportunity[] // Added field for investment opportunities
+}
 
-    // Fetch all users except the current user and exclude users with existing friend requests
-    const users = await prisma.user.findMany({
-      where: {
-        id: {
-          not: userId, // Exclude the current user's ID
-          notIn: excludedUserIds, // Exclude users with existing friend requests
-        },
-      },
-      include: {
-        entrepreneurProfile: true,
-        investorProfile: true,
-      },
-    });
+model FriendRequest {
+  id                   Int                   @id @default(autoincrement())
+  senderId             Int
+  receiverId           Int
+  sender               User                  @relation("SentFriendRequests", fields: [senderId], references: [id])
+  receiver             User                  @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
+  status               FriendRequestStatus   @default(PENDING)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
 
-    return NextResponse.json(users);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch users" },
-      { status: 500 },
-    );
-  }
+  @@unique([senderId, receiverId]) 
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model InvestmentOpportunity {
+  id                   Int                   @id @default(autoincrement())
+  title                String
+  description          String?
+  amount               Float?
+  entrepreneurProfileId Int
+  entrepreneurProfile  EntrepreneurProfile   @relation(fields: [entrepreneurProfileId], references: [id])
+  investments          Investment[]          @relation("InvestmentOpportunityInvestments")
+
+  Investment Investment[]
+}
+
+model InvestorProfile {
+  id                    Int                   @id @default(autoincrement())
+  userId                Int                   @unique
+  user                  User                  @relation(fields: [userId], references: [id])
+  investmentStrategy    String?
+  linkedinUrl           String?
+  investments           Investment[]          // Investments made by the investor
+  feedbacks             Feedback[]            // Feedback given by the investor
+  createdAt             DateTime              @default(now())
+  updatedAt             DateTime              @updatedAt
+  preferredIndustries   String[]              // New field for preferred industries
+  riskTolerance         String?               // New field for risk tolerance (e.g., low, medium, high)
+  investmentAmountRange Float[]               // New field for acceptable investment amount range
+}
+
+
+model Investment {
+  id                   Int                   @id @default(autoincrement())
+  amount               Float
+  date                 DateTime              @default(now())
+  title                String 
+  investorProfileId    Int
+  entrepreneurProfileId Int
+  investorProfile      InvestorProfile       @relation(fields: [investorProfileId], references: [id])
+  entrepreneurProfile  EntrepreneurProfile   @relation(fields: [entrepreneurProfileId], references: [id])
+  investmentOpportunityId Int
+  investmentOpportunity InvestmentOpportunity @relation(fields: [investmentOpportunityId], references: [id])
+
+  User User[]
+
+  InvestmentOpportunity InvestmentOpportunity[] @relation("InvestmentOpportunityInvestments")
+}
+
+
+model Feedback {
+  id                   Int                   @id @default(autoincrement())
+  content              String
+  investorId           Int
+  pitchId              Int
+  investor             InvestorProfile       @relation(fields: [investorId], references: [id])
+  pitch                Pitch                 @relation(fields: [pitchId], references: [id])
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  User User[]
+}
+
+model Interest {
+  id                   Int                   @id @default(autoincrement())
+  userId               Int
+  pitchId              Int
+  user                 User                  @relation(fields: [userId], references: [id])
+  pitch                Pitch                 @relation(fields: [pitchId], references: [id])
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
 }

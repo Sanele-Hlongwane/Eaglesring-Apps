@@ -246,167 +246,148 @@ export default function PitchesPage() {
                         <div className="p-6 rounded-lg w-full">
                           <h3 className="text-3xl font-bold mb-6">Edit Pitch</h3>
                           <form
-                            onSubmit={(e) => {
-                              e.preventDefault();
-                              handleUpdate(pitch.id);
-                            }}
-                            className="space-y-6"
-                          >
-                            <div className="relative">
-                              <button
-                                onClick={() => setIsEditing(false)}
-                                className="absolute top-[-90px] right-[-30px] text-red-500 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
-                              >
-                                <FaTimes size={24} />
-                              </button>
-                            <div className="flex flex-col md:flex-row md:space-x-6">
-                              <div className="w-full">
-                              <label htmlFor="title" className="block text-gray-700 dark:text-gray-200">
-                                Title
-                              </label>
-                              <input
-                                id="title"
-                                type="text"
-                                className="mt-1 p-2 border rounded"
-                              />
-                                <input
-                                  type="text"
-                                  value={selectedPitch?.title || ""}
-                                  onChange={(e) =>
-                                    setSelectedPitch({
-                                      ...selectedPitch,
-                                      title: e.target.value,
-                                    })
-                                  }
-                                  className="border p-2 rounded w-full bg-gray-100 dark:bg-gray-700"
-                                  required
-                                />
-                              </div>
-                              <div className="w-full">
-                                <div className="mt-4">
-                                <label htmlFor="fundingGoal" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">
-  Funding Goal (in ZAR)
-</label>
-<input
-  id="fundingGoal"
-  type="number" // or "text" depending on your use case
-  className="mt-1 p-2 border rounded"
-/>
-<input
-                                    type="number"
-                                    value={selectedPitch?.fundingGoal || ""}
-                                    onChange={(e) =>
-                                      setSelectedPitch({
-                                        ...selectedPitch,
-                                        fundingGoal: parseFloat(e.target.value),
-                                      })
-                                    }
-                                    placeholder="Enter funding goal"
-                                    className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
-                                    required
-                                  />
-                                </div>
-                              </div>
-                            </div>
-
-                            <div>
-                              <label className="block text-gray-700 dark:text-gray-200">
-                                Description
-                              </label>
-                              <textarea
-                                id="pitchDescription" // Add this line
-                                value={selectedPitch?.description || ""}
-                                onChange={(e) =>
-                                  setSelectedPitch({
-                                    ...selectedPitch,
-                                    description: e.target.value,
-                                  })
-                                }
-                                className="border p-2 rounded w-full bg-gray-100 dark:bg-gray-700"
-                                required
-                              />
-                            </div>
-
-                            {/* Read-Only Video Section */}
-                            <div>
-                            <label className="block text-gray-700 dark:text-gray-200">
-  Video (view only)
-</label>
-{pitch.videoUrl ? (
-  <div className="mt-2">
-    <video
-      src={pitch.videoUrl}
-      controls
-      className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-      style={{ maxHeight: "500px" }}
+  onSubmit={(e) => {
+    e.preventDefault();
+    handleUpdate(pitch.id);
+  }}
+  className="space-y-6"
+>
+  <div className="relative">
+    <button
+      onClick={() => setIsEditing(false)}
+      className="absolute top-[-90px] right-[-30px] text-red-500 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
     >
-      <track kind="captions" srcLang="en" />
-    </video>
-    <p className="text-gray-500 dark:text-gray-400 mt-2">
-      You cannot edit the video. To change it, delete the pitch and create a new one.
-    </p>
-  </div>
-) : (
-  <p className="text-gray-500 dark:text-gray-400">
-    No video available.
-  </p>
-)}
+      <FaTimes size={24} />
+    </button>
+    <div className="flex flex-col md:flex-row md:space-x-6">
+      <div className="w-full">
+        <label htmlFor="title" className="block text-gray-700 dark:text-gray-200">
+          Title
+        </label>
+        <input
+          id="title"
+          type="text"
+          value={selectedPitch?.title || ""}
+          onChange={(e) =>
+            setSelectedPitch({
+              ...selectedPitch,
+              title: e.target.value,
+            })
+          }
+          className="mt-1 p-2 border rounded w-full bg-gray-100 dark:bg-gray-700"
+          required
+        />
+      </div>
+      <div className="w-full">
+        <label htmlFor="fundingGoal" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">
+          Funding Goal (in ZAR)
+        </label>
+        <input
+          id="fundingGoal"
+          type="number"
+          value={selectedPitch?.fundingGoal || ""}
+          onChange={(e) =>
+            setSelectedPitch({
+              ...selectedPitch,
+              fundingGoal: parseFloat(e.target.value),
+            })
+          }
+          placeholder="Enter funding goal"
+          className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
+          required
+        />
+      </div>
+    </div>
 
-                            </div>
+    <div>
+      <label htmlFor="pitchDescription" className="block text-gray-700 dark:text-gray-200">
+        Description
+      </label>
+      <textarea
+        id="pitchDescription"
+        value={selectedPitch?.description || ""}
+        onChange={(e) =>
+          setSelectedPitch({
+            ...selectedPitch,
+            description: e.target.value,
+          })
+        }
+        className="border p-2 rounded w-full bg-gray-100 dark:bg-gray-700"
+        required
+      />
+    </div>
 
-                            {/* Read-Only Attachments Section */}
-                            <div>
-                              <label className="block text-gray-700 dark:text-gray-200">
-                                Attachments (view only)
-                              </label>
-                              {pitch.attachments && pitch.attachments.length > 0 ? (
-  <div className="mt-2">
-    <ul role="list" className="space-y-3">
-      {pitch.attachments.map((attachment, index) => (
-        <li key={index} className="flex items-center space-x-2">
-          <FaDownload className="text-blue-600" />
-          <a
-            href={attachment}
-            download
-            className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium transition-colors duration-300"
-            aria-label={`Download ${attachment.split("/").pop()}`}
+    {/* Read-Only Video Section */}
+    <div>
+      <label className="block text-gray-700 dark:text-gray-200">Video (view only)</label>
+      {pitch.videoUrl ? (
+        <div className="mt-2">
+          <video
+            src={pitch.videoUrl}
+            controls
+            className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+            style={{ maxHeight: "500px" }}
           >
-            {attachment.split("/").pop()}
-          </a>
-        </li>
-      ))}
-    </ul>
-    <p className="text-gray-500 dark:text-gray-400 mt-2">
-      You cannot edit the attachments. To change them, delete the pitch and create a new one.
-    </p>
+            <track kind="captions" srcLang="en" />
+          </video>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
+            You cannot edit the video. To change it, delete the pitch and create a new one.
+          </p>
+        </div>
+      ) : (
+        <p className="text-gray-500 dark:text-gray-400">No video available.</p>
+      )}
+    </div>
+
+    {/* Read-Only Attachments Section */}
+    <div>
+      <label className="block text-gray-700 dark:text-gray-200">Attachments (view only)</label>
+      {pitch.attachments && pitch.attachments.length > 0 ? (
+        <div className="mt-2">
+          <ul className="space-y-3">
+            {pitch.attachments.map((attachment, index) => (
+              <li key={index} className="flex items-center space-x-2">
+                <FaDownload className="text-blue-600" />
+                <a
+                  href={attachment}
+                  download
+                  className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium transition-colors duration-300"
+                  aria-label={`Download ${attachment.split("/").pop()}`}
+                >
+                  {attachment.split("/").pop()}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
+            You cannot edit the attachments. To change them, delete the pitch and create a new one.
+          </p>
+        </div>
+      ) : (
+        <p className="text-gray-500 dark:text-gray-400">No attachments available.</p>
+      )}
+    </div>
   </div>
-) : (
-  <p className="text-gray-500 dark:text-gray-400">
-    No attachments available.
-  </p>
-)}
 
-                            </div>
-                            </div>
+  {/* Save/Cancel Buttons */}
+  <div>
+    <button
+      type="submit"
+      disabled={loading}
+      className={`bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors ${loading ? "cursor-not-allowed" : ""}`}
+    >
+      {loading ? <LoadingDots /> : "Save"}
+    </button>
+    <button
+      type="button"
+      onClick={() => setIsEditing(false)}
+      className="bg-gray-500 text-white px-4 py-2 rounded ml-4 hover:bg-gray-600 transition-colors"
+    >
+      Cancel
+    </button>
+  </div>
+</form>
 
-                            {/* Save/Cancel Buttons */}
-                            <div>
-                              <button
-                                type="submit"
-                                disabled={loading}
-                                className={`bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors ${loading ? "cursor-not-allowed" : ""}`}
-                              >
-                              {loading ? <LoadingDots /> : "Save"}
-                             </button>
-                              <button
-                                type="button"
-                                onClick={() => setIsEditing(false)}
-                                className="bg-gray-500 text-white px-4 py-2 rounded ml-4 hover:bg-gray-600 transition-colors"
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </form>
                         </div>
                       ) : (
                         <>
@@ -542,22 +523,23 @@ export default function PitchesPage() {
                   <section className="py-16 px-4 sm:px-8 lg:px-16 xl:px-24">
                     <div className="max-w-6xl mx-auto text-center">
                     <div className="relative shadow-2xl rounded-lg overflow-hidden">
-  <video
-    src="/pitch.mp4"
-    className="w-full h-auto rounded-lg"
-    controls
-    preload="auto"
-    autoPlay={false}
-  >
-    <track
-      kind="subtitles" // You can use "captions" if you want it to be used for captions
-      src="/path-to-your-subtitles.vtt" // Add the path to your WebVTT file for subtitles
-      srcLang="en" // Change to the appropriate language code
-      label="English" // Change to the appropriate label
-      default // Optional: set as default if you want it to show by default
-    />
-    Your browser does not support the video tag.
-  </video>
+                    <video
+  src="/pitch.mp4"
+  className="w-full h-auto rounded-lg"
+  controls
+  preload="auto"
+  autoPlay={false}
+>
+  <track
+    kind="subtitles" // Use "captions" for captions if needed
+    src="/path-to-your-subtitles.vtt" // Update this path to your WebVTT file
+    srcLang="en" // Adjust the language code as necessary
+    label="English" // Label for the track
+    default // Optional: set as default if you want it to show by default
+  />
+  Your browser does not support the video tag.
+</video>
+
   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-30 pointer-events-none"></div>
 </div>
 
@@ -637,13 +619,24 @@ export default function PitchesPage() {
     />
     {videoFile && (
       <video
-        controls
-        className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-        style={{ maxHeight: "500px" }}
-      >
-        <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
-        Your browser does not support the video tag.
-      </video>
+      controls
+      className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+      style={{ maxHeight: "500px" }}
+    >
+      <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
+      
+      {/* Add the track element for captions or subtitles */}
+      <track
+        kind="subtitles" // or "captions" depending on your use case
+        src="/path-to-your-subtitles.vtt" // Update this path to your WebVTT file
+        srcLang="en" // Adjust the language code as necessary
+        label="English" // Label for the track
+        default // Optional: set as default if you want it to show by default
+      />
+      
+      Your browser does not support the video tag.
+    </video>
+    
     )}
   </div>
 

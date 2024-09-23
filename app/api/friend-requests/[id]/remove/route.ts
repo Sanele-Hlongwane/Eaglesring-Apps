@@ -1,16 +1,24 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { currentUser } from '@clerk/nextjs/server';
+import { NextRequest, NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const user = await currentUser();
 
     if (!user) {
-      console.error('User not authenticated');
-      return NextResponse.json({ error: 'User not authenticated' }, { status: 401 });
+      console.error("User not authenticated");
+      return NextResponse.json(
+        {
+          error: "User not authenticated",
+        },
+        { status: 401 }
+      );
     }
 
     const clerkId = user.id;
@@ -21,8 +29,13 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     });
 
     if (!receiver) {
-      console.error('Receiver user not found');
-      return NextResponse.json({ error: 'Receiver user not found' }, { status: 404 });
+      console.error("Receiver user not found");
+      return NextResponse.json(
+        {
+          error: "Receiver user not found",
+        },
+        { status: 404 }
+      );
     }
 
     const senderId = parseInt(params.id, 10); // Ensure senderId is a number
@@ -40,8 +53,13 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     console.debug(`Receiver ID: ${receiver.id}, Sender ID: ${senderId}`);
 
     if (!friendRequest) {
-      console.error('Friend request not found');
-      return NextResponse.json({ error: 'Friend request not found' }, { status: 404 });
+      console.error("Friend request not found");
+      return NextResponse.json(
+        {
+          error: "Friend request not found",
+        },
+        { status: 404 }
+      );
     }
 
     // Delete the friend request
@@ -62,8 +80,13 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     });
 
     if (!sender) {
-      console.error('Sender user not found');
-      return NextResponse.json({ error: 'Sender user not found' }, { status: 404 });
+      console.error("Sender user not found");
+      return NextResponse.json(
+        {
+          error: "Sender user not found",
+        },
+        { status: 404 }
+      );
     }
 
     // Create a notification for the sender, notifying them that their friend request was deleted
@@ -74,12 +97,20 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       },
     });
 
-    console.debug(`Notification sent to Sender ID ${senderId}: "${receiver.name} has deleted your friend request. You can resend it if you wish."`);
+    console.debug(
+      `Notification sent to Sender ID ${senderId}: "${receiver.name} has deleted your friend request. You can resend it if you wish."`
+    );
 
     return NextResponse.json({ success: true });
 
   } catch (error) {
-    console.error('Error deleting friend request:', error);
-    return NextResponse.json({ error: 'Failed to delete friend request', details: (error as any).message }, { status: 500 });
+    console.error("Error deleting friend request:", error);
+    return NextResponse.json(
+      {
+        error: "Failed to delete friend request",
+        details: (error as any).message,
+      },
+      { status: 500 }
+    );
   }
 }

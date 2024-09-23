@@ -10,15 +10,18 @@ export async function GET(req: NextRequest) {
   if (!user) {
     return NextResponse.json(
       { error: "User not found. Please log in." },
-      { status: 401 },
+      { status: 401 }
     );
   }
 
   try {
+    // Convert user.id to an integer
+    const userId = parseInt(user.id, 10);
+
     const friends = await prisma.user.findMany({
       where: {
         NOT: {
-          id: user.id,
+          id: userId,
         },
       },
       select: {
@@ -28,11 +31,12 @@ export async function GET(req: NextRequest) {
         imageUrl: true,
       },
     });
+
     return NextResponse.json(friends);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch friends" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

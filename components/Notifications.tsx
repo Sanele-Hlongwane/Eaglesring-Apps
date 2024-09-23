@@ -99,8 +99,7 @@ export default function Notifications() {
       <div className="absolute inset-0 pointer-events-none opacity-30">
             <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />
             <FaShieldAlt className="text-blue-500 absolute top-1/3 right-10 text-[120px] rotate-6" />
-          </div>
-
+          </div>\
         <div className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div className="relative w-full sm:w-1/2">
@@ -163,7 +162,7 @@ export default function Notifications() {
                 {filteredNotifications.map((notification) => (
                   <li
                     key={notification.id}
-                    className="bg-gray-400 dark:bg-gray-600 rounded-lg shadow-md p-4 border-l-4 border-indigo-500"
+                    className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md p-4 border-l-4 border-indigo-500"
                   >
                     <p className="text-lg font-semibold text-gray-900 dark:text-gray-200">
                       {notification.content}

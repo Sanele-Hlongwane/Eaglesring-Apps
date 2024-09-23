@@ -1,0 +1,278 @@
+[33mcommit 8b39c2c90d9e55e1ec1a149087c3dd8d4a7da2e0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Ngwane-Sanele <masumpangwame@gmail.com>
+Date:   Mon Sep 23 10:31:34 2024 +0000
+
+    Add design file
+
+[33mcommit 2d522e86a5c192b8336fef2d0e8fd71a61e309fc[m
+Author: Ngwane-Sanele <masumpangwame@gmail.com>
+Date:   Mon Sep 23 10:17:43 2024 +0000
+
+    Track Onboarding.mp4 with LFS
+
+[33mcommit 8a64ebb8f0c3338dc536e230fbb11ba421811637[m
+Author: Ngwane-Sanele <masumpangwame@gmail.com>
+Date:   Mon Sep 23 10:15:08 2024 +0000
+
+    Edited bg-colors
+
+[33mcommit 5a8810da9905cc3acc5bcf2798d364ea8ab25829[m
+Author: Ngwane-Sanele <masumpangwame@gmail.com>
+Date:   Mon Sep 23 06:18:09 2024 +0000
+
+    edited style
+
+[33mcommit f228d4e784ecffa00327b28462e7478e708021da[m
+Author: Ngwane-Sanele <masumpangwame@gmail.com>
+Date:   Sun Sep 22 23:32:46 2024 +0000
+
+    Edited landing page
+
+[33mcommit d2665962c005a0ebaa6c69585b48e3613defa0cd[m
+Author: Ngwane-Sanele <masumpangwame@gmail.com>
+Date:   Sun Sep 22 23:08:12 2024 +0000
+
+    Edited more style
+
+[33mcommit cc7cb6e6ad324cdeb8d8208a143eb412226da286[m
+Author: Ngwane-Sanele <masumpangwame@gmail.com>
+Date:   Sun Sep 22 22:24:38 2024 +0000
+
+    Edited some style
+
+[33mcommit 43b2403c8c251b267ce9cf7ca2f7455fef602516[m
+Author: Masumpa-Sanele <sanelehlong93@gmail.com>
+Date:   Sat Sep 21 21:15:27 2024 +0000
+
+    Edited style again
+
+[33mcommit a55c757cfe82ab9f729ee8b79a31522bd6b182de[m
+Author: Masumpa-Sanele <sanelehlong93@gmail.com>
+Date:   Sat Sep 21 19:06:40 2024 +0000
+
+    Edited style
+
+[33mcommit 2217f7395676745beb59769361ec74e659da0d5d[m
+Author: Masumpa-Sanele <sanelehlong93@gmail.com>
+Date:   Sat Sep 21 00:54:39 2024 +0000
+
+    Fixed profile page
+
+[33mcommit 887f9b518dee504031970df8bdd60e6c4d77f4da[m
+Author: Masumpa-Sanele <sanelehlong93@gmail.com>
+Date:   Fri Sep 20 23:34:45 2024 +0000
+
+    Edited entrepreneur dashboard
+
+[33mcommit 6cbc675626ad2103745331956d5481e38fb79f6c[m
+Author: Masumpa-Sanele <sanelehlong93@gmail.com>
+Date:   Fri Sep 20 20:23:04 2024 +0000
+
+    fixed investor page
+
+[33mcommit 4be87ce7dc8f3c741a65557435614e3caaeab26d[m
+Author: Sanele Hlongwane <135650019+Sanele-Hlongwane@users.noreply.github.com>
+Date:   Tue Sep 17 12:36:20 2024 +0000
+
+    Pending changes exported from your codespace
+
+[33mcommit 77ec6045e3ba56a84350fb46820b40e8952ae1a0[m
+Author: Sanele Hlongwane <135650019+Sanele-Hlongwane@users.noreply.github.com>
+Date:   Tue Sep 17 12:36:19 2024 +0000
+
+    Initial commit
+
+[33mcommit 71e0348257f02e3b9b2ca5177acb836f9265a0f7[m
+Author: Sanele Hlongwane <135650019+Sanele-Hlongwane@users.noreply.github.com>
+Date:   Fri Sep 13 00:07:30 2024 +0000
+
+    fixed style
+
+[33mcommit 93235560e233fd9d15b7f6cc4624b858a03a1747[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Thu Sep 12 00:30:19 2024 +0000
+
+    Fixed layout=almost done
+
+[33mcommit db040df0928b109e74884a693a038d7c145a73ea[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 11 20:33:31 2024 +0000
+
+    edited video preview
+
+[33mcommit d06cb8892719a3d14cd96b4df9b85fd787b4c960[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 11 14:53:06 2024 +0000
+
+    video plays and files download
+
+[33mcommit c945ec0132249e1a1655d534a2a3595a00ac9903[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Tue Sep 10 21:09:48 2024 +0000
+
+    edited nav
+
+[33mcommit ac0888b287abce3de8dd783631d1674e4311a5ab[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sun Sep 8 12:30:09 2024 +0000
+
+    fixed route so upload works
+
+[33mcommit 9156c3aab7d131be128571195bbcc2cc4622410b[m
+Author: Sanele Hlongwane <135650019+Sanele-Hlongwane@users.noreply.github.com>
+Date:   Sun Sep 8 00:54:53 2024 +0000
+
+    edited layout and file upload works
+
+[33mcommit 27c1fd73eede175404b8fef7386ad2c1a0c31177[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Fri Sep 6 15:44:00 2024 +0000
+
+    Edited pitches form
+
+[33mcommit c32c5e03a77b10a5983176af9acd6a6f1f6e0327[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Fri Sep 6 12:51:32 2024 +0000
+
+    fixed friend requests style
+
+[33mcommit 10cc9166b9a990c3d3a9664aa33386fbccf47d75[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Fri Sep 6 11:39:34 2024 +0000
+
+    fixed entrepreneurDashboard component
+
+[33mcommit 15ca21861f1715f1147015088a6414bcef35df1a[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Fri Sep 6 11:33:37 2024 +0000
+
+    fixed entrepreneurDashboard component
+
+[33mcommit 2f028a61bf5107702a926ff56a046ed5ef4c93ac[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Fri Sep 6 11:18:47 2024 +0000
+
+    fixed requests tabs
+
+[33mcommit e03453c9d514773aa8e554e197389ff1415124c9[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 4 23:24:57 2024 +0000
+
+    edited friend requests
+
+[33mcommit 5351e2e022d0a80aaf96f12032fa81b247aca951[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 4 23:14:56 2024 +0000
+
+    edited fedbacks component
+
+[33mcommit 06a65e6312e6dba92d3ea01a52826a1ba0f1e2bd[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 4 23:08:43 2024 +0000
+
+    edited friend requests
+
+[33mcommit d5dbc8e867c9edc1aa45ab40346b650fa4f35cad[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 4 23:05:31 2024 +0000
+
+    edited friend requests
+
+[33mcommit 5b18ad906a8f28afde72aebfb1e86579226a5353[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 4 23:01:18 2024 +0000
+
+    edited friend requests
+
+[33mcommit 73b0fbb22a78b9aa6929a9128eeb41460c504180[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 4 22:55:24 2024 +0000
+
+    edited friend requests
+
+[33mcommit 5177ca1f812fe0cbec04a2506aff14238642be0b[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Wed Sep 4 15:26:16 2024 +0000
+
+    testing
+
+[33mcommit 4175ae80cb116408a211d113d83ff37f1e8f2ec7[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sun Sep 1 10:04:45 2024 +0000
+
+    plans.ts
+
+[33mcommit 9a83e1e7429a26a482d295e95d48c3401f3af9db[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sun Sep 1 10:00:38 2024 +0000
+
+    edit privacy page
+
+[33mcommit ce3968478a32bab88f753202dd64a47f14bcaf70[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sun Sep 1 09:51:58 2024 +0000
+
+    added pitch graph
+
+[33mcommit e9f7f930f18f4e1835f62f6208fa38e7f28a5b6c[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 09:38:05 2024 +0200
+
+    Update current-plan.tsx
+
+[33mcommit 51ec8b4d2f23fa8386e4dddd376d4b39771b5e7f[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 09:32:19 2024 +0200
+
+    Update current-plan.tsx
+
+[33mcommit c9fc5ddaac373d2101fb913dc25ec1d0abc9370b[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 09:16:55 2024 +0200
+
+    Update plans.ts
+
+[33mcommit e3d03a9ad6e7fca3c0aba9f66886584d3225b511[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 09:13:42 2024 +0200
+
+    Update plans.ts
+
+[33mcommit 1f68b3cdbf0fedb1c3956a89b5abaa40d2ce4d15[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 09:11:02 2024 +0200
+
+    Update current-plan.tsx
+
+[33mcommit 36f14ca6a5a8695e1e25ae2df83e8b9cd46df0c1[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 09:07:57 2024 +0200
+
+    Update current-plan.tsx
+
+[33mcommit 4b06cf963eb9fd075926a4c736643d242ddd34a8[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 09:04:00 2024 +0200
+
+    Update current-plan.tsx
+
+[33mcommit 2b9e6fdd6eac48d06db83c4ecd07eed5f4f81278[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 08:51:20 2024 +0200
+
+    Update current-plan.tsx
+
+[33mcommit 6389c3a92fb7ff55118b838a2f8c74c9a66679a4[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 08:48:23 2024 +0200
+
+    Update page.tsx
+
+[33mcommit 79422d034f01033528b462257fc99aa0cee73d46[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com>
+Date:   Sat Aug 31 08:45:53 2024 +0200
+
+    Update page.tsx
+
+[33mcommit 3150683cbcbe007302e9409e0c89b06144631aec[m
+Author: Sanele-Masumpa <masumpasanele5@gmail.com

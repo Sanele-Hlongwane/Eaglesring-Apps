@@ -20,6 +20,17 @@ import {
   FaTag,
   FaInfoCircle,
   FaMoneyBillWave,
+  FaLightbulb,
+  FaShieldAlt,
+  FaComments,
+  FaUserTie,
+  FaChartLine,
+  FaRegGem,
+  FaHandsHelping,
+  FaGlobe,
+  FaRocket,
+  FaAward,
+  FaMedal,
 } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import EmptyState from "@/components/EmptyState";
@@ -210,7 +221,20 @@ const ProfilesPage = () => {
     }
 
     return (
-      <div className="w-full m-0 space-y-6 text-xs">
+      <div className="relative min-h-screen ">
+      <div className="absolute inset-0 pointer-events-none opacity-20">
+        <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />
+        <FaShieldAlt className="text-blue-500 absolute top-1/3 right-10 text-[120px] rotate-6" />
+        <FaComments className="text-green-500 absolute bottom-16 left-1/4 text-[80px] -rotate-12" />
+        <FaUserTie className="text-red-500 absolute top-1/4 left-10 text-[90px] rotate-45" />
+        <FaChartLine className="text-purple-500 absolute bottom-20 right-1/3 text-[110px] -rotate-6" />
+        <FaRegGem className="text-pink-500 absolute bottom-1/4 left-2/3 text-[100px] rotate-12" />
+        <FaHandsHelping className="text-yellow-400 absolute top-20 right-5 text-[90px] rotate-12" />
+        <FaGlobe className="text-blue-400 absolute bottom-28 right-14 text-[100px] rotate-12" />
+        <FaRocket className="text-red-400 absolute top-1/3 left-14 text-[80px] rotate-45" />
+        <FaAward className="text-orange-500 absolute bottom-10 left-32 text-[120px] rotate-6" />
+        <FaMedal className="text-green-400 absolute top-10 right-32 text-[110px] -rotate-12" />
+      </div>
         <div className="grid gap-1 grid-cols-1 xm-grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
           {dataToDisplay.map((item: any) => (
             <div

@@ -335,6 +335,7 @@ export default function PitchesPage() {
                                   </p>
                                 </div>
                               ) : (
+                                
                                 <p className="text-gray-500 dark:text-gray-400">
                                   No video available.
                                 </p>
@@ -503,13 +504,29 @@ export default function PitchesPage() {
                   </li>
                 ))
               ) : (
-                <EmptyState message="No pitches available try creating it or contact us if you having trouble."/>
+                <div>
+                  <p className="text-red-600 bold dark:text-red-500">No pitches found</p>
+                  <section className="py-16 px-4 sm:px-8 lg:px-16 xl:px-24">
+                    <div className="max-w-6xl mx-auto text-center">
+                      <div className="relative shadow-2xl rounded-lg overflow-hidden">
+                        <video
+                          src="/pitch.mp4"
+                          className="w-full h-auto rounded-lg"
+                          controls
+                          preload="auto"
+                          autoPlay={false} 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-30 pointer-events-none"></div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
               )}
             </ul>
           </div>
         )}
         {activeTab === "add" && (
-          <div className="mt-8">
+          <div className="elative min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white">
             <h3 className="text-3xl font-bold mb-6">Create New Pitch</h3>
             <form
               onSubmit={(e) => {
@@ -519,7 +536,7 @@ export default function PitchesPage() {
               className="space-y-6"
             >
               <div>
-                <label className="block text-gray-700 dark:text-gray-200">Title</label>
+                <label className="relative z-10 block text-gray-700 dark:text-gray-200">Title</label>
                 <input
                   type="text"
                   value={newPitch.title}

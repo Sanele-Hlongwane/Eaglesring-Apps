@@ -95,7 +95,7 @@ const EntrepreneurPitchesPage = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-100 dark:bg-gray-700 space-y-8">
+    <div className="p-8  space-y-8">
       {commonDetails && (
         <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-300 dark:border-gray-700 rounded-2xl p-10  transition-transform duration-300 transform ">
           {commonDetails.imageUrl && (
@@ -196,7 +196,7 @@ const EntrepreneurPitchesPage = () => {
           </div>
 
           {expandedPitchId === pitch.id && (
-            <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-xl shadow-md border-t-2 border-gray-900 dark:border-gray-300 mt-4">
+            <div className=" p-4 rounded-xl shadow-md border-t-2 border-gray-900 dark:border-gray-300 mt-4">
             <p className="text-xs font-semibold text-gray-800 dark:text-gray-300 whitespace-pre-line">
               {pitch.description}
             </p>

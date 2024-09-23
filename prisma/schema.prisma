@@ -151,7 +151,11 @@ model InvestorProfile {
   feedbacks             Feedback[]            // Feedback given by the investor
   createdAt             DateTime              @default(now())
   updatedAt             DateTime              @updatedAt
+  preferredIndustries   String[]              // New field for preferred industries
+  riskTolerance         String?               // New field for risk tolerance (e.g., low, medium, high)
+  investmentAmountRange Float[]               // New field for acceptable investment amount range
 }
+
 
 model Investment {
   id                   Int                   @id @default(autoincrement())

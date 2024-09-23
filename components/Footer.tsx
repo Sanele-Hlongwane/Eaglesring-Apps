@@ -1,4 +1,5 @@
 "use client";
+
 import { Link } from "@nextui-org/link";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
 import { useState, useEffect } from "react";
@@ -20,10 +21,10 @@ export const Footer = () => {
   }, []);
 
   return (
-    <footer className="w-full bg-gradient-to-r from-gray-400 via-gray-400 to-gray-400 text-gray-900 dark:text-gray-200 dark:bg-gradient-to-r dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 py-10 ">
+    <footer className="w-full bg-gradient-to-r from-blue-200 via-gray-400 to-gray-500 text-gray-900 dark:text-gray-200 dark:bg-gradient-to-r dark:from-blue-700 dark:via-gray-800 dark:to-gray-800 py-10 relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {isSmallScreen ? (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center relative z-10">
             <div className="flex flex-col items-center mb-6">
               <Link
                 href="https://www.icrdgroup.com"

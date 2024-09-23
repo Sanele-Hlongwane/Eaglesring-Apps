@@ -7,6 +7,47 @@ body {
   font-weight: 400; 
   font-style: normal;
 }
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes zoom {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s infinite;
+}
+
+.animate-zoom {
+  animation: zoom 2s infinite;
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s infinite linear;
+}
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Roboto', sans-serif;

@@ -115,7 +115,8 @@ export default function ProposalsAnalytics() {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-gray-100 dark:bg-gray-700">
+    <div className="min-h-screen p-4 md:p-8">
+      
       <div className="max-w-full md:max-w-7xl mx-auto py-6 md:py-10">
         <h2 className="text-3xl md:text-4xl font-extrabold mb-6 md:mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-gray-500 to-yellow-400">
           Pitches Analytics

@@ -2,7 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaSearch } from 'react-icons/fa';
+import { 
+  FaSearch,
+  FaLightbulb,
+  FaShieldAlt,
+  FaComments,
+  FaUserTie,
+  FaChartLine,
+  FaRegGem,
+  FaLeaf,
+  FaHandsHelping,
+  FaGlobe,
+  FaRocket,
+  FaAward,
+  FaMedal, } from 'react-icons/fa';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import LoadingDots from './ui/LoadingDots';
@@ -78,10 +91,21 @@ export default function Notifications() {
 
   return (
     <div className="min-h-screen w-full p-0 m-0">
-      <div className="h-full max-w-full mx-auto bg-gray-100 dark:bg-gray-700 rounded-none shadow-none overflow-hidden">
+      <div className="h-full max-w-full mx-auto min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white rounded-none shadow-none overflow-hidden">
         <div className="p-6 bg-gradient-to-r from-gray-300 to-gray-500 dark:from-gray-800 dark:to-gray-600 text-gray-900 dark:text-gray-100 text-3xl font-semibold text-center">
           Notifications
         </div>
+        {/* Background Icons */}
+      <div className="absolute inset-0 pointer-events-none opacity-30">
+            <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />
+            <FaShieldAlt className="text-blue-500 absolute top-1/3 right-10 text-[120px] rotate-6" />
+            <FaComments className="text-green-500 absolute bottom-16 left-1/4 text-[80px] -rotate-12" />
+            <FaUserTie className="text-red-500 absolute bottom-1/4 left-10 text-[90px] rotate-45" />
+            <FaGlobe className="text-blue-400 absolute bottom-28 right-14 text-[100px] rotate-12" />
+            <FaAward className="text-orange-500 absolute bottom-10 left-32 text-[120px] rotate-6" />
+            <FaHandsHelping className="text-yellow-400 absolute top-20 right-5 text-[90px] rotate-12" />
+            <FaLeaf className="text-green-500 text-[70px] absolute bottom-16 left-16 animate-spin-slow" />
+          </div>
 
         <div className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">

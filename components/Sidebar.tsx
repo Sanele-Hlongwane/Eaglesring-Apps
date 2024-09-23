@@ -1,12 +1,11 @@
-
 'use client';
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-
 import { sidebarLinks } from '@/constants';
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+
 interface TabProps {
   label: string;
   route: string;
@@ -14,10 +13,15 @@ interface TabProps {
   onClick: () => void;
 }
 
-
-export const Tab : React.FC<TabProps> = ({ label, route, imgURL, onClick }) => {
+export const Tab: React.FC<TabProps> = ({ label, route, imgURL, onClick }) => {
   const pathname = usePathname();
   const isActive = pathname === route;
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      onClick();
+    }
+  };
 
   return (
     <div
@@ -28,7 +32,10 @@ export const Tab : React.FC<TabProps> = ({ label, route, imgURL, onClick }) => {
           "hover:bg-gray-700": !isActive,
         }
       )}
+      role="button"
+      tabIndex={0}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
     >
       <Link href={route} passHref>
         <p className="flex gap-3 lg:gap-4 items-center w-full">
@@ -48,13 +55,18 @@ export const Tab : React.FC<TabProps> = ({ label, route, imgURL, onClick }) => {
   );
 };
 
-
 const SideNav = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSideNav = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "Enter" || event.key === " ") {
+      toggleSideNav();
+    }
   };
 
   return (
@@ -68,6 +80,7 @@ const SideNav = () => {
             "w-0 md:w-0 lg:w-0 xl:w-0 -translate-x-full": !isOpen,
           }
         )}
+        role="navigation"
       >
         <div className="flex justify-between items-center px-4 py-2">
           {isOpen ? (
@@ -94,7 +107,7 @@ const SideNav = () => {
             </button>
           )}
         </div>
-        <div className={cn("mt-4", { "hidden": !isOpen })}>
+        <div className={cn("mt-4", { hidden: !isOpen })}>
           {sidebarLinks.map(({ label, imgURL, route }, index) => (
             <Tab
               key={index}
@@ -109,7 +122,10 @@ const SideNav = () => {
       {isOpen && (
         <div
           className="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-30"
+          role="button"
+          tabIndex={0}
           onClick={toggleSideNav}
+          onKeyDown={handleKeyDown}
         ></div>
       )}
       <button
@@ -121,8 +137,8 @@ const SideNav = () => {
           }
         )}
         onClick={toggleSideNav}
-      > 
-        <div className="w-12 h-12 flex items-center justify-center bg-gray-400 dark:bg-ray-800rounded-lg shadow-lg">
+      >
+        <div className="w-12 h-12 flex items-center justify-center bg-gray-400 dark:bg-ray-800 rounded-lg shadow-lg">
           {isOpen ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"

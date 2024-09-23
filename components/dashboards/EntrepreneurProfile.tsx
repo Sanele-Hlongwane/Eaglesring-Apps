@@ -89,31 +89,37 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
 
       <div className="grid grid-cols-1 gap-4">
         <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label className="block text-lg font-semibold mr-4">Company:</label>
+          <label htmlFor="company" className="block text-lg font-semibold mr-4">Company:</label>
           <FaBuilding className="text-blue-500 mr-2" />
-          <span>{data?.company || "N/A"}</span>
+          <span id="company">{data?.company || "N/A"}</span>
         </div>
 
         <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label className="block text-lg font-semibold mr-4">Annual Revenue:</label>
+          <label htmlFor="revenue" className="block text-lg font-semibold mr-4">Annual Revenue:</label>
           <FaMoneyBillWave className="text-green-500 mr-2" />
-          <span>{new Intl.NumberFormat('en-ZA', { style: 'currency', currency: 'ZAR' }).format(data?.revenue || 0)}</span>
+          <span id="revenue">
+            {new Intl.NumberFormat("en-ZA", {
+              style: "currency",
+              currency: "ZAR",
+            }).format(data?.revenue || 0)}
+          </span>
         </div>
 
         <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label className="block text-lg font-semibold mr-4">Stage:</label>
+          <label htmlFor="businessStage" className="block text-lg font-semibold mr-4">Stage:</label>
           <FaRocket className="text-blue-500 mr-2" />
-          <span className="text-green-600">{data?.businessStage || "N/A"}</span>
+          <span id="businessStage" className="text-green-600">{data?.businessStage || "N/A"}</span>
         </div>
       </div>
 
       <button
         onClick={handleEditClick}
         className="mt-4 w-full py-2 border border-gray-800 text-white bg-gradient-to-r from-green-500 to-green-600 rounded-md transition-transform hover:bg-gradient-to-r hover:from-green-400 hover:to-green-500"
-
       >
         Edit Profile
       </button>
+
+      <ToastContainer />
     </div>
   );
 };

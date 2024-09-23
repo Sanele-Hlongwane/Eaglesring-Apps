@@ -107,21 +107,21 @@ const MeetingTypeList = () => {
           handleClick={createMeeting}
         >
           <div className="flex flex-col gap-2.5">
-            <label className="text-base font-normal leading-[22.4px] text-sky-2">
-              Add a description
-            </label>
-            <Textarea
-              className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
-              onChange={(e) =>
-                setValues({ ...values, description: e.target.value })
-              }
-            />
+          <label htmlFor="description" className="text-base font-normal leading-[22.4px] text-sky-2">
+            Add a description
+          </label>
+          <Textarea
+            id="description"
+            className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+            onChange={(e) => setValues({ ...values, description: e.target.value })}
+          />
           </div>
           <div className="flex w-full flex-col gap-2.5">
-            <label className="text-base font-normal leading-[22.4px] text-sky-2">
+            <label htmlFor="dateTime" className="text-base font-normal leading-[22.4px] text-sky-2">
               Select Date and Time
             </label>
             <ReactDatePicker
+              id="dateTime" // Add this line
               selected={values.dateTime}
               onChange={(date) => setValues({ ...values, dateTime: date! })}
               showTimeSelect

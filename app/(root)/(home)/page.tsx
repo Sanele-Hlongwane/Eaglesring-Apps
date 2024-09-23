@@ -306,7 +306,7 @@ export default function DashboardPage() {
         {/* Intro Section */}
         <section className="mb-12 mx-auto">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-6 bg-gradient-to-r from-purple-500 to-blue-600 dark:from-yellow-400 dark:to-red-500 text-transparent bg-clip-text">
-            Bridging Visionaries and Investors to Ignite Tomorrow's Innovations
+            Bridging Visionaries and Investors to Ignite Tomorrow&apos;s Innovations
           </h1>
           <p className="text-base sm:text-lg md:text-xl mb-8">
             Connect, innovate, and grow with Eagles Ring. Our platform brings together startups and investors to foster groundbreaking business ideas and opportunities.
@@ -343,16 +343,25 @@ export default function DashboardPage() {
           <div className="max-w-6xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-4">Connect, Invest, and Grow with Eagles Ring</h2>
             <p className="text-lg mb-10">
-              Whether you're an entrepreneur seeking funding or an investor looking for the next big opportunity, Eagles Ring is your gateway to meaningful connections and successful partnerships.
+              Whether you&apos;re an entrepreneur seeking funding or an investor looking for the next big opportunity, Eagles Ring is your gateway to meaningful connections and successful partnerships.
             </p>
             <div className="relative shadow-2xl rounded-lg overflow-hidden">
-              <video
+            <video
                 src="/Pitch-tut.mp4"
                 className="w-full h-auto rounded-lg"
                 controls
                 preload="auto"
                 autoPlay={false}
-              />
+              >
+                <track 
+                  src="/captions.vtt" 
+                  kind="captions" 
+                  srcLang="en" 
+                  label="English" 
+                  default 
+                />
+                Your browser does not support the video tag.
+              </video>
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-50 z-10 pointer-events-none"></div>
             </div>
           </div>

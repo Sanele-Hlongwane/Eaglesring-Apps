@@ -11,7 +11,7 @@ export default function FeaturesPage() {
         <section className="mb-12 max-w-4xl mx-auto">
           <h1 className="text-3xl sm:text-2xl md:text-4xl font-bold mb-4">Our Features</h1>
           <p className="text-base sm:text-sm md:text-lg mb-8">
-            Explore the wide range of features designed to enhance your experience and success on Eagles Ring, whether you're an entrepreneur or an investor.
+            Explore the wide range of features designed to enhance your experience and success on Eagles Ring, whether you&apos;re an entrepreneur or an investor.
           </p>
         </section>
 

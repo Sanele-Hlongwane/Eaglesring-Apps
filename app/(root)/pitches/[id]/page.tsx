@@ -189,11 +189,18 @@ const EntrepreneurPitchesPage = () => {
           </div>
 
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => handleExpand(pitch)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                handleExpand(pitch);
+              }
+            }}
             className="mt-4 cursor-pointer text-green-600 hover:text-green-700 transition-colors"
           >
             {expandedPitchId === pitch.id ? "▲ Show Less" : "▼ View More"}
-            </div>
+          </div>
 
             {expandedPitchId === pitch.id && (
               <div className=" p-4 rounded-xl shadow-md border-t-2 border-gray-900 dark:border-gray-300 mt-4">

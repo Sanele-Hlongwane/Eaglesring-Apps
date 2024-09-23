@@ -261,9 +261,14 @@ export default function PitchesPage() {
                               </button>
                             <div className="flex flex-col md:flex-row md:space-x-6">
                               <div className="w-full">
-                                <label className="block text-gray-700 dark:text-gray-200">
-                                  Title
-                                </label>
+                              <label htmlFor="title" className="block text-gray-700 dark:text-gray-200">
+                                Title
+                              </label>
+                              <input
+                                id="title"
+                                type="text"
+                                className="mt-1 p-2 border rounded"
+                              />
                                 <input
                                   type="text"
                                   value={selectedPitch?.title || ""}
@@ -278,12 +283,16 @@ export default function PitchesPage() {
                                 />
                               </div>
                               <div className="w-full">
-                                <label className="block text-gray-700 dark:text-gray-200">
-                                  Funding Goal
-                                </label>
                                 <div className="mt-4">
-                                  <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Funding Goal (in ZAR)</label>
-                                  <input
+                                <label htmlFor="fundingGoal" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">
+  Funding Goal (in ZAR)
+</label>
+<input
+  id="fundingGoal"
+  type="number" // or "text" depending on your use case
+  className="mt-1 p-2 border rounded"
+/>
+<input
                                     type="number"
                                     value={selectedPitch?.fundingGoal || ""}
                                     onChange={(e) =>
@@ -305,6 +314,7 @@ export default function PitchesPage() {
                                 Description
                               </label>
                               <textarea
+                                id="pitchDescription" // Add this line
                                 value={selectedPitch?.description || ""}
                                 onChange={(e) =>
                                   setSelectedPitch({
@@ -319,27 +329,29 @@ export default function PitchesPage() {
 
                             {/* Read-Only Video Section */}
                             <div>
-                              <label className="block text-gray-700 dark:text-gray-200">
-                                Video (view only)
-                              </label>
-                              {pitch.videoUrl ? (
-                                <div className="mt-2">
-                                  <video
-                                    src={pitch.videoUrl}
-                                    controls
-                                    className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-                                    style={{ maxHeight: "500px" }}
-                                  />
-                                  <p className="text-gray-500 dark:text-gray-400 mt-2">
-                                    You cannot edit the video. To change it, delete the pitch and create a new one.
-                                  </p>
-                                </div>
-                              ) : (
-                                
-                                <p className="text-gray-500 dark:text-gray-400">
-                                  No video available.
-                                </p>
-                              )}
+                            <label className="block text-gray-700 dark:text-gray-200">
+  Video (view only)
+</label>
+{pitch.videoUrl ? (
+  <div className="mt-2">
+    <video
+      src={pitch.videoUrl}
+      controls
+      className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+      style={{ maxHeight: "500px" }}
+    >
+      <track kind="captions" srcLang="en" />
+    </video>
+    <p className="text-gray-500 dark:text-gray-400 mt-2">
+      You cannot edit the video. To change it, delete the pitch and create a new one.
+    </p>
+  </div>
+) : (
+  <p className="text-gray-500 dark:text-gray-400">
+    No video available.
+  </p>
+)}
+
                             </div>
 
                             {/* Read-Only Attachments Section */}
@@ -348,33 +360,32 @@ export default function PitchesPage() {
                                 Attachments (view only)
                               </label>
                               {pitch.attachments && pitch.attachments.length > 0 ? (
-                                <div className="mt-2">
-                                  <ul className="space-y-3">
-                                    {pitch.attachments.map((attachment, index) => (
-                                      <li
-                                        key={index}
-                                        className="flex items-center space-x-2"
-                                      >
-                                        <FaDownload className="text-blue-600" />
-                                        <a
-                                          href={attachment}
-                                          download
-                                          className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium transition-colors duration-300"
-                                        >
-                                          {attachment.split("/").pop()}
-                                        </a>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                  <p className="text-gray-500 dark:text-gray-400 mt-2">
-                                    You cannot edit the attachments. To change them, delete the pitch and create a new one.
-                                  </p>
-                                </div>
-                              ) : (
-                                <p className="text-gray-500 dark:text-gray-400">
-                                  No attachments available.
-                                </p>
-                              )}
+  <div className="mt-2">
+    <ul role="list" className="space-y-3">
+      {pitch.attachments.map((attachment, index) => (
+        <li key={index} className="flex items-center space-x-2">
+          <FaDownload className="text-blue-600" />
+          <a
+            href={attachment}
+            download
+            className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium transition-colors duration-300"
+            aria-label={`Download ${attachment.split("/").pop()}`}
+          >
+            {attachment.split("/").pop()}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p className="text-gray-500 dark:text-gray-400 mt-2">
+      You cannot edit the attachments. To change them, delete the pitch and create a new one.
+    </p>
+  </div>
+) : (
+  <p className="text-gray-500 dark:text-gray-400">
+    No attachments available.
+  </p>
+)}
+
                             </div>
                             </div>
 
@@ -461,18 +472,28 @@ export default function PitchesPage() {
                         </p>
                         {/* Video Section */}
                         {pitch.videoUrl && (
-                          <div className="mb-6">
-                            <video
-                              src={pitch.videoUrl}
-                              controls
-                              className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-                              style={{ maxHeight: "500px" }}
-                            />
-                            <p className="text-gray-600 dark:text-gray-400 text-sm flex items-center mt-2">
-                              <FaVideo className="mr-2" /> Video Preview
-                            </p>
-                          </div>
-                        )}
+  <div className="mb-6">
+    <video
+      src={pitch.videoUrl}
+      controls
+      className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+      style={{ maxHeight: "500px" }}
+    >
+      <track
+        kind="captions"
+        srcLang="en"
+        label="English"
+        src="/path/to/captions.vtt" // Replace with your actual caption file path
+        default
+      />
+      Your browser does not support the video tag.
+    </video>
+    <p className="text-gray-600 dark:text-gray-400 text-sm flex items-center mt-2">
+      <FaVideo className="mr-2" /> Video Preview
+    </p>
+  </div>
+)}
+
 
                         {/* Attachments Section */}
                         {pitch.attachments && pitch.attachments.length > 0 && (
@@ -481,21 +502,33 @@ export default function PitchesPage() {
                               <FaDownload className="mr-2" /> Attachments:
                             </p>
                             <ul className="space-y-3">
-                              {pitch.attachments.map((attachment, index) => (
-                                <li
-                                  key={index}
-                                  className="flex items-center space-x-2"
-                                >
-                                  <FaDownload className="text-blue-600" />
-                                  <a
-                                    href={attachment}
-                                    download
-                                    className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium transition-colors duration-300"
-                                  >
-                                    {attachment.split("/").pop()}
-                                  </a>
-                                </li>
-                              ))}
+                            {pitch.attachments && pitch.attachments.length > 0 ? (
+  <div className="mt-2">
+    <ul className="space-y-3">
+      {pitch.attachments.map((attachment, index) => (
+        <li key={attachment} className="flex items-center space-x-2">
+          <FaDownload className="text-blue-600" />
+          <a
+            href={attachment}
+            download
+            aria-label={`Download ${attachment.split("/").pop()}`} // Accessible label
+            className="text-blue-700 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 font-medium transition-colors duration-300"
+          >
+            {attachment.split("/").pop()}
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p className="text-gray-500 dark:text-gray-400 mt-2">
+      You cannot edit the attachments. To change them, delete the pitch and create a new one.
+    </p>
+  </div>
+) : (
+  <p className="text-gray-500 dark:text-gray-400">
+    No attachments available.
+  </p>
+)}
+
                             </ul>
                           </div>
                         )}
@@ -508,16 +541,26 @@ export default function PitchesPage() {
                   <p className="text-red-600 bold dark:text-red-500">No pitches found</p>
                   <section className="py-16 px-4 sm:px-8 lg:px-16 xl:px-24">
                     <div className="max-w-6xl mx-auto text-center">
-                      <div className="relative shadow-2xl rounded-lg overflow-hidden">
-                        <video
-                          src="/pitch.mp4"
-                          className="w-full h-auto rounded-lg"
-                          controls
-                          preload="auto"
-                          autoPlay={false} 
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-30 pointer-events-none"></div>
-                      </div>
+                    <div className="relative shadow-2xl rounded-lg overflow-hidden">
+  <video
+    src="/pitch.mp4"
+    className="w-full h-auto rounded-lg"
+    controls
+    preload="auto"
+    autoPlay={false}
+  >
+    <track
+      kind="subtitles" // You can use "captions" if you want it to be used for captions
+      src="/path-to-your-subtitles.vtt" // Add the path to your WebVTT file for subtitles
+      srcLang="en" // Change to the appropriate language code
+      label="English" // Change to the appropriate label
+      default // Optional: set as default if you want it to show by default
+    />
+    Your browser does not support the video tag.
+  </video>
+  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-30 pointer-events-none"></div>
+</div>
+
                     </div>
                   </section>
                 </div>
@@ -529,123 +572,133 @@ export default function PitchesPage() {
           <div className="elative min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white">
             <h3 className="text-3xl font-bold mb-6">Create New Pitch</h3>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleCreate();
-              }}
-              className="space-y-6"
-            >
-              <div>
-                <label className="relative z-10 block text-gray-700 dark:text-gray-200">Title</label>
-                <input
-                  type="text"
-                  value={newPitch.title}
-                  onChange={(e) => setNewPitch({ ...newPitch, title: e.target.value })}
-                  placeholder="Enter title of your pitch..."
-                  className="border p-2 rounded w-full border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 dark:text-gray-200">Description</label>
-                <textarea
-                  value={newPitch.description}
-                  onChange={(e) => setNewPitch({ ...newPitch, description: e.target.value })}
-                  placeholder="Enter description for your pitch..."
-                  className="border p-2 rounded w-full border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                />
-              </div>
-              <div className="mb-6">
-                <label htmlFor="fundingGoal" className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
-                  Funding Goal (in Rands)
-                </label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400">
-                    R
-                  </span>
-                  <input
-                    type="number"
-                    id="fundingGoal"
-                    name="fundingGoal"
-                    value={newPitch.fundingGoal}
-                    onChange={(e) => setNewPitch({ ...newPitch, fundingGoal: parseFloat(e.target.value) || 0 })}
-                    placeholder="Enter the funding goal"
-                    className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                    min="0"
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-gray-700 dark:text-gray-200">Video file (File must be 50MB or less)</label>
-                <input
-                  type="file"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0] || null;
-                    setVideoFile(file);
-                  }}
-                  className="border p-2 rounded w-full"
-                />
-                {videoFile && (
-                  <video
-                    controls
-                    className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-                    style={{ maxHeight: "500px" }}
-                  >
-                    <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
-                </div>
-                <div>
-                  <label className="block text-gray-700 dark:text-gray-200">Attachments (Files must be 50MB or less)</label>
-                  <input
-                    type="file"
-                    multiple
-                    onChange={(e) => {
-                      const files = Array.from(e.target.files || []);
-                      const validFiles: File[] = []; // Explicitly define the type as File[]
-                      const invalidFiles: File[] = []; // Explicitly define the type as File[]
-                      
-                      files.forEach(file => {
-                        if (file.size <= 50 * 1024 * 1024) { // 50MB in bytes
-                          validFiles.push(file);
-                        } else {
-                          invalidFiles.push(file);
-                        }
-                      });
-                      
-                      if (invalidFiles.length > 0) {
-                        alert(`Some files are too large. Please ensure each file is 50MB or less.`);
-                      }
-                      
-                      setAttachmentFiles(validFiles);
-                    }}
-                    className="border p-2 rounded w-full"
-                  />
-                  {attachmentFiles.length > 0 && (
-                    <div className="mt-2">
-                      {attachmentFiles.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between mb-2">
-                          <a href={URL.createObjectURL(file)} target="_blank" rel="noopener noreferrer" className="text-blue-600">
-                            {file.name}
-                          </a>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors ${loading ? "cursor-not-allowed" : ""}`}
-                >
-                  {loading ? <LoadingDots /> : "Create Pitch"}
-                </button>
-              </div>
-            </form>
+  onSubmit={(e) => {
+    e.preventDefault();
+    handleCreate();
+  }}
+  className="space-y-6"
+>
+  <div>
+    <label htmlFor="title" className="relative z-10 block text-gray-700 dark:text-gray-200">Title</label>
+    <input
+      type="text"
+      id="title"
+      value={newPitch.title}
+      onChange={(e) => setNewPitch({ ...newPitch, title: e.target.value })}
+      placeholder="Enter title of your pitch..."
+      className="border p-2 rounded w-full border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+      required
+    />
+  </div>
+  
+  <div>
+    <label htmlFor="description" className="block text-gray-700 dark:text-gray-200">Description</label>
+    <textarea
+      id="description"
+      value={newPitch.description}
+      onChange={(e) => setNewPitch({ ...newPitch, description: e.target.value })}
+      placeholder="Enter description for your pitch..."
+      className="border p-2 rounded w-full border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+      required
+    />
+  </div>
+  
+  <div className="mb-6">
+    <label htmlFor="fundingGoal" className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
+      Funding Goal (in Rands)
+    </label>
+    <div className="relative">
+      <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400">R</span>
+      <input
+        type="number"
+        id="fundingGoal"
+        name="fundingGoal"
+        value={newPitch.fundingGoal}
+        onChange={(e) => setNewPitch({ ...newPitch, fundingGoal: parseFloat(e.target.value) || 0 })}
+        placeholder="Enter the funding goal"
+        className="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+        min="0"
+        required
+      />
+    </div>
+  </div>
+  
+  <div>
+    <label htmlFor="videoFile" className="block text-gray-700 dark:text-gray-200">Video file (File must be 50MB or less)</label>
+    <input
+      type="file"
+      id="videoFile"
+      onChange={(e) => {
+        const file = e.target.files?.[0] || null;
+        setVideoFile(file);
+      }}
+      className="border p-2 rounded w-full"
+      accept="video/*"
+    />
+    {videoFile && (
+      <video
+        controls
+        className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+        style={{ maxHeight: "500px" }}
+      >
+        <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
+        Your browser does not support the video tag.
+      </video>
+    )}
+  </div>
+
+  <div>
+    <label htmlFor="attachments" className="block text-gray-700 dark:text-gray-200">Attachments (Files must be 50MB or less)</label>
+    <input
+      type="file"
+      id="attachments"
+      multiple
+      onChange={(e) => {
+        const files = Array.from(e.target.files || []);
+        const validFiles: File[] = [];
+        const invalidFiles: File[] = [];
+        
+        files.forEach(file => {
+          if (file.size <= 50 * 1024 * 1024) { // 50MB in bytes
+            validFiles.push(file);
+          } else {
+            invalidFiles.push(file);
+          }
+        });
+        
+        if (invalidFiles.length > 0) {
+          alert(`Some files are too large. Please ensure each file is 50MB or less.`);
+        }
+        
+        setAttachmentFiles(validFiles);
+      }}
+      className="border p-2 rounded w-full"
+      accept="*/*"
+    />
+    {attachmentFiles.length > 0 && (
+      <div className="mt-2">
+        {attachmentFiles.map((file, index) => (
+          <div key={index} className="flex items-center justify-between mb-2">
+            <a href={URL.createObjectURL(file)} target="_blank" rel="noopener noreferrer" className="text-blue-600">
+              {file.name}
+            </a>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <div>
+    <button
+      type="submit"
+      disabled={loading}
+      className={`bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors ${loading ? "cursor-not-allowed" : ""}`}
+    >
+      {loading ? <LoadingDots /> : "Create Pitch"}
+    </button>
+  </div>
+</form>
+
           </div>
         )}
          </div>

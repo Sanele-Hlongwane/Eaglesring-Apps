@@ -4,12 +4,20 @@ import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
     const user = await currentUser();
 
     if (!user) {
-      return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
+      return NextResponse.json(
+        {
+          error: "User not authenticated",
+        },
+        { status: 401 }
+      );
     }
 
     const clerkId = user.id;
@@ -20,7 +28,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     });
 
     if (!receiver) {
-      return NextResponse.json({ error: "Receiver user not found" }, { status: 404 });
+      return NextResponse.json(
+        {
+          error: "Receiver user not found",
+        },
+        { status: 404 }
+      );
     }
 
     const senderId = parseInt(params.id, 10); // Ensure senderId is a number
@@ -36,7 +49,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     });
 
     if (!friendRequest) {
-      return NextResponse.json({ error: "Friend request not found" }, { status: 404 });
+      return NextResponse.json(
+        {
+          error: "Friend request not found",
+        },
+        { status: 404 }
+      );
     }
 
     // Delete the friend request
@@ -55,7 +73,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     });
 
     if (!sender) {
-      return NextResponse.json({ error: "Sender user not found" }, { status: 404 });
+      return NextResponse.json(
+        {
+          error: "Sender user not found",
+        },
+        { status: 404 }
+      );
     }
 
     // Create a notification for the sender, notifying them that their friend request was deleted
@@ -69,6 +92,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     return NextResponse.json({ success: true });
 
   } catch (error) {
-    return NextResponse.json({ error: "Failed to remove friend request", details: (error as any).message }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: "Failed to remove friend request",
+        details: (error as any).message,
+      },
+      { status: 500 }
+    );
   }
 }

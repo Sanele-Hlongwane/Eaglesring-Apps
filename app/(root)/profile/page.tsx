@@ -1,77 +1,79 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { FaCamera, FaPencilAlt, FaLinkedin, FaUpload } from 'react-icons/fa';
-import { v4 as uuidv4 } from 'uuid';
-import supabase from '@/lib/supabaseClient';
-import Loader from '@/components/Loader';
-import LoadingDots from '@/components/ui/LoadingDots';
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { FaCamera, FaPencilAlt, FaLinkedin, FaUpload } from "react-icons/fa";
+import { v4 as uuidv4 } from "uuid";
+import supabase from "@/lib/supabaseClient";
+import Loader from "@/components/Loader";
+import LoadingDots from "@/components/ui/LoadingDots";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function EntrepreneurProfilePage() {
   const { toast } = useToast();
-  const [bio, setBio] = useState('');
-  const [company, setCompany] = useState('');
-  const [businessStage, setBusinessStage] = useState('');
-  const [linkedinUrl, setLinkedinUrl] = useState('');
+  const [bio, setBio] = useState("");
+  const [company, setCompany] = useState("");
+  const [businessStage, setBusinessStage] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
   const [revenue, setRevenue] = useState(0);
-  const [imageUrl, setImageUrl] = useState('');
-  const [fundingHistory, setFundingHistory] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
+  const [fundingHistory, setFundingHistory] = useState("");
   const [profile, setProfile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [imageToDelete, setImageToDelete] = useState<string | null>(null);
   const [tempImageUrl, setTempImageUrl] = useState<string | null>(null);
-  const [selectedStage, setSelectedStage] = useState('');
-  const businessStages = ['Startup', 'Growth', 'Mature', 'Exit'];
+  const [selectedStage, setSelectedStage] = useState("");
+  const businessStages = ["Startup", "Growth", "Mature", "Exit"];
 
   const handleSuccessToast = (message: string) => {
     toast({
-      title: 'Success',
+      title: "Success",
       description: message,
-      variant: 'success',
+      variant: "success",
     });
   };
 
   const handleErrorToast = (message: string) => {
     toast({
-      title: 'Error',
+      title: "Error",
       description: message,
-      variant: 'destructive',
+      variant: "destructive",
     });
   };
 
   const handleInfoToast = (message: string) => {
     toast({
-      title: 'Info',
+      title: "Info",
       description: message,
-      variant: 'info',
+      variant: "info",
     });
   };
 
   useEffect(() => {
     async function fetchProfile() {
       try {
-        const res = await fetch('/api/entrepreneur-profile');
+        const res = await fetch("/api/entrepreneur-profile");
         const data = await res.json();
         if (data.error) {
           handleErrorToast(data.error);
         } else {
-          setBio(data.entrepreneurProfile?.bio || '');
-          setCompany(data.entrepreneurProfile?.company || '');
-          setBusinessStage(data.entrepreneurProfile?.businessStage || '');
-          setSelectedStage(data.entrepreneurProfile?.businessStage || '');
-          setLinkedinUrl(data.entrepreneurProfile?.linkedinUrl || '');
+          setBio(data.entrepreneurProfile?.bio || "");
+          setCompany(data.entrepreneurProfile?.company || "");
+          setBusinessStage(data.entrepreneurProfile?.businessStage || "");
+          setSelectedStage(data.entrepreneurProfile?.businessStage || "");
+          setLinkedinUrl(data.entrepreneurProfile?.linkedinUrl || "");
           setRevenue(data.entrepreneurProfile?.revenue || 0);
-          setImageUrl(data.imageUrl || '');
-          setFundingHistory(data.entrepreneurProfile?.fundingHistory || 'No history');
+          setImageUrl(data.imageUrl || "");
+          setFundingHistory(
+            data.entrepreneurProfile?.fundingHistory || "No history",
+          );
           setProfile(data.entrepreneurProfile);
         }
       } catch (error) {
-        handleErrorToast('Failed to fetch profile.');
+        handleErrorToast("Failed to fetch profile.");
       } finally {
         setIsLoading(false);
       }
@@ -81,23 +83,29 @@ export default function EntrepreneurProfilePage() {
 
   const uploadFile = async (file: File, path: string): Promise<string> => {
     setIsUploading(true);
-    const { data: uploadData, error: uploadError } = await supabase.storage.from('videos').upload(path, file);
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from("videos")
+      .upload(path, file);
     setIsUploading(false);
 
     if (uploadError) {
       throw new Error(`Failed to upload image: ${uploadError.message}`);
     }
 
-    const { data: urlData } = supabase.storage.from('videos').getPublicUrl(path);
+    const { data: urlData } = supabase.storage
+      .from("videos")
+      .getPublicUrl(path);
     if (!urlData?.publicUrl) {
-      throw new Error('Failed to get public URL');
+      throw new Error("Failed to get public URL");
     }
 
     return urlData.publicUrl;
   };
 
   const deleteFile = async (path: string) => {
-    const { error: deleteError } = await supabase.storage.from('videos').remove([path]);
+    const { error: deleteError } = await supabase.storage
+      .from("videos")
+      .remove([path]);
     if (deleteError) {
       throw new Error(`Failed to delete image: ${deleteError.message}`);
     }
@@ -111,9 +119,9 @@ export default function EntrepreneurProfilePage() {
         await deleteFile(imageToDelete);
       }
 
-      const res = await fetch('/api/entrepreneur-profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/entrepreneur-profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bio,
           company,
@@ -128,13 +136,13 @@ export default function EntrepreneurProfilePage() {
       if (data.error) {
         handleErrorToast(data.error);
       } else {
-        handleSuccessToast('Profile updated successfully!');
+        handleSuccessToast("Profile updated successfully!");
         setProfile(data.entrepreneurProfile);
         setImageUrl(tempImageUrl || imageUrl);
         setTempImageUrl(null);
       }
     } catch (error) {
-      handleErrorToast('Failed to update profile.');
+      handleErrorToast("Failed to update profile.");
     } finally {
       setIsSaving(false);
     }
@@ -149,9 +157,11 @@ export default function EntrepreneurProfilePage() {
       const publicUrl = await uploadFile(file, filePath);
       setTempImageUrl(publicUrl);
       setImageToDelete(imageUrl);
-      handleInfoToast('Image uploaded successfully! Remember to save changes to update your image!');
+      handleInfoToast(
+        "Image uploaded successfully! Remember to save changes to update your image!",
+      );
     } catch (error) {
-      handleErrorToast('Failed to upload image.');
+      handleErrorToast("Failed to upload image.");
     }
   };
 
@@ -176,7 +186,10 @@ export default function EntrepreneurProfilePage() {
                     className="w-full h-full object-contain"
                   />
                 ) : (
-                  <FaCamera className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500" size={80} />
+                  <FaCamera
+                    className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500"
+                    size={80}
+                  />
                 )}
                 <input
                   type="file"
@@ -193,7 +206,12 @@ export default function EntrepreneurProfilePage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
-                <label htmlFor="bio" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Bio</label>
+                <label
+                  htmlFor="bio"
+                  className="block text-lg font-semibold text-gray-700 dark:text-gray-300"
+                >
+                  Bio
+                </label>
                 <textarea
                   id="bio"
                   value={bio}
@@ -205,7 +223,12 @@ export default function EntrepreneurProfilePage() {
                 />
               </div>
               <div>
-                <label htmlFor="company" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Company Name</label>
+                <label
+                  htmlFor="company"
+                  className="block text-lg font-semibold text-gray-700 dark:text-gray-300"
+                >
+                  Company Name
+                </label>
                 <input
                   type="text"
                   id="company"
@@ -216,7 +239,12 @@ export default function EntrepreneurProfilePage() {
                 />
               </div>
               <div>
-                <label htmlFor="businessStage" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Business Stage</label>
+                <label
+                  htmlFor="businessStage"
+                  className="block text-lg font-semibold text-gray-700 dark:text-gray-300"
+                >
+                  Business Stage
+                </label>
                 <select
                   id="businessStage"
                   value={selectedStage}
@@ -225,12 +253,19 @@ export default function EntrepreneurProfilePage() {
                   required
                 >
                   {businessStages.map((stage) => (
-                    <option key={stage} value={stage}>{stage}</option>
+                    <option key={stage} value={stage}>
+                      {stage}
+                    </option>
                   ))}
                 </select>
               </div>
               <div>
-                <label htmlFor="linkedinUrl" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">LinkedIn URL</label>
+                <label
+                  htmlFor="linkedinUrl"
+                  className="block text-lg font-semibold text-gray-700 dark:text-gray-300"
+                >
+                  LinkedIn URL
+                </label>
                 <input
                   type="text"
                   id="linkedinUrl"
@@ -241,7 +276,12 @@ export default function EntrepreneurProfilePage() {
                 />
               </div>
               <div>
-                <label htmlFor="revenue" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Revenue</label>
+                <label
+                  htmlFor="revenue"
+                  className="block text-lg font-semibold text-gray-700 dark:text-gray-300"
+                >
+                  Revenue
+                </label>
                 <input
                   type="number"
                   id="revenue"
@@ -252,7 +292,12 @@ export default function EntrepreneurProfilePage() {
                 />
               </div>
               <div className="col-span-full">
-                <label htmlFor="fundingHistory" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Funding History</label>
+                <label
+                  htmlFor="fundingHistory"
+                  className="block text-lg font-semibold text-gray-700 dark:text-gray-300"
+                >
+                  Funding History
+                </label>
                 <textarea
                   id="fundingHistory"
                   value={fundingHistory}
@@ -266,10 +311,10 @@ export default function EntrepreneurProfilePage() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className={`inline-flex items-center px-6 py-3 text-base font-medium text-white ${isSaving ? 'bg-gray-500' : 'bg-green-600'} rounded-lg shadow-md focus:outline-none`}
+                className={`inline-flex items-center px-6 py-3 text-base font-medium text-white ${isSaving ? "bg-gray-500" : "bg-green-600"} rounded-lg shadow-md focus:outline-none`}
                 disabled={isSaving}
               >
-                {isSaving ? <LoadingDots /> : 'Save Changes'}
+                {isSaving ? <LoadingDots /> : "Save Changes"}
               </button>
             </div>
           </form>

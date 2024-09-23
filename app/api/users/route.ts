@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { currentUser } from '@clerk/nextjs/server';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
@@ -9,7 +9,10 @@ export async function GET(request: Request) {
 
   if (!user) {
     console.error("No user found. Please log in.");
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -24,7 +27,10 @@ export async function GET(request: Request) {
 
     if (!dbUser) {
       console.error("No corresponding database user found.");
-      return NextResponse.json({ error: "Database user not found." }, { status: 404 });
+      return NextResponse.json(
+        { error: "Database user not found." },
+        { status: 404 },
+      );
     }
 
     const userId = dbUser.id; // Use the numeric user ID from your database
@@ -33,19 +39,19 @@ export async function GET(request: Request) {
     // Fetch all friend requests where the current user is either the sender or the receiver
     const friendRequests = await prisma.friendRequest.findMany({
       where: {
-        OR: [
-          { senderId: userId },
-          { receiverId: userId },
-        ],
+        OR: [{ senderId: userId }, { receiverId: userId }],
       },
     });
 
     // Extract the user IDs of users for whom friend requests have been sent or received
-    const excludedUserIds = friendRequests.flatMap(request =>
-      [request.senderId, request.receiverId].filter(id => id !== userId)
+    const excludedUserIds = friendRequests.flatMap((request) =>
+      [request.senderId, request.receiverId].filter((id) => id !== userId),
     );
 
-    console.log("Users with sent or received friend requests:", excludedUserIds);
+    console.log(
+      "Users with sent or received friend requests:",
+      excludedUserIds,
+    );
 
     // Fetch all users except the current user and exclude users with existing friend requests
     const users = await prisma.user.findMany({
@@ -63,7 +69,10 @@ export async function GET(request: Request) {
 
     return NextResponse.json(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
-    return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
+    console.error("Error fetching users:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch users" },
+      { status: 500 },
+    );
   }
 }

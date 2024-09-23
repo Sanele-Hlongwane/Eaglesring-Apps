@@ -10,7 +10,9 @@ import { plans } from "@/constants/plans"; // Adjust the import path as necessar
 import { FaCheck, FaTimes, FaCrown, FaRocket, FaLeaf } from "react-icons/fa"; // Import more icons
 import LoadingDots from "@/components/ui/LoadingDots";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+);
 
 const SubscriptionForm = () => {
   const { user } = useUser();
@@ -46,8 +48,8 @@ const SubscriptionForm = () => {
       typeof selectedPlanData.stripePriceId === "string"
         ? selectedPlanData.stripePriceId
         : isYearly
-        ? selectedPlanData.stripePriceId.yearly
-        : selectedPlanData.stripePriceId.monthly;
+          ? selectedPlanData.stripePriceId.yearly
+          : selectedPlanData.stripePriceId.monthly;
 
     if (!priceId) {
       toast.error("Invalid price ID.");
@@ -84,7 +86,9 @@ const SubscriptionForm = () => {
 
   return (
     <div className="relative container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-extrabold mb-18 text-center">Subscription Plans</h1>
+      <h1 className="text-4xl font-extrabold mb-18 text-center">
+        Subscription Plans
+      </h1>
 
       {/* Animated Icons */}
       <div className="absolute inset-0 pointer-events-none opacity-30">
@@ -135,7 +139,9 @@ const SubscriptionForm = () => {
               role="button"
               tabIndex={0}
               onClick={() => handlePlanSelect(plan.name)}
-              onKeyPress={(e) => e.key === "Enter" && handlePlanSelect(plan.name)}
+              onKeyPress={(e) =>
+                e.key === "Enter" && handlePlanSelect(plan.name)
+              }
               aria-label={`Select ${plan.name} plan`}
             >
               <h2 className="text-2xl font-semibold mb-2 flex items-center">
@@ -160,7 +166,10 @@ const SubscriptionForm = () => {
                   </li>
                 ))}
                 {plan.unavailable.map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-500 line-through">
+                  <li
+                    key={index}
+                    className="flex items-center text-gray-500 line-through"
+                  >
                     <FaTimes className="text-red-500 mr-2" /> {feature}
                   </li>
                 ))}

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const user = await currentUser();
@@ -17,7 +17,7 @@ export async function DELETE(
         {
           error: "User not authenticated",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -34,7 +34,7 @@ export async function DELETE(
         {
           error: "Receiver user not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -58,7 +58,7 @@ export async function DELETE(
         {
           error: "Friend request not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -85,7 +85,7 @@ export async function DELETE(
         {
           error: "Sender user not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -98,11 +98,10 @@ export async function DELETE(
     });
 
     console.debug(
-      `Notification sent to Sender ID ${senderId}: "${receiver.name} has deleted your friend request. You can resend it if you wish."`
+      `Notification sent to Sender ID ${senderId}: "${receiver.name} has deleted your friend request. You can resend it if you wish."`,
     );
 
     return NextResponse.json({ success: true });
-
   } catch (error) {
     console.error("Error deleting friend request:", error);
     return NextResponse.json(
@@ -110,7 +109,7 @@ export async function DELETE(
         error: "Failed to delete friend request",
         details: (error as any).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

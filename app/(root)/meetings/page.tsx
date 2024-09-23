@@ -1,16 +1,19 @@
-import MeetingTypeList from '@/components/MeetingTypeList';
+import MeetingTypeList from "@/components/MeetingTypeList";
 
 const Home = () => {
   const now = new Date();
-  
+
   const options: Intl.DateTimeFormatOptions = {
-    timeZone: 'Africa/Johannesburg', // Use the correct time zone identifier for SAST
-    hour: '2-digit',
-    minute: '2-digit',
+    timeZone: "Africa/Johannesburg", // Use the correct time zone identifier for SAST
+    hour: "2-digit",
+    minute: "2-digit",
   };
 
-  const time = now.toLocaleTimeString('en-US', options);
-  const date = new Intl.DateTimeFormat('en-US', { dateStyle: 'full', timeZone: 'Africa/Johannesburg' }).format(now);
+  const time = now.toLocaleTimeString("en-US", options);
+  const date = new Intl.DateTimeFormat("en-US", {
+    dateStyle: "full",
+    timeZone: "Africa/Johannesburg",
+  }).format(now);
 
   return (
     <section className="flex size-full flex-col gap-5 text-white">

@@ -8,7 +8,10 @@ export async function GET() {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -19,19 +22,22 @@ export async function GET() {
           include: {
             pitches: true,
             investments: true,
-          }
+          },
         },
         investorProfile: {
           include: {
             feedbacks: true,
             investments: true,
-          }
+          },
         },
-      }
+      },
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User profile not found" },
+        { status: 404 },
+      );
     }
 
     // Return user data including the imageUrl and funding history
@@ -40,12 +46,15 @@ export async function GET() {
 
     return NextResponse.json({
       imageUrl,
-      fundingHistory: fundingHistory || 'No funding history available',
+      fundingHistory: fundingHistory || "No funding history available",
       entrepreneurProfile: existingUser.entrepreneurProfile,
     });
   } catch (error) {
-    console.error('Error fetching profile:', error);
-    return NextResponse.json({ error: "Failed to fetch profile" }, { status: 500 });
+    console.error("Error fetching profile:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch profile" },
+      { status: 500 },
+    );
   }
 }
 
@@ -53,7 +62,10 @@ export async function POST(request: NextRequest) {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   const {
@@ -68,11 +80,13 @@ export async function POST(request: NextRequest) {
   try {
     const existingUser = await prisma.user.findUnique({
       where: { clerkId: user.id, role: "ENTREPRENEUR" },
-      
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User profile not found" },
+        { status: 404 },
+      );
     }
 
     // Update entrepreneur profile and imageUrl in the User model
@@ -80,7 +94,7 @@ export async function POST(request: NextRequest) {
       where: { userId: existingUser.id },
     });
 
-    if (!entrepreneurProfile ) {
+    if (!entrepreneurProfile) {
       entrepreneurProfile = await prisma.entrepreneurProfile.create({
         data: {
           userId: existingUser.id,
@@ -109,12 +123,15 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({
-      message: 'Profile updated successfully',
+      message: "Profile updated successfully",
       entrepreneurProfile,
       imageUrl: existingUser.imageUrl,
     });
   } catch (error) {
-    console.error('Error updating profile:', error);
-    return NextResponse.json({ error: "Failed to update profile" }, { status: 500 });
+    console.error("Error updating profile:", error);
+    return NextResponse.json(
+      { error: "Failed to update profile" },
+      { status: 500 },
+    );
   }
 }

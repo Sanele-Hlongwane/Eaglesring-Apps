@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import AcceptedRequestsPage from "@/components/Accepted"; 
+import AcceptedRequestsPage from "@/components/Accepted";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LoadingDots from "@/components/ui/LoadingDots"
+import LoadingDots from "@/components/ui/LoadingDots";
 import {
   FaUser,
   FaUsers,
@@ -63,7 +63,9 @@ const ProfilesPage = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
   const [receivedRequests, setReceivedRequests] = useState<FriendRequest[]>([]);
-  const [activeTab, setActiveTab] = useState<"all" | "sent" | "received" |  "accepted">("all");
+  const [activeTab, setActiveTab] = useState<
+    "all" | "sent" | "received" | "accepted"
+  >("all");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingId, setLoadingId] = useState<number | null>(null); // Loading state for buttons
@@ -134,11 +136,11 @@ const ProfilesPage = () => {
     setLoadingId(requestId);
     try {
       await axios.post(`/api/friend-requests/${requestId}/accept`);
-      toast.success('Friend request accepted!');
+      toast.success("Friend request accepted!");
       setLoadingId(null);
       refreshRequests();
     } catch (err) {
-      toast.error('Failed to accept friend request');
+      toast.error("Failed to accept friend request");
       setLoadingId(null);
     }
   };
@@ -147,11 +149,11 @@ const ProfilesPage = () => {
     setLoadingId(requestId);
     try {
       await axios.post(`/api/friend-requests/${requestId}/reject`);
-      toast.success('Friend request rejected!');
+      toast.success("Friend request rejected!");
       setLoadingId(null);
       refreshRequests();
     } catch (err) {
-      toast.error('Failed to reject friend request');
+      toast.error("Failed to reject friend request");
       setLoadingId(null);
     }
   };
@@ -160,11 +162,11 @@ const ProfilesPage = () => {
     setLoadingId(requestId);
     try {
       await axios.delete(`/api/friend-requests/${requestId}/delete`);
-      toast.success('Friend request deleted!');
+      toast.success("Friend request deleted!");
       setLoadingId(null);
       refreshRequests();
     } catch (err) {
-      toast.error('Failed to delete friend request');
+      toast.error("Failed to delete friend request");
       setLoadingId(null);
     }
   };
@@ -173,11 +175,11 @@ const ProfilesPage = () => {
     setLoadingId(requestId);
     try {
       await axios.delete(`/api/friend-requests/${requestId}/remove`);
-      toast.success('Friend request removed!');
+      toast.success("Friend request removed!");
       setLoadingId(null);
       refreshRequests();
     } catch (err) {
-      toast.error('Failed to remove friend request');
+      toast.error("Failed to remove friend request");
       setLoadingId(null);
     }
   };
@@ -196,10 +198,12 @@ const ProfilesPage = () => {
     .filter(
       (profile) =>
         profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        profile.email.toLowerCase().includes(searchTerm.toLowerCase())
+        profile.email.toLowerCase().includes(searchTerm.toLowerCase()),
     )
     .filter((profile) =>
-      roleFilter ? profile.role.toLowerCase() === roleFilter.toLowerCase() : true
+      roleFilter
+        ? profile.role.toLowerCase() === roleFilter.toLowerCase()
+        : true,
     );
 
   const renderContent = () => {
@@ -213,38 +217,42 @@ const ProfilesPage = () => {
       activeTab === "all"
         ? filteredProfiles
         : activeTab === "sent"
-        ? sentRequests
-        : receivedRequests;
+          ? sentRequests
+          : receivedRequests;
 
     if (dataToDisplay.length === 0) {
-      return <EmptyState message={`No ${activeTab === "all" ? "profiles" : activeTab + " requests"} found`} />;
+      return (
+        <EmptyState
+          message={`No ${activeTab === "all" ? "profiles" : activeTab + " requests"} found`}
+        />
+      );
     }
 
     return (
       <div className="relative min-h-screen ">
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-        <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />
-        <FaShieldAlt className="text-blue-500 absolute top-1/3 right-10 text-[120px] rotate-6" />
-        <FaComments className="text-green-500 absolute bottom-16 left-1/4 text-[80px] -rotate-12" />
-        <FaUserTie className="text-red-500 absolute top-1/4 left-10 text-[90px] rotate-45" />
-        <FaChartLine className="text-purple-500 absolute bottom-20 right-1/3 text-[110px] -rotate-6" />
-        <FaRegGem className="text-pink-500 absolute bottom-1/4 left-2/3 text-[100px] rotate-12" />
-        <FaHandsHelping className="text-yellow-400 absolute top-20 right-5 text-[90px] rotate-12" />
-        <FaGlobe className="text-blue-400 absolute bottom-28 right-14 text-[100px] rotate-12" />
-        <FaRocket className="text-red-400 absolute top-1/3 left-14 text-[80px] rotate-45" />
-        <FaAward className="text-orange-500 absolute bottom-10 left-32 text-[120px] rotate-6" />
-        <FaMedal className="text-green-400 absolute top-10 right-32 text-[110px] -rotate-12" />
-      </div>
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+          <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />
+          <FaShieldAlt className="text-blue-500 absolute top-1/3 right-10 text-[120px] rotate-6" />
+          <FaComments className="text-green-500 absolute bottom-16 left-1/4 text-[80px] -rotate-12" />
+          <FaUserTie className="text-red-500 absolute top-1/4 left-10 text-[90px] rotate-45" />
+          <FaChartLine className="text-purple-500 absolute bottom-20 right-1/3 text-[110px] -rotate-6" />
+          <FaRegGem className="text-pink-500 absolute bottom-1/4 left-2/3 text-[100px] rotate-12" />
+          <FaHandsHelping className="text-yellow-400 absolute top-20 right-5 text-[90px] rotate-12" />
+          <FaGlobe className="text-blue-400 absolute bottom-28 right-14 text-[100px] rotate-12" />
+          <FaRocket className="text-red-400 absolute top-1/3 left-14 text-[80px] rotate-45" />
+          <FaAward className="text-orange-500 absolute bottom-10 left-32 text-[120px] rotate-6" />
+          <FaMedal className="text-green-400 absolute top-10 right-32 text-[110px] -rotate-12" />
+        </div>
         <div className="grid gap-1 grid-cols-1 xm-grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
           {dataToDisplay.map((item: any) => (
             <div
               key={item.id}
               className="relative bg-gradient-to-r from-gray-300 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-xl transition-transform transform "
             >
-            {/* Badge for Role */}
-            <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md">
-              {item.role}
-            </div>
+              {/* Badge for Role */}
+              <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md">
+                {item.role}
+              </div>
               <div className="flex  text-sm flex-col items-center">
                 {item.imageUrl && (
                   <img
@@ -262,129 +270,155 @@ const ProfilesPage = () => {
                   </p>
                   {item.entrepreneurProfile && (
                     <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-blue-500 transition-transform transform hover:scale-105">
-                    <div className="mb-2">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Company:</h4>
-                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaBuilding className="text-blue-500 mr-2" />
-                        <span className="text-gray-800 dark:text-gray-300">{item.entrepreneurProfile.company}</span>
+                      <div className="mb-2">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                          Company:
+                        </h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaBuilding className="text-blue-500 mr-2" />
+                          <span className="text-gray-800 dark:text-gray-300">
+                            {item.entrepreneurProfile.company}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                          Bio:
+                        </h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaInfoCircle className="text-blue-500 mr-2" />
+                          <span className="text-gray-700 dark:text-gray-400">
+                            {item.entrepreneurProfile.bio}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                          Business Stage:
+                        </h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaTag className="text-blue-500 mr-2" />
+                          <span className="text-gray-700 dark:text-gray-400">
+                            {item.entrepreneurProfile.businessStage}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                          Revenue:
+                        </h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaMoneyBillWave className="mr-2 text-green-600 dark:text-green-400" />
+                          <span className="font-semibold">Funding Goal:</span>
+                          <span className="text-green-700 text-bold dark:text-green-800">
+                            R
+                            {item.entrepreneurProfile.revenue
+                              ? item.entrepreneurProfile.revenue
+                                  .toString()
+                                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                              : "N/A"}
+                          </span>
+                        </div>
                       </div>
                     </div>
-
-                    <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Bio:</h4>
-                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaInfoCircle className="text-blue-500 mr-2" />
-                        <span className="text-gray-700 dark:text-gray-400">{item.entrepreneurProfile.bio}</span>
-                      </div>
+                  )}
+                  {item.investorProfile && (
+                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
+                      <p className="font-semibold text-gray-800 dark:text-gray-100">
+                        Investment Strategy:
+                      </p>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {item.investorProfile.investmentStrategy}
+                      </p>
                     </div>
+                  )}
+                  {activeTab === "all" && (
+                    <button
+                      onClick={() => sendFriendRequest(item.id)}
+                      className="mt-4 bg-green-600 dark:bg-green-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700 dark:hover:bg-green-400 transition-colors relative"
+                      disabled={loadingId === item.id}
+                    >
+                      {loadingId === item.id ? (
+                        <LoadingDots />
+                      ) : (
+                        <>
+                          <FaPaperPlane className="inline-block mr-2" /> Send
+                          Friend Request
+                        </>
+                      )}
+                    </button>
+                  )}
+                  {activeTab === "received" && item.status === "PENDING" && (
+                    <div className="mt-4 flex justify-center space-x-4">
+                      <button
+                        onClick={() => handleAcceptRequest(item.id)}
+                        className="bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition-colors"
+                        disabled={loadingId === item.id}
+                      >
+                        {loadingId === item.id ? (
+                          <LoadingDots />
+                        ) : (
+                          <span>Accept</span>
+                        )}
+                      </button>
 
-                    <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Business Stage:</h4>
-                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaTag className="text-blue-500 mr-2" />
-                        <span className="text-gray-700 dark:text-gray-400">{item.entrepreneurProfile.businessStage}</span>
-                      </div>
+                      <button
+                        onClick={() => handleDeclineRequest(item.id)}
+                        className="bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition-colors"
+                        disabled={loadingId === item.id}
+                      >
+                        {loadingId === item.id ? (
+                          <LoadingDots />
+                        ) : (
+                          <span>Decline</span>
+                        )}
+                      </button>
                     </div>
+                  )}
 
-                    <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Revenue:</h4>
-                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaMoneyBillWave className="mr-2 text-green-600 dark:text-green-400" />
-                        <span className="font-semibold">Funding Goal:</span>
-                        <span className="text-green-700 text-bold dark:text-green-800">
-                          R{item.entrepreneurProfile.revenue
-                            ? item.entrepreneurProfile.revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                            : "N/A"}
+                  {(activeTab === "sent" || activeTab === "received") && (
+                    <div className="mt-4 w-full text-gray-600 dark:text-gray-300">
+                      <p>
+                        Status:
+                        <span
+                          className={`font-semibold ${item.status === "PENDING" ? "text-yellow-600 dark:text-yellow-500" : item.status === "ACCEPTED" ? "text-green-600 dark:text-green-500" : "text-red-600 dark:text-red-500"}`}
+                        >
+                          {item.status}
                         </span>
-                      </div>
+                      </p>
                     </div>
-                  </div>
-                )}
-                {item.investorProfile && (
-                  <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
-                    <p className="font-semibold text-gray-800 dark:text-gray-100">Investment Strategy:</p>
-                    <p className="text-gray-700 dark:text-gray-300">{item.investorProfile.investmentStrategy}</p>
-                  </div>
-                )}
-                {activeTab === "all" && (
-                  <button
-                    onClick={() => sendFriendRequest(item.id)}
-                    className="mt-4 bg-green-600 dark:bg-green-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700 dark:hover:bg-green-400 transition-colors relative"
-                    disabled={loadingId === item.id}
-                  >
-                    {loadingId === item.id ? (
-                      <LoadingDots />
-                    ) : (
-                      <>
-                        <FaPaperPlane className="inline-block mr-2" /> Send Friend Request
-                      </>
-                    )}
-                  </button>
-                )}
-                {activeTab === "received" && item.status === "PENDING" && (
-                  <div className="mt-4 flex justify-center space-x-4">
+                  )}
+                  {activeTab === "sent" && (
                     <button
-                      onClick={() => handleAcceptRequest(item.id)}
-                      className="bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition-colors"
+                      onClick={() => handleDeleteRequest(item.id)}
+                      className={`mt-4 py-2 px-4 rounded-lg shadow-md text-white transition-colors relative ${
+                        loadingId === item.id
+                          ? "bg-red-600 dark:bg-red-500 cursor-wait"
+                          : "bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-400"
+                      }`}
                       disabled={loadingId === item.id}
                     >
                       {loadingId === item.id ? (
-                        <LoadingDots />
+                        <div className="flex items-center justify-center space-x-2">
+                          <LoadingDots />
+                        </div>
                       ) : (
-                        <span>Accept</span>
+                        <>
+                          <FaTrashAlt className="inline-block mr-2" /> Cancel
+                          Request
+                        </>
                       )}
                     </button>
-
-                    <button
-                      onClick={() => handleDeclineRequest(item.id)}
-                      className="bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 transition-colors"
-                      disabled={loadingId === item.id}
-                    >
-                      {loadingId === item.id ? (
-                        <LoadingDots />
-                      ) : (
-                        <span>Decline</span>
-                      )}
-                    </button>
-                  </div>
-                )}
-
-                {(activeTab === 'sent' || activeTab === 'received') && (
-                  <div className="mt-4 w-full text-gray-600 dark:text-gray-300">
-                    <p>Status: 
-                      <span className={`font-semibold ${item.status === 'PENDING' ? 'text-yellow-600 dark:text-yellow-500' : item.status === 'ACCEPTED' ? 'text-green-600 dark:text-green-500' : 'text-red-600 dark:text-red-500'}`}>
-                        {item.status}
-                      </span>
-                    </p>
-                  </div>
-                )}
-                {activeTab === "sent" && (
-                  <button
-                    onClick={() => handleDeleteRequest(item.id)}
-                    className={`mt-4 py-2 px-4 rounded-lg shadow-md text-white transition-colors relative ${
-                      loadingId === item.id
-                        ? 'bg-red-600 dark:bg-red-500 cursor-wait'
-                        : 'bg-red-600 dark:bg-red-500 hover:bg-red-700 dark:hover:bg-red-400'
-                    }`}
-                    disabled={loadingId === item.id}
-                  >
-                    {loadingId === item.id ? (
-                      <div className="flex items-center justify-center space-x-2">
-                        <LoadingDots />
-                      </div>
-                    ) : (
-                      <>
-                        <FaTrashAlt className="inline-block mr-2" /> Cancel Request
-                      </>
-                    )}
-                  </button>
-                )}
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     );
   };
 
@@ -397,12 +431,12 @@ const ProfilesPage = () => {
             <a
               href="#all"
               onClick={() => setActiveTab("all")}
-                
               className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 
-                ${activeTab === "all" 
-                  ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" 
-                  : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"} focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300`
-                }
+                ${
+                  activeTab === "all"
+                    ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50"
+                    : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"
+                } focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300`}
             >
               <FaUsers className="inline-block mr-2" /> All Profiles
             </a>
@@ -410,9 +444,11 @@ const ProfilesPage = () => {
               href="#sent"
               onClick={() => setActiveTab("sent")}
               className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 
-                ${activeTab === "sent" 
-                  ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" 
-                  : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"} focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300
+                ${
+                  activeTab === "sent"
+                    ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50"
+                    : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"
+                } focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300
                 `}
             >
               <FaPaperPlane className="inline-block mr-2" /> Sent
@@ -421,9 +457,10 @@ const ProfilesPage = () => {
               href="#received"
               onClick={() => setActiveTab("received")}
               className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 
-                ${activeTab === "received" 
-                  ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" 
-                  : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"
+                ${
+                  activeTab === "received"
+                    ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50"
+                    : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"
                 } focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300
               `}
             >
@@ -433,9 +470,10 @@ const ProfilesPage = () => {
               href="#accepted"
               onClick={() => setActiveTab("accepted")}
               className={`px-6 py-3 rounded-md border border-transparent bg-gradient-to-r from-gray-200 to-gray-300 dark:bg-gradient-to-r dark:from-gray-600 dark:to-gray-800 
-                ${activeTab === "accepted" 
-                  ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50" 
-                  : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"
+                ${
+                  activeTab === "accepted"
+                    ? "text-gray-800 dark:text-gray-200 bg-opacity-90 shadow-lg shadow-blue-500/50"
+                    : "text-gray-700 dark:text-gray-300 bg-opacity-80 hover:bg-gray-300 dark:hover:bg-gray-600"
                 } focus:outline-none focus:ring-4 focus:ring-blue-500 transition-all duration-300
               `}
             >
@@ -468,9 +506,7 @@ const ProfilesPage = () => {
         </div>
       </nav>
 
-      <div className="pt-40 pb-10 m-10">
-        {renderContent()}
-      </div>
+      <div className="pt-40 pb-10 m-10">{renderContent()}</div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { currentUser } from '@clerk/nextjs/server';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: 'User not found' }, { status: 401 });
+    return NextResponse.json({ error: "User not found" }, { status: 401 });
   }
 
   try {
@@ -24,7 +24,10 @@ export async function GET(request: Request) {
     });
 
     if (!dbUser || !dbUser.entrepreneurProfile) {
-      return NextResponse.json({ error: 'Entrepreneur profile not found' }, { status: 404 });
+      return NextResponse.json(
+        { error: "Entrepreneur profile not found" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json({
@@ -32,7 +35,10 @@ export async function GET(request: Request) {
       pitches: dbUser.entrepreneurProfile.pitches,
     });
   } catch (error) {
-    console.error('Error fetching profile:', error);
-    return NextResponse.json({ error: 'Failed to fetch profile' }, { status: 500 });
+    console.error("Error fetching profile:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch profile" },
+      { status: 500 },
+    );
   }
 }

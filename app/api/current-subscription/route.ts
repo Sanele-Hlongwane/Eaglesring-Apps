@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     if (!email) {
       return NextResponse.json(
         { message: "Email is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     if (!customer) {
       return NextResponse.json(
         { message: "Customer not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
 
     // Find the active subscription
     const activeSubscription = subscriptions.data.find(
-      (sub) => sub.status === "active"
+      (sub) => sub.status === "active",
     );
 
     // Retrieve payment methods
@@ -66,6 +66,9 @@ export async function GET(request: Request) {
     });
   } catch (err) {
     console.error("Error fetching subscription:", err);
-    return NextResponse.json({ message: (err as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { message: (err as Error).message },
+      { status: 500 },
+    );
   }
 }

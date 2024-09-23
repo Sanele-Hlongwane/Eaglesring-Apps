@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { currentUser } from '@clerk/nextjs/server';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
@@ -9,7 +9,10 @@ export async function GET(request: Request) {
 
   if (!user) {
     console.error("No user found. Please log in.");
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -23,7 +26,10 @@ export async function GET(request: Request) {
 
     if (!dbUser) {
       console.error("No corresponding database user found.");
-      return NextResponse.json({ error: "Database user not found." }, { status: 404 });
+      return NextResponse.json(
+        { error: "Database user not found." },
+        { status: 404 },
+      );
     }
 
     const userId = dbUser.id;
@@ -32,11 +38,8 @@ export async function GET(request: Request) {
     // Fetch accepted friend requests
     const acceptedRequests = await prisma.friendRequest.findMany({
       where: {
-        status: 'ACCEPTED',
-        OR: [
-          { senderId: userId },
-          { receiverId: userId },
-        ],
+        status: "ACCEPTED",
+        OR: [{ senderId: userId }, { receiverId: userId }],
       },
       include: {
         sender: {
@@ -54,10 +57,12 @@ export async function GET(request: Request) {
       },
     });
 
-    console.debug(`Fetched ${acceptedRequests.length} accepted friend requests`);
+    console.debug(
+      `Fetched ${acceptedRequests.length} accepted friend requests`,
+    );
 
     // Return the requests in the desired format
-    const response = acceptedRequests.map(req => {
+    const response = acceptedRequests.map((req) => {
       const isSender = req.senderId === userId;
       const userData = isSender ? req.receiver : req.sender;
 
@@ -75,7 +80,10 @@ export async function GET(request: Request) {
 
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Error fetching accepted requests:', error);
-    return NextResponse.json({ error: "Failed to fetch accepted requests" }, { status: 500 });
+    console.error("Error fetching accepted requests:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch accepted requests" },
+      { status: 500 },
+    );
   }
 }

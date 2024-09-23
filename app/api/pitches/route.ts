@@ -8,7 +8,10 @@ export async function GET() {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -19,29 +22,35 @@ export async function GET() {
           include: {
             pitches: true,
             investments: true,
-          }
+          },
         },
         investorProfile: {
           include: {
             feedbacks: true,
             investments: true,
-          }
+          },
         },
         feedbacks: true,
-        interests: true
-      }
+        interests: true,
+      },
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User profile not found" },
+        { status: 404 },
+      );
     }
 
     const pitches = existingUser.entrepreneurProfile?.pitches || [];
 
     return NextResponse.json({ pitches });
   } catch (error) {
-    console.error('Error fetching pitches:', error);
-    return NextResponse.json({ error: "Failed to fetch pitches" }, { status: 500 });
+    console.error("Error fetching pitches:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch pitches" },
+      { status: 500 },
+    );
   }
 }
 
@@ -51,23 +60,17 @@ export async function POST(request: NextRequest) {
   if (!user) {
     return NextResponse.json(
       { error: "User not found. Please log in." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
-  const {
-    title,
-    description,
-    videoUrl,
-    attachments,
-    fundingGoal,
-  } = await request.json();
+  const { title, description, videoUrl, attachments, fundingGoal } =
+    await request.json();
 
-
-  if (!title || !description ) {
+  if (!title || !description) {
     return NextResponse.json(
       { error: "Title and description are required" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -79,7 +82,7 @@ export async function POST(request: NextRequest) {
     if (!existingUser) {
       return NextResponse.json(
         { error: "User profile not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -91,7 +94,7 @@ export async function POST(request: NextRequest) {
       entrepreneurProfile = await prisma.entrepreneurProfile.create({
         data: {
           userId: existingUser.id,
-          bio: "Hey there, I am new entrepreneur here to get funds for my company.",  // Placeholder bio for now
+          bio: "Hey there, I am new entrepreneur here to get funds for my company.", // Placeholder bio for now
         },
       });
     }
@@ -106,26 +109,28 @@ export async function POST(request: NextRequest) {
         entrepreneurId: entrepreneurProfile.id,
       },
     });
-    
+
     // Notify the user that the pitch was successfully created
     await prisma.notification.create({
       data: {
         content: `Your pitch "${newPitch.title}" has been created successfully.`,
-        userId: existingUser.id,  // Send the notification to the entrepreneur
+        userId: existingUser.id, // Send the notification to the entrepreneur
       },
     });
 
-    console.debug(`Notification sent to user ID ${existingUser.id}: "Your pitch "${newPitch.title}" has been created successfully."`);
+    console.debug(
+      `Notification sent to user ID ${existingUser.id}: "Your pitch "${newPitch.title}" has been created successfully."`,
+    );
 
     return NextResponse.json({
-      message: 'Pitch created successfully',
+      message: "Pitch created successfully",
       pitch: newPitch,
     });
   } catch (error) {
-    console.error('Error creating pitch:', error);
+    console.error("Error creating pitch:", error);
     return NextResponse.json(
       { error: "Failed to create pitch" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

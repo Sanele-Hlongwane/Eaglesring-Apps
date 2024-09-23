@@ -1,6 +1,5 @@
-import React from 'react';
-import Notifications from '@/components/Notifications';
-
+import React from "react";
+import Notifications from "@/components/Notifications";
 
 const NotificationsPage = () => {
   return (

@@ -8,7 +8,10 @@ export async function GET() {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -20,26 +23,30 @@ export async function GET() {
           include: {
             pitches: true,
             investments: true,
-          }
+          },
         },
         investorProfile: {
           include: {
             feedbacks: true,
             investments: true,
-          }
+          },
         },
         feedbacks: true,
-        interests: true
-      }
+        interests: true,
+      },
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User profile not found" },
+        { status: 404 },
+      );
     }
 
     const analytics = {
       pitchesCount: existingUser.entrepreneurProfile?.pitches.length || 0,
-      investmentsCount: existingUser.entrepreneurProfile?.investments.length || 0,
+      investmentsCount:
+        existingUser.entrepreneurProfile?.investments.length || 0,
       feedbacksCount: existingUser.investorProfile?.feedbacks.length || 0,
       interestsCount: existingUser.interests.length || 0,
       pitches: existingUser.entrepreneurProfile?.pitches || [],
@@ -50,7 +57,10 @@ export async function GET() {
 
     return NextResponse.json({ analytics });
   } catch (error) {
-    console.error('Error fetching analytics:', error);
-    return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 });
+    console.error("Error fetching analytics:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch analytics" },
+      { status: 500 },
+    );
   }
 }

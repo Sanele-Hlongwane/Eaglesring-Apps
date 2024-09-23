@@ -1,6 +1,6 @@
-import MessageList from '@/components/chat/MessageList';
-import SendMessage from '@/components/chat/SendMessage';
-import FriendsList from '@/components/chat/FriendsList';
+import MessageList from "@/components/chat/MessageList";
+import SendMessage from "@/components/chat/SendMessage";
+import FriendsList from "@/components/chat/FriendsList";
 
 export default function ChatApp() {
   return (

@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const user = await currentUser();
@@ -17,7 +17,7 @@ export async function POST(
         {
           error: "User not authenticated",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -34,7 +34,7 @@ export async function POST(
         {
           error: "Receiver user not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -58,7 +58,7 @@ export async function POST(
         {
           error: "Friend request not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -86,7 +86,7 @@ export async function POST(
         {
           error: "Sender user not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -99,14 +99,13 @@ export async function POST(
     });
 
     console.debug(
-      `Notification sent to Sender ID ${senderId}: "${receiver.name} has rejected your friend request."`
+      `Notification sent to Sender ID ${senderId}: "${receiver.name} has rejected your friend request."`,
     );
 
     return NextResponse.json({
       success: true,
       updatedFriendRequest,
     });
-
   } catch (error) {
     console.error("Error rejecting friend request:", error);
     return NextResponse.json(
@@ -114,7 +113,7 @@ export async function POST(
         error: "Failed to reject friend request",
         details: (error as any).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

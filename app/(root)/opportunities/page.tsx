@@ -5,10 +5,18 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingDots from "@/components/ui/LoadingDots";
-import AcceptedRequestsPage from "@/components/Accepted"; 
+import AcceptedRequestsPage from "@/components/Accepted";
 import Loader from "@/components/Loader";
 import EmptyState from "@/components/EmptyState";
-import { FaBuilding, FaInfoCircle, FaTag, FaDollarSign, FaCheckCircle, FaTimesCircle, FaTrashAlt } from "react-icons/fa";
+import {
+  FaBuilding,
+  FaInfoCircle,
+  FaTag,
+  FaDollarSign,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaTrashAlt,
+} from "react-icons/fa";
 
 interface Profile {
   id: number;
@@ -40,7 +48,9 @@ const OpportunitiesPage = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
   const [receivedRequests, setReceivedRequests] = useState<FriendRequest[]>([]);
-  const [activeTab, setActiveTab] = useState<"all" | "sent" | "received" | "accepted">("all"); // Added "accepted" tab
+  const [activeTab, setActiveTab] = useState<
+    "all" | "sent" | "received" | "accepted"
+  >("all"); // Added "accepted" tab
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingId, setLoadingId] = useState<number | null>(null);
@@ -109,40 +119,40 @@ const OpportunitiesPage = () => {
   const handleAcceptRequest = async (requestId: number) => {
     try {
       await axios.post(`/api/friend-requests/${requestId}/accept`);
-      toast.success('Friend request accepted!');
+      toast.success("Friend request accepted!");
       refreshRequests();
     } catch (err) {
-      toast.error('Failed to accept friend request');
+      toast.error("Failed to accept friend request");
     }
   };
 
   const handleDeclineRequest = async (requestId: number) => {
     try {
       await axios.post(`/api/friend-requests/${requestId}/reject`);
-      toast.success('Friend request rejected!');
+      toast.success("Friend request rejected!");
       refreshRequests();
     } catch (err) {
-      toast.error('Failed to reject friend request');
+      toast.error("Failed to reject friend request");
     }
   };
 
   const handleDeleteRequest = async (requestId: number) => {
     try {
       await axios.delete(`/api/friend-requests/${requestId}/delete`);
-      toast.success('Friend request deleted!');
+      toast.success("Friend request deleted!");
       refreshRequests();
     } catch (err) {
-      toast.error('Failed to delete friend request');
+      toast.error("Failed to delete friend request");
     }
   };
 
   const handleRemoveRequest = async (requestId: number) => {
     try {
       await axios.delete(`/api/friend-requests/${requestId}/remove`);
-      toast.success('Friend request removed!');
+      toast.success("Friend request removed!");
       refreshRequests();
     } catch (err) {
-      toast.error('Failed to remove friend request');
+      toast.error("Failed to remove friend request");
     }
   };
 
@@ -160,10 +170,12 @@ const OpportunitiesPage = () => {
     .filter(
       (profile) =>
         profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        profile.email.toLowerCase().includes(searchTerm.toLowerCase())
+        profile.email.toLowerCase().includes(searchTerm.toLowerCase()),
     )
     .filter((profile) =>
-      roleFilter ? profile.role.toLowerCase() === roleFilter.toLowerCase() : true
+      roleFilter
+        ? profile.role.toLowerCase() === roleFilter.toLowerCase()
+        : true,
     );
 
   const renderContent = () => {
@@ -177,11 +189,15 @@ const OpportunitiesPage = () => {
       activeTab === "all"
         ? filteredProfiles
         : activeTab === "sent"
-        ? sentRequests
-        : receivedRequests;
+          ? sentRequests
+          : receivedRequests;
 
     if (dataToDisplay.length === 0) {
-      return <EmptyState message={`No ${activeTab === "all" ? "profiles" : activeTab + " requests"} found`} />;
+      return (
+        <EmptyState
+          message={`No ${activeTab === "all" ? "profiles" : activeTab + " requests"} found`}
+        />
+      );
     }
 
     return (
@@ -196,7 +212,7 @@ const OpportunitiesPage = () => {
               <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md">
                 {item.role}
               </div>
-              
+
               <div className="flex flex-col items-center">
                 {item.imageUrl && (
                   <img
@@ -219,33 +235,53 @@ const OpportunitiesPage = () => {
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg mb-4 border-t-2 border-gray-900 dark:border-gray-300">
                       <div className="flex items-center mb-2">
                         <FaBuilding className="text-gray-600 mr-2" />
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Company:</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                          Company:
+                        </h3>
                       </div>
-                      <p className="text-gray-800 dark:text-gray-300 mb-2">{item.entrepreneurProfile.company}</p>
+                      <p className="text-gray-800 dark:text-gray-300 mb-2">
+                        {item.entrepreneurProfile.company}
+                      </p>
                       <div className="flex items-center mb-2">
                         <FaInfoCircle className="text-gray-600 mr-2" />
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Bio:</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                          Bio:
+                        </h3>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-400 mb-2">{item.entrepreneurProfile.bio}</p>
+                      <p className="text-gray-700 dark:text-gray-400 mb-2">
+                        {item.entrepreneurProfile.bio}
+                      </p>
                       <div className="flex items-center mb-2">
                         <FaTag className="text-gray-600 mr-2" />
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Business Stage:</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                          Business Stage:
+                        </h3>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-400 mb-2">{item.entrepreneurProfile.businessStage}</p>
+                      <p className="text-gray-700 dark:text-gray-400 mb-2">
+                        {item.entrepreneurProfile.businessStage}
+                      </p>
                       <div className="flex items-center mb-2">
                         <FaDollarSign className="text-gray-600 mr-2" />
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Revenue:</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                          Revenue:
+                        </h3>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-400 mb-2">{item.entrepreneurProfile.revenue}</p>
+                      <p className="text-gray-700 dark:text-gray-400 mb-2">
+                        {item.entrepreneurProfile.revenue}
+                      </p>
                     </div>
                   )}
                   {item.investorProfile && (
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg mb-4 border-t-2 border-gray-900 dark:border-gray-300">
                       <div className="flex items-center mb-2">
                         <FaDollarSign className="text-gray-600 mr-2" />
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">Investment Strategy:</h3>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                          Investment Strategy:
+                        </h3>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-400 mb-2">{item.investorProfile.investmentStrategy}</p>
+                      <p className="text-gray-700 dark:text-gray-400 mb-2">
+                        {item.investorProfile.investmentStrategy}
+                      </p>
                     </div>
                   )}
                 </div>
@@ -255,26 +291,31 @@ const OpportunitiesPage = () => {
                     disabled={loadingId === item.id}
                     className="bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 disabled:opacity-50"
                   >
-                    {loadingId === item.id ? <LoadingDots /> : "Send Friend Request"}
+                    {loadingId === item.id ? (
+                      <LoadingDots />
+                    ) : (
+                      "Send Friend Request"
+                    )}
                   </button>
                 )}
-                {(activeTab === "sent" || activeTab === "received") && item.status === "ACCEPTED" && (
-                  <div className="p-4">
-                    <h1 className="text-2xl font-bold">{item.title}</h1>
-                    <a
-                      href={`/pitches/${item.id}`}
-                      className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700"
-                    >
-                      View Pitches
-                    </a>
-                    <a
-                      href={`/chat/${item.id}`}
-                      className="mt-4 ml-4 bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700"
-                    >
-                      Message
-                    </a>
-                  </div>
-                )}
+                {(activeTab === "sent" || activeTab === "received") &&
+                  item.status === "ACCEPTED" && (
+                    <div className="p-4">
+                      <h1 className="text-2xl font-bold">{item.title}</h1>
+                      <a
+                        href={`/pitches/${item.id}`}
+                        className="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-green-700"
+                      >
+                        View Pitches
+                      </a>
+                      <a
+                        href={`/chat/${item.id}`}
+                        className="mt-4 ml-4 bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700"
+                      >
+                        Message
+                      </a>
+                    </div>
+                  )}
                 {(activeTab === "sent" || activeTab === "received") && (
                   <div className="mt-4 flex space-x-4">
                     {activeTab === "received" && item.status === "PENDING" && (

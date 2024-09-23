@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
         {
           error: "User not authenticated",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -31,12 +31,14 @@ export async function GET(request: NextRequest) {
         {
           error: "Receiver user not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Debug logging
-    console.debug(`Fetching received friend requests for user ID: ${receiver.id}`);
+    console.debug(
+      `Fetching received friend requests for user ID: ${receiver.id}`,
+    );
 
     const receivedRequests = await prisma.friendRequest.findMany({
       where: { receiverId: receiver.id },
@@ -50,7 +52,9 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    console.debug(`Fetched ${receivedRequests.length} received friend requests`);
+    console.debug(
+      `Fetched ${receivedRequests.length} received friend requests`,
+    );
 
     return NextResponse.json(
       receivedRequests.map((req) => ({
@@ -62,7 +66,7 @@ export async function GET(request: NextRequest) {
         entrepreneurProfile: req.sender.entrepreneurProfile,
         investorProfile: req.sender.investorProfile,
         status: req.status,
-      }))
+      })),
     );
   } catch (error) {
     console.error("Failed to fetch received requests:", error);
@@ -71,7 +75,7 @@ export async function GET(request: NextRequest) {
         error: "Failed to fetch received requests",
         details: (error as any).message,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

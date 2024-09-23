@@ -45,12 +45,14 @@ const ProfilesPage = () => {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
   const [receivedRequests, setReceivedRequests] = useState<FriendRequest[]>([]);
-  const [activeTab, setActiveTab] = useState<"all" | "sent" | "received">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "sent" | "received">(
+    "all",
+  );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [buttonLoading, setButtonLoading] = useState<{ [key: number]: boolean }>(
-    {}
-  );
+  const [buttonLoading, setButtonLoading] = useState<{
+    [key: number]: boolean;
+  }>({});
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [roleFilter, setRoleFilter] = useState<string>("");
 
@@ -76,7 +78,9 @@ const ProfilesPage = () => {
         setLoading(true);
         try {
           const sentResponse = await axios.get("/api/friend-requests/sent");
-          const receivedResponse = await axios.get("/api/friend-requests/received");
+          const receivedResponse = await axios.get(
+            "/api/friend-requests/received",
+          );
           setSentRequests(sentResponse.data);
           setReceivedRequests(receivedResponse.data);
         } catch (err) {
@@ -167,24 +171,23 @@ const ProfilesPage = () => {
 
   // Filter profiles based on search, role filter, and exclude users in sent/received requests when on "all" tab
   const filteredProfiles = profiles
-    .filter((profile) =>
-      profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      profile.email.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (profile) =>
+        profile.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        profile.email.toLowerCase().includes(searchTerm.toLowerCase()),
     )
     .filter((profile) => (roleFilter ? profile.role === roleFilter : true))
-    .filter((profile) => (activeTab === "all" ? !isInRequests(profile.id) : true));
+    .filter((profile) =>
+      activeTab === "all" ? !isInRequests(profile.id) : true,
+    );
 
   return (
     <div className="profiles-page">
       <ToastContainer />
       {/* Tab Navigation */}
       <div className="tabs">
-        <button onClick={() => setActiveTab("all")}>
-          All Profiles
-        </button>
-        <button onClick={() => setActiveTab("sent")}>
-          Sent Requests
-        </button>
+        <button onClick={() => setActiveTab("all")}>All Profiles</button>
+        <button onClick={() => setActiveTab("sent")}>Sent Requests</button>
         <button onClick={() => setActiveTab("received")}>
           Received Requests
         </button>

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Loader from "@/components/Loader";
 import { useRef, useEffect, useState } from "react";
@@ -21,31 +21,37 @@ export default function SelectRole() {
 
   useEffect(() => {
     if (isLoaded && isSignedIn) {
-      setUserName(user?.fullName || '');
+      setUserName(user?.fullName || "");
     } else {
-      console.log('User not loaded or not signed in');
+      console.log("User not loaded or not signed in");
     }
   }, [isLoaded, isSignedIn, user]);
 
-  const handleRoleAssignment = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleRoleAssignment = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    const roleName = formData.get('role') as 'INVESTOR' | 'ENTREPRENEUR';
+    const roleName = formData.get("role") as "INVESTOR" | "ENTREPRENEUR";
 
     if (!roleName) {
-      toast.error('Role is required');
+      toast.error("Role is required");
       return;
     }
 
-    if (window.confirm(`Do you want to save ${roleName} as your role? This cannot be changed.`)) {
+    if (
+      window.confirm(
+        `Do you want to save ${roleName} as your role? This cannot be changed.`,
+      )
+    ) {
       setIsSubmitting(true);
 
       try {
-        const response = await fetch('/api/assign-role', {
-          method: 'POST',
+        const response = await fetch("/api/assign-role", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ role: roleName }),
         });
@@ -54,13 +60,13 @@ export default function SelectRole() {
           const data = await response.json();
           toast.success(data.message);
           formRef.current?.reset();
-          router.push('/role-assigned');
+          router.push("/role-assigned");
         } else {
           const errorData = await response.json();
-          toast.error(errorData.error || 'Failed to assign role');
+          toast.error(errorData.error || "Failed to assign role");
         }
       } catch (error) {
-        toast.error('Failed to assign role');
+        toast.error("Failed to assign role");
         console.error(error);
       } finally {
         setIsSubmitting(false);
@@ -79,7 +85,9 @@ export default function SelectRole() {
           Welcome to Eagles Ring, {userName}!
         </h2>
       )}
-      <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Select Role</h3>
+      <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+        Select Role
+      </h3>
       <form ref={formRef} onSubmit={handleRoleAssignment}>
         <div className="relative">
           <select
@@ -97,7 +105,7 @@ export default function SelectRole() {
           type="submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? <LoadingDots /> : 'Assign Role'}
+          {isSubmitting ? <LoadingDots /> : "Assign Role"}
         </button>
       </form>
     </div>

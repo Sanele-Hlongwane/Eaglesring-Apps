@@ -7,7 +7,16 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "@/components/Loader";
 import EmptyState from "@/components/EmptyState";
-import { FaBuilding, FaDollarSign, FaTag, FaInfoCircle, FaVideo, FaFileDownload, FaCalendarAlt, FaLinkedin } from "react-icons/fa";
+import {
+  FaBuilding,
+  FaDollarSign,
+  FaTag,
+  FaInfoCircle,
+  FaVideo,
+  FaFileDownload,
+  FaCalendarAlt,
+  FaLinkedin,
+} from "react-icons/fa";
 
 interface Pitch {
   id: number;
@@ -48,7 +57,7 @@ const EntrepreneurPitchesPage = () => {
         setError("Invalid user ID.");
         return;
       }
-  
+
       setLoading(true);
       try {
         const response = await axios.get(`/api/opportunities/${id}`);
@@ -60,14 +69,14 @@ const EntrepreneurPitchesPage = () => {
           throw new Error("Invalid response from API.");
         }
       } catch (err) {
-        console.error('Error fetching pitches and profile:', err);
+        console.error("Error fetching pitches and profile:", err);
         setError("Failed to fetch pitches and profile");
         toast.error("Failed to fetch pitches and profile");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchPitchesAndProfile();
   }, [id]);
 
@@ -77,20 +86,21 @@ const EntrepreneurPitchesPage = () => {
 
   if (loading) return <Loader />;
   if (error) return <EmptyState message={error} />;
-  if (pitches.length === 0) return <EmptyState message="No pitches found for this user." />;
+  if (pitches.length === 0)
+    return <EmptyState message="No pitches found for this user." />;
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return `${date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })}, ${date.toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-      hour12: true
+    return `${date.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })}, ${date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
     })}`;
   };
 
@@ -108,8 +118,12 @@ const EntrepreneurPitchesPage = () => {
                 />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex flex-col justify-end items-center text-white p-4">
-                <div className="mb-2 h-20 overflow-auto bg-opacity-5 backdrop-blur-md bg-white  rounded-lg p-2"> {/* Added blur and background */}
-                  <p className="text-xs text-gray-100 dark:text-gray-300">{commonDetails?.bio || "N/A"}</p>
+                <div className="mb-2 h-20 overflow-auto bg-opacity-5 backdrop-blur-md bg-white  rounded-lg p-2">
+                  {" "}
+                  {/* Added blur and background */}
+                  <p className="text-xs text-gray-100 dark:text-gray-300">
+                    {commonDetails?.bio || "N/A"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -118,25 +132,38 @@ const EntrepreneurPitchesPage = () => {
             <div className="flex items-center p-4 bg-blue-100 dark:bg-blue-900 rounded-lg transition-transform duration-300">
               <FaBuilding className="text-blue-600 dark:text-blue-300 mr-2 text-3xl" />
               <div>
-                <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200">Company:</h3>
-                <p className="text-xs text-gray-800 dark:text-gray-300">{commonDetails.company}</p>
+                <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                  Company:
+                </h3>
+                <p className="text-xs text-gray-800 dark:text-gray-300">
+                  {commonDetails.company}
+                </p>
               </div>
             </div>
 
             <div className="flex items-center p-4 bg-purple-100 dark:bg-purple-900 rounded-lg transition-transform duration-300">
               <FaTag className="text-purple-600 dark:text-purple-300 mr-2 text-3xl" />
               <div>
-                <h3 className="text-sm font-semibold text-purple-800 dark:text-purple-200">Stage:</h3>
-                <p className="text-xs text-gray-800 dark:text-gray-300">{commonDetails.businessStage}</p>
+                <h3 className="text-sm font-semibold text-purple-800 dark:text-purple-200">
+                  Stage:
+                </h3>
+                <p className="text-xs text-gray-800 dark:text-gray-300">
+                  {commonDetails.businessStage}
+                </p>
               </div>
             </div>
 
             <div className="flex items-center p-4 bg-green-100 dark:bg-green-900 rounded-lg transition-transform duration-300">
               <FaDollarSign className="text-green-600 dark:text-green-300 mr-2 text-3xl" />
               <div>
-                <h3 className="text-sm font-semibold text-green-800 dark:text-green-200">Annual Revenue:</h3>
+                <h3 className="text-sm font-semibold text-green-800 dark:text-green-200">
+                  Annual Revenue:
+                </h3>
                 <p className="text-xs text-gray-800 dark:text-gray-300">
-                  R{new Intl.NumberFormat('en-ZA').format(Number(commonDetails.revenue))}
+                  R
+                  {new Intl.NumberFormat("en-ZA").format(
+                    Number(commonDetails.revenue),
+                  )}
                 </p>
               </div>
             </div>
@@ -144,14 +171,18 @@ const EntrepreneurPitchesPage = () => {
             <div className="flex items-center p-4 bg-blue-100 dark:bg-blue-900 rounded-lg transition-transform duration-300">
               <FaLinkedin className="text-blue-600 dark:text-blue-300 mr-2 text-3xl" />
               <div>
-                <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200">LinkedIn:</h3>
+                <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-200">
+                  LinkedIn:
+                </h3>
                 <a
                   href={commonDetails.linkedinUrl}
                   className="text-xs text-blue-500 dark:text-blue-400 hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {window.innerWidth < 640 ? "View Profile" : commonDetails.linkedinUrl}
+                  {window.innerWidth < 640
+                    ? "View Profile"
+                    : commonDetails.linkedinUrl}
                 </a>
               </div>
             </div>
@@ -166,24 +197,34 @@ const EntrepreneurPitchesPage = () => {
       )}
 
       {pitches.map((pitch) => (
-        <div key={pitch.id} className="bg-gradient-to-r from-gray-200 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-md transition-transform duration-300 transform ">
-          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">{pitch.title}</h2>
+        <div
+          key={pitch.id}
+          className="bg-gradient-to-r from-gray-200 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-md transition-transform duration-300 transform "
+        >
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4">
+            {pitch.title}
+          </h2>
           <h1 className="text-l font-bold text-green-800 dark:text-green-300 mb-4">
-            Funding Goal: R{pitch.fundingGoal !== undefined ? new Intl.NumberFormat('en-ZA').format(pitch.fundingGoal) : "N/A"}
+            Funding Goal: R
+            {pitch.fundingGoal !== undefined
+              ? new Intl.NumberFormat("en-ZA").format(pitch.fundingGoal)
+              : "N/A"}
           </h1>
 
           <div className="flex flex-col gap-2 mb-4">
             <div className="flex items-center">
               <FaCalendarAlt className="text-gray-700 dark:text-gray-200 text-xl mr-2" />
               <div className="text-xs text-gray-600 dark:text-gray-400">
-                <span className="font-semibold">Created At:</span> {formatDate(pitch.createdAt)}
+                <span className="font-semibold">Created At:</span>{" "}
+                {formatDate(pitch.createdAt)}
               </div>
             </div>
 
             <div className="flex items-center">
               <FaCalendarAlt className="text-gray-700 dark:text-gray-200 text-xl mr-2" />
               <div className="text-xs text-gray-600 dark:text-gray-400">
-                <span className="font-semibold">Last Updated At:</span> {formatDate(pitch.updatedAt)}
+                <span className="font-semibold">Last Updated At:</span>{" "}
+                {formatDate(pitch.updatedAt)}
               </div>
             </div>
           </div>
@@ -202,8 +243,8 @@ const EntrepreneurPitchesPage = () => {
             {expandedPitchId === pitch.id ? "▲ Show Less" : "▼ View More"}
           </div>
 
-            {expandedPitchId === pitch.id && (
-              <div className=" p-4 rounded-xl shadow-md border-t-2 border-gray-900 dark:border-gray-300 mt-4">
+          {expandedPitchId === pitch.id && (
+            <div className=" p-4 rounded-xl shadow-md border-t-2 border-gray-900 dark:border-gray-300 mt-4">
               <p className="text-xs font-semibold text-gray-800 dark:text-gray-300 whitespace-pre-line">
                 {pitch.description}
               </p>
@@ -231,7 +272,11 @@ const EntrepreneurPitchesPage = () => {
                     {pitch.attachments.map((attachment, index) => (
                       <li key={index} className="flex items-center mt-1">
                         <FaFileDownload className="text-gray-600 dark:text-gray-200 mr-2" />
-                        <a href={attachment} className="text-blue-500 dark:text-blue-400 hover:underline" download>
+                        <a
+                          href={attachment}
+                          className="text-blue-500 dark:text-blue-400 hover:underline"
+                          download
+                        >
                           Download Attachment {index + 1}
                         </a>
                       </li>
@@ -243,8 +288,14 @@ const EntrepreneurPitchesPage = () => {
           )}
         </div>
       ))}
-      
-      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar closeOnClick theme="dark" />
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={3000}
+        hideProgressBar
+        closeOnClick
+        theme="dark"
+      />
     </div>
   );
 };

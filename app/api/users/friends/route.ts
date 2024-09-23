@@ -8,7 +8,10 @@ export async function GET(req: NextRequest) {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -27,6 +30,9 @@ export async function GET(req: NextRequest) {
     });
     return NextResponse.json(friends);
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch friends" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch friends" },
+      { status: 500 },
+    );
   }
 }

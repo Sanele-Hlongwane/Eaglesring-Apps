@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
+  apiVersion: "2024-06-20",
 });
 
 export async function POST(request: Request) {
@@ -10,14 +10,19 @@ export async function POST(request: Request) {
     const { priceId, email, userId } = await request.json();
 
     if (!priceId || !email || !userId) {
-      return NextResponse.json({ message: "Price ID, email, and user ID are required" }, { status: 400 });
+      return NextResponse.json(
+        { message: "Price ID, email, and user ID are required" },
+        { status: 400 },
+      );
     }
 
     // Retrieve or create a customer in Stripe
-    let customer = await stripe.customers.list({
-      email,
-      limit: 1,
-    }).then(res => res.data[0]);
+    let customer = await stripe.customers
+      .list({
+        email,
+        limit: 1,
+      })
+      .then((res) => res.data[0]);
 
     if (!customer) {
       customer = await stripe.customers.create({
@@ -29,28 +34,32 @@ export async function POST(request: Request) {
     // Check if the customer already has an active subscription
     const activeSubscriptions = await stripe.subscriptions.list({
       customer: customer.id,
-      status: 'active',
+      status: "active",
     });
 
     if (activeSubscriptions.data.length > 0) {
-      console.log("Customer already has an active subscription. Proceeding without canceling.");
+      console.log(
+        "Customer already has an active subscription. Proceeding without canceling.",
+      );
     }
 
     // Create a Checkout Session for the selected plan
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
       customer: customer.id,
-      line_items: [{
-        price: priceId,
-        quantity: 1,
-      }],
-      mode: 'subscription',
+      line_items: [
+        {
+          price: priceId,
+          quantity: 1,
+        },
+      ],
+      mode: "subscription",
       success_url: `${process.env.NEXT_PUBLIC_URL}/success`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/canceled`,
     });
 
     // Handle the cancellation of previous subscriptions after successful checkout
-    if (session.payment_status === 'paid') {
+    if (session.payment_status === "paid") {
       // Cancel previous subscriptions
       for (const subscription of activeSubscriptions.data) {
         await stripe.subscriptions.cancel(subscription.id);
@@ -60,6 +69,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ id: session.id });
   } catch (err) {
     console.error("Error creating subscription:", err);
-    return NextResponse.json({ message: (err as Error).message }, { status: 500 });
+    return NextResponse.json(
+      { message: (err as Error).message },
+      { status: 500 },
+    );
   }
 }

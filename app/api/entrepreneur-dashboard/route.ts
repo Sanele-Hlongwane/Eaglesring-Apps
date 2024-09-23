@@ -8,7 +8,10 @@ export async function GET() {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -27,7 +30,10 @@ export async function GET() {
 
     return NextResponse.json({ profile: existingUser.entrepreneurProfile });
   } catch (error) {
-    console.error('Error fetching entrepreneur profile:', error);
-    return NextResponse.json({ error: "Failed to fetch entrepreneur profile" }, { status: 500 });
+    console.error("Error fetching entrepreneur profile:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch entrepreneur profile" },
+      { status: 500 },
+    );
   }
 }

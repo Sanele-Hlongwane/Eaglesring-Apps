@@ -10,7 +10,10 @@ export async function GET(request: NextRequest) {
     const user = await currentUser();
 
     if (!user) {
-      return NextResponse.json({ error: "User not authenticated" }, { status: 401 });
+      return NextResponse.json(
+        { error: "User not authenticated" },
+        { status: 401 },
+      );
     }
 
     const clerkId = user.id;
@@ -21,14 +24,17 @@ export async function GET(request: NextRequest) {
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "User profile not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "User profile not found" },
+        { status: 404 },
+      );
     }
 
     // Get query parameters for search and filters
     const urlParams = request.nextUrl.searchParams;
-    const search = urlParams.get('search'); // Get 'search' parameter from the query
-    const startDate = urlParams.get('startDate'); // Get 'startDate' parameter from the query
-    const endDate = urlParams.get('endDate'); // Get 'endDate' parameter from the query
+    const search = urlParams.get("search"); // Get 'search' parameter from the query
+    const startDate = urlParams.get("startDate"); // Get 'startDate' parameter from the query
+    const endDate = urlParams.get("endDate"); // Get 'endDate' parameter from the query
 
     // Construct filters based on query params
     let filters: any = {
@@ -39,7 +45,7 @@ export async function GET(request: NextRequest) {
     if (search) {
       filters.content = {
         contains: search, // This allows case-insensitive partial matching
-        mode: 'insensitive',
+        mode: "insensitive",
       };
     }
 
@@ -64,7 +70,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ notifications });
   } catch (error) {
-    console.error('Error fetching notifications:', error);
-    return NextResponse.json({ error: "Failed to fetch notifications" }, { status: 500 });
+    console.error("Error fetching notifications:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch notifications" },
+      { status: 500 },
+    );
   }
 }

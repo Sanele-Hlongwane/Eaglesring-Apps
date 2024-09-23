@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { currentUser } from '@clerk/nextjs/server';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
@@ -9,7 +9,10 @@ export async function GET(request: Request) {
 
   if (!user) {
     console.error("No user found. Please log in.");
-    return NextResponse.json({ error: "User not found. Please log in." }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not found. Please log in." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -23,7 +26,10 @@ export async function GET(request: Request) {
 
     if (!dbUser) {
       console.error("No corresponding database user found.");
-      return NextResponse.json({ error: "Database user not found." }, { status: 404 });
+      return NextResponse.json(
+        { error: "Database user not found." },
+        { status: 404 },
+      );
     }
 
     const userId = dbUser.id;
@@ -31,18 +37,18 @@ export async function GET(request: Request) {
 
     const friendRequests = await prisma.friendRequest.findMany({
       where: {
-        OR: [
-          { senderId: userId },
-          { receiverId: userId },
-        ],
+        OR: [{ senderId: userId }, { receiverId: userId }],
       },
     });
 
-    const excludedUserIds = friendRequests.flatMap(request =>
-      [request.senderId, request.receiverId].filter(id => id !== userId)
+    const excludedUserIds = friendRequests.flatMap((request) =>
+      [request.senderId, request.receiverId].filter((id) => id !== userId),
     );
 
-    console.log("Users with sent or received friend requests:", excludedUserIds);
+    console.log(
+      "Users with sent or received friend requests:",
+      excludedUserIds,
+    );
 
     const users = await prisma.user.findMany({
       where: {
@@ -50,7 +56,7 @@ export async function GET(request: Request) {
           not: userId,
           notIn: excludedUserIds,
         },
-        role: 'ENTREPRENEUR',
+        role: "ENTREPRENEUR",
         entrepreneurProfile: {
           isNot: null,
         },
@@ -63,7 +69,10 @@ export async function GET(request: Request) {
 
     return NextResponse.json(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
-    return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
+    console.error("Error fetching users:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch users" },
+      { status: 500 },
+    );
   }
 }

@@ -52,8 +52,8 @@ export default function SignUpPage() {
             </span>
           </h1>
           <p className="text-sm sm:text-lg text-gray-800 dark:text-gray-300 mb-6 sm:mb-8 text-center">
-            You&apos;re already logged in. Let&apos;s get you back to where the action
-            happens!
+            You&apos;re already logged in. Let&apos;s get you back to where the
+            action happens!
           </p>
           <Button
             onPress={handleDashboardRedirect}

@@ -9,7 +9,7 @@ export default function SuccessPage() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push("/pricing"); 
+      router.push("/pricing");
     }, 4000);
 
     return () => clearTimeout(timer); // Cleanup timer on unmount
@@ -33,15 +33,15 @@ export default function SuccessPage() {
               d="M5 13l4 4L19 7"
             />
           </svg>
-        
-        <h1 className={`${title()} text-center text-sm font-bold `}>
-          Success!
-        </h1>
+
+          <h1 className={`${title()} text-center text-sm font-bold `}>
+            Success!
+          </h1>
         </div>
         <p className="text-gray-600 dark:text-gray-300 text-center text-xl">
-          Your role has been successfully assigned. You will be redirected shortly.
+          Your role has been successfully assigned. You will be redirected
+          shortly.
         </p>
-        
       </div>
     </div>
   );

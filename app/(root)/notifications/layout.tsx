@@ -1,15 +1,15 @@
-import { Metadata } from 'next';
-import { ReactNode } from 'react';
+import { Metadata } from "next";
+import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: 'Notifications',
-  description: 'Find and connect with entrepreneurs.',
+  title: "Notifications",
+  description: "Find and connect with entrepreneurs.",
 };
 
-const Layout = ({ children }: Readonly<{children: ReactNode}>) => {
+const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <main>
-        <div className="w-full">{children}</div>
+      <div className="w-full">{children}</div>
     </main>
   );
 };

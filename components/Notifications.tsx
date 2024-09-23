@@ -99,12 +99,6 @@ export default function Notifications() {
       <div className="absolute inset-0 pointer-events-none opacity-30">
             <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />
             <FaShieldAlt className="text-blue-500 absolute top-1/3 right-10 text-[120px] rotate-6" />
-            <FaComments className="text-green-500 absolute bottom-16 left-1/4 text-[80px] -rotate-12" />
-            <FaUserTie className="text-red-500 absolute bottom-1/4 left-10 text-[90px] rotate-45" />
-            <FaGlobe className="text-blue-400 absolute bottom-28 right-14 text-[100px] rotate-12" />
-            <FaAward className="text-orange-500 absolute bottom-10 left-32 text-[120px] rotate-6" />
-            <FaHandsHelping className="text-yellow-400 absolute top-20 right-5 text-[90px] rotate-12" />
-            <FaLeaf className="text-green-500 text-[70px] absolute bottom-16 left-16 animate-spin-slow" />
           </div>
 
         <div className="p-6">

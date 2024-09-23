@@ -78,13 +78,8 @@ export const Navbar = () => {
         return (
           <>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/')} href="/" onClick={() => handleLinkClick('/')}>
-                Dashboard
-              </Link>
-            </NavbarMenuItem>
-            <NavbarMenuItem>
-              <Link className={getLinkClasses('/opportunities')} href="/opportunities" onClick={() => handleLinkClick('/opportunities')}>
-                Opportunities
+              <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
+                notifications
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
@@ -103,13 +98,13 @@ export const Navbar = () => {
         return (
           <>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/')} href="/" onClick={() => handleLinkClick('/')}>
-                Dashboard
+              <Link className={getLinkClasses('/pitches')} href="/pitches" onClick={() => handleLinkClick('/pitches')}>
+                Pitches
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/pitches')} href="/pitches" onClick={() => handleLinkClick('/pitches')}>
-                Pitches
+              <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
+                Notifications
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
@@ -166,6 +161,11 @@ export const Navbar = () => {
 
         <ul className="hidden lg:flex gap-2 justify-start ml-2">
           <SignedIn>
+          <NavbarMenuItem>
+              <Link className={getLinkClasses('/')} href="/" onClick={() => handleLinkClick('/')}>
+                Dashboard
+              </Link>
+            </NavbarMenuItem>
             {roleBasedOptions(role)}
           </SignedIn>
           <SignedOut>

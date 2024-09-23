@@ -162,117 +162,125 @@ export default function EntrepreneurProfilePage() {
             Edit Your Profile
           </h1>
           <form onSubmit={handleUpdate} className="space-y-12">
-            <div className="flex flex-col items-center">
-            <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700 overflow-hidden shadow-xl">
-              {tempImageUrl || imageUrl ? (
-                <img
-                  src={tempImageUrl || imageUrl}
-                  alt="Profile"
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <FaCamera className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500" size={80} />
-              )}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="absolute inset-0 opacity-0 cursor-pointer"
-                disabled={isUploading}
-              />
-            </div>
+  <div className="flex flex-col items-center">
+    <div className="relative w-full h-64 bg-gray-200 dark:bg-gray-700 overflow-hidden shadow-xl">
+      {tempImageUrl || imageUrl ? (
+        <img
+          src={tempImageUrl || imageUrl}
+          alt="Profile"
+          className="w-full h-full object-contain"
+        />
+      ) : (
+        <FaCamera className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500" size={80} />
+      )}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        className="absolute inset-0 opacity-0 cursor-pointer"
+        disabled={isUploading}
+        id="imageUpload" // Added id
+      />
+    </div>
 
-              <div className="text-black mt-5">
-              {isUploading && <LoadingDots />}
-              </div>
-            </div>
+    <div className="text-black mt-5">
+      {isUploading && <LoadingDots />}
+    </div>
+  </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Bio</label>
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Tell us about yourself..."
-                  className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
-                  rows={5}
-                  required
-                />
-              </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <label htmlFor="bio" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Bio</label>
+      <textarea
+        id="bio" // Added id
+        value={bio}
+        onChange={(e) => setBio(e.target.value)}
+        placeholder="Tell us about yourself..."
+        className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
+        rows={5}
+        required
+      />
+    </div>
 
-              <div>
-                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Company Name</label>
-                <input
-                  type="text"
-                  value={company}
-                  onChange={(e) => setCompany(e.target.value)}
-                  placeholder="Your company's name"
-                  className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
-                />
-              </div>
+    <div>
+      <label htmlFor="company" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Company Name</label>
+      <input
+        type="text"
+        id="company" // Added id
+        value={company}
+        onChange={(e) => setCompany(e.target.value)}
+        placeholder="Your company's name"
+        className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
+      />
+    </div>
 
-              <div>
-                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Business Stage</label>
-                <select
-                  value={selectedStage}
-                  onChange={(e) => setSelectedStage(e.target.value)}
-                  className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
-                >
-                  {businessStages.map((stage) => (
-                    <option key={stage} value={stage}>
-                      {stage}
-                    </option>
-                  ))}
-                </select>
-              </div>
+    <div>
+      <label htmlFor="businessStage" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Business Stage</label>
+      <select
+        id="businessStage" // Added id
+        value={selectedStage}
+        onChange={(e) => setSelectedStage(e.target.value)}
+        className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
+      >
+        {businessStages.map((stage) => (
+          <option key={stage} value={stage}>
+            {stage}
+          </option>
+        ))}
+      </select>
+    </div>
 
-              <div>
-                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">LinkedIn URL</label>
-                <input
-                  type="url"
-                  value={linkedinUrl}
-                  onChange={(e) => setLinkedinUrl(e.target.value)}
-                  placeholder="https://linkedin.com/in/your_profile"
-                  className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
-                />
-                {linkedinUrl && (
-                  <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center text-blue-600 dark:text-blue-400">
-                    <FaLinkedin size={20} className="mr-2" />
-                    View LinkedIn Profile
-                  </a>
-                )}
-              </div>
+    <div>
+      <label htmlFor="linkedinUrl" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">LinkedIn URL</label>
+      <input
+        type="url"
+        id="linkedinUrl" // Added id
+        value={linkedinUrl}
+        onChange={(e) => setLinkedinUrl(e.target.value)}
+        placeholder="https://linkedin.com/in/your_profile"
+        className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
+      />
+      {linkedinUrl && (
+        <a href={linkedinUrl} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center text-blue-600 dark:text-blue-400">
+          <FaLinkedin size={20} className="mr-2" />
+          View LinkedIn Profile
+        </a>
+      )}
+    </div>
 
-              <div>
-                <label className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Annual Revenue (in ZAR)</label>
-                <input
-                  type="number"
-                  value={revenue}
-                  onChange={(e) => setRevenue(Number(e.target.value))}
-                  className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
-                />
-                <p className="mt-2 text-lg text-green-700 dark:text-green-500">
-                  Annual Revenue: R{new Intl.NumberFormat('en-ZA').format(revenue)}
-                </p>
-              </div>
-              <div
-                className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800"
-                style={{ whiteSpace: "pre-wrap" }}
-              >
-                {fundingHistory}
-              </div>
-            </div>
+    <div>
+      <label htmlFor="revenue" className="block text-lg font-semibold text-gray-700 dark:text-gray-300">Annual Revenue (in ZAR)</label>
+      <input
+        type="number"
+        id="revenue" // Added id
+        value={revenue}
+        onChange={(e) => setRevenue(Number(e.target.value))}
+        className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
+      />
+      <p className="mt-2 text-lg text-green-700 dark:text-green-500">
+        Annual Revenue: R{new Intl.NumberFormat('en-ZA').format(revenue)}
+      </p>
+    </div>
+    
+    <div
+      className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-100 dark:bg-gray-800"
+      style={{ whiteSpace: "pre-wrap" }}
+    >
+      {fundingHistory}
+    </div>
+  </div>
 
-            <div className="flex justify-center mt-8">
-              <button
-                type="submit"
-                disabled={isSaving}
-                className="mt-4 w-full inline-flex items-center justify-center px-8 py-3 border border-gray-500 dark:border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700 dark:bg-green-600 dark:hover:bg-green-700"
-           >
-                {isSaving ? <LoadingDots/> : 'Save Changes'}
-              </button>
-            </div>
-          </form>
+  <div className="flex justify-center mt-8">
+    <button
+      type="submit"
+      disabled={isSaving}
+      className="mt-4 w-full inline-flex items-center justify-center px-8 py-3 border border-gray-500 dark:border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700 dark:bg-green-600 dark:hover:bg-green-700"
+    >
+      {isSaving ? <LoadingDots /> : 'Save Changes'}
+    </button>
+  </div>
+</form>
+
         </div>
       )}
     </div>

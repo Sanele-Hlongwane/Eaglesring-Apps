@@ -529,22 +529,15 @@ export default function PitchesPage() {
                   <section className="py-16 px-4 sm:px-8 lg:px-16 xl:px-24">
                     <div className="max-w-6xl mx-auto text-center">
                     <div className="relative shadow-2xl rounded-lg overflow-hidden">
-                    <video
-  src="/pitch.mp4"
-  className="w-full h-auto rounded-lg"
-  controls
-  preload="auto"
-  autoPlay={false}
->
-  <track
-    kind="subtitles" // Use "captions" if you want it for captions
-    srcLang="en" // Adjust the language code as necessary
-    label="English" // Label for the track
-    default // Optional: set as default if you want it to show by default
-    src="" // Placeholder to satisfy the requirement
-  />
-  Your browser does not support the video tag.
-</video>
+                   <video
+        id="video" // Add an id to associate with the label
+        src="/Pitch-tut.mp4"
+        controls
+        className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+        style={{ maxHeight: "500px" }}
+      >
+        <track kind="captions" srcLang="en" />
+      </video>
 
 
 
@@ -614,41 +607,41 @@ export default function PitchesPage() {
   </div>
   
   <div>
-    <label htmlFor="videoFile" className="block text-gray-700 dark:text-gray-200">Video file (File must be 50MB or less)</label>
-    <input
-      type="file"
-      id="videoFile"
-      onChange={(e) => {
-        const file = e.target.files?.[0] || null;
-        setVideoFile(file);
-      }}
-      className="border p-2 rounded w-full"
-      accept="video/*"
-    />
-    {videoFile && (
-    <video
-  controls
-  className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
-  style={{ maxHeight: "500px" }}
->
-  <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
-  
-  {/* Add the track element for captions or subtitles */}
-  <track
-    kind="subtitles" // or "captions" depending on your use case
-    src="" // Placeholder to satisfy the requirement
-    srcLang="en" // Adjust the language code as necessary
-    label="English" // Label for the track
-    default // Optional: set as default if you want it to show by default
+  <label htmlFor="videoFile" className="block text-gray-700 dark:text-gray-200">
+    Video file (File must be 50MB or less)
+  </label>
+  <input
+    type="file"
+    id="videoFile"
+    onChange={(e) => {
+      const file = e.target.files?.[0] || null;
+      setVideoFile(file);
+    }}
+    className="border p-2 rounded w-full"
+    accept="video/*"
   />
-  
-  Your browser does not support the video tag.
-</video>
 
-   
-    
-    )}
-  </div>
+  {videoFile && (
+    <video
+      controls
+      className="w-full max-w-full rounded-lg border border-gray-300 dark:border-gray-700"
+      style={{ maxHeight: "500px" }}
+    >
+      <source src={URL.createObjectURL(videoFile)} type={videoFile.type} />
+      
+      {/* Add a placeholder for the track */}
+      <track
+        kind="captions" // This indicates that it's for accessibility
+        src="" // Add your subtitle file here when available
+        srcLang="en" // Set the language of the captions
+        label="English" // Caption track label
+        default // Optional: makes this the default track
+      />
+      Your browser does not support the video tag.
+    </video>
+  )}
+</div>
+
 
   <div>
     <label htmlFor="attachments" className="block text-gray-700 dark:text-gray-200">Attachments (Files must be 50MB or less)</label>

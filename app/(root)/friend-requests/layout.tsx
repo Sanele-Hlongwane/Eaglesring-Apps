@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Active Meeting",
-  description: "Join and manage your active meetings.",
+  title: "Connections",
+  description: "Send, accept and manage your onnections.",
 };
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {

@@ -78,18 +78,53 @@ export const Navbar = () => {
         return (
           <>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/investor-profile')} href="/investor-profile" onClick={() => handleLinkClick('/investor-profile')}>
-                Profile
+              <Link className={getLinkClasses('/')} href="/" onClick={() => handleLinkClick('/')}>
+                Dashboard
               </Link>
             </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
+                Notifications
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link className={getLinkClasses('/meetings')} href="/meetings" onClick={() => handleLinkClick('/meetings')}>
+                Meetings
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+          <Link className={getLinkClasses('/friend-requests')} href="/friend-requests" onClick={() => handleLinkClick('/friend-requests')}>
+            Connections
+          </Link>
+        </NavbarMenuItem>
           </>
         );
       case 'ENTREPRENEUR':
         return (
           <>
             <NavbarMenuItem>
+              <Link className={getLinkClasses('/')} href="/" onClick={() => handleLinkClick('/')}>
+                Dashboard
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
+                Notifications
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
               <Link className={getLinkClasses('/pitches')} href="/pitches" onClick={() => handleLinkClick('/pitches')}>
                 Pitches
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link className={getLinkClasses('/meetings')} href="/meetings" onClick={() => handleLinkClick('/meetings')}>
+                Meetings
+              </Link>
+            </NavbarMenuItem>
+            <NavbarMenuItem>
+              <Link className={getLinkClasses('/friend-requests')} href="/friend-requests" onClick={() => handleLinkClick('/friend-requests')}>
+                Connections
               </Link>
             </NavbarMenuItem>
           </>
@@ -136,28 +171,7 @@ export const Navbar = () => {
 
         <ul className="hidden lg:flex gap-2 justify-start ml-2">
           <SignedIn>
-            <NavbarMenuItem>
-              <Link className={getLinkClasses('/')} href="/" onClick={() => handleLinkClick('/')}>
-                Dashboard
-              </Link>
-            </NavbarMenuItem>
-            <NavbarMenuItem>
-              <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
-                Notifications
-              </Link>
-            </NavbarMenuItem>
             {roleBasedOptions(role)}
-
-            <NavbarMenuItem>
-              <Link className={getLinkClasses('/meetings')} href="/meetings" onClick={() => handleLinkClick('/meetings')}>
-                Meetings
-              </Link>
-            </NavbarMenuItem>
-            <NavbarMenuItem>
-              <Link className={getLinkClasses('/friend-requests')} href="/friend-requests" onClick={() => handleLinkClick('/friend-requests')}>
-                Connections
-              </Link>
-            </NavbarMenuItem>
           </SignedIn>
           <SignedOut>
             {commonLinks}

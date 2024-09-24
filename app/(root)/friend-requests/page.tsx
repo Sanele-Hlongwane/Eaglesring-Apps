@@ -204,7 +204,7 @@ const ProfilesPage = () => {
     }
 
     return (
-      <div className="relative min-h-screen ">
+      <div className="relative min-h-screen h-screen ">
         <div className="grid gap-1 grid-cols-1 xm-grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
           {dataToDisplay.map((item: any) => (
             <div

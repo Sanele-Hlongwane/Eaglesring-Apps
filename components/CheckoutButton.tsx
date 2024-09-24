@@ -8,7 +8,7 @@ interface CheckoutButtonProps {
   pitchId: number;
   amount: number;
   pitchTitle: string;
-  onClick: () => Promise<void>; // Add onClick prop type
+  onClick: () => Promise<void>;
 }
 
 const CheckoutButton = ({ pitchId, amount, onClick }: CheckoutButtonProps) => {

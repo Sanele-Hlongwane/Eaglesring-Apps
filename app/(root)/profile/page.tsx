@@ -300,6 +300,7 @@ export default function EntrepreneurProfilePage() {
                 </label>
                 <textarea
                   id="fundingHistory"
+                  readOnly
                   value={fundingHistory}
                   onChange={(e) => setFundingHistory(e.target.value)}
                   placeholder="Describe your funding history..."

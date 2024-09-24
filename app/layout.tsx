@@ -42,7 +42,7 @@ export default function RootLayout({
         appearance={{
           layout: {
             socialButtonsVariant: "iconButton",
-            logoImageUrl: "/images/Eagle.png",
+            logoImageUrl: "/images/EaglesRingLogoDark.png",
           },
           variables: {
             colorText: "#E0E0E0",

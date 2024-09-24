@@ -2,16 +2,16 @@ import { Metadata } from "next";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "Select Your Role",
+  title: "Role Assigned",
   description:
-    "Choose your path as an entrepreneur or investor. Define your journey and unlock tailored experiences designed for your success.",
+    "Congratulations on taking the next step. Your role has been successfully assigned, and you're ready to begin your journey with Eagles Ring.",
 };
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <main className="relative w-full min-h-screen">
-      <div className="flex w-full min-h-screen justify-center items-center">
-        <section className="flex w-full max-w-4xl flex-col justify-center items-center p-8 ">
+      <div className="flex w-full min-h-screen">
+        <section className="flex w-full flex-col justify-center items-center min-h-screen">
           <div className="w-full">{children}</div>
         </section>
       </div>

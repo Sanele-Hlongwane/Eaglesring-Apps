@@ -21,7 +21,7 @@ export const Footer = () => {
   }, []);
 
   return (
-    <footer className="w-full bg-gradient-to-r from-gray-400 via-gray-500 to-gray-300 text-gray-900 dark:text-gray-200 dark:bg-gradient-to-r dark:from-blue-700 dark:via-gray-800 dark:to-gray-800 py-10 relative z-10">
+    <footer className="w-full bg-gradient-to-r from-gray-400 via-gray-400 to-gray-400 text-gray-900 dark:text-gray-200 dark:bg-gradient-to-r dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 py-10 relative shadow-lg z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {isSmallScreen ? (
           <div className="flex flex-col items-center relative z-10">

@@ -73,7 +73,7 @@ export default function SelectRole() {
   }
 
   return (
-    <div className="max-w-md mx-auto my-20 p-6 bg-gradient-to-br from-yellow-100 to-orange-100 dark:from-gray-900 dark:to-blue-900 rounded-xl shadow-lg space-y-6">
+    <div className="max-w-md mx-auto my-20 p-6 bg-gradient-to-br from-gray-200 to-gray-100 dark:from-gray-900 dark:to-blue-900 rounded-xl shadow-lg space-y-6">
       {isLoaded && isSignedIn && (
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 text-center">
           Welcome to Eagles Ring, {userName}!

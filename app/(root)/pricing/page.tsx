@@ -6,8 +6,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import CurrentPlan from "@/components/pricing/current-plan";
-import { plans } from "@/constants/plans"; // Adjust the import path as necessary
-import { FaCheck, FaTimes, FaCrown, FaRocket, FaLeaf } from "react-icons/fa"; // Import more icons
+import { plans } from "@/constants/plans";
+import { FaCheck, FaTimes} from "react-icons/fa";
 import LoadingDots from "@/components/ui/LoadingDots";
 
 const stripePromise = loadStripe(
@@ -32,14 +32,14 @@ const SubscriptionForm = () => {
     const userEmail = user?.primaryEmailAddress?.emailAddress;
 
     if (!planName || !user?.id || !userEmail) {
-      toast.error("Please select a plan and ensure you are logged in.");
+      toast.info("Please select a plan and ensure you are logged in.");
       setIsLoading(false);
       return;
     }
 
     const selectedPlanData = plans.find((plan) => plan.name === planName);
     if (!selectedPlanData) {
-      toast.error("Invalid plan selected.");
+      toast.info("Invalid plan selected.");
       setIsLoading(false);
       return;
     }
@@ -52,7 +52,7 @@ const SubscriptionForm = () => {
           : selectedPlanData.stripePriceId.monthly;
 
     if (!priceId) {
-      toast.error("Invalid price ID.");
+      toast.info("Invalid price ID.");
       return;
     }
 
@@ -89,14 +89,6 @@ const SubscriptionForm = () => {
       <h1 className="text-4xl font-extrabold mb-18 text-center">
         Subscription Plans
       </h1>
-
-      {/* Animated Icons */}
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-        <FaCrown className="text-yellow-400 text-[80px] absolute top-10 left-10 animate-bounce-slow" />
-        <FaRocket className="text-blue-500 text-[90px] absolute top-20 right-12 animate-zoom" />
-        <FaLeaf className="text-green-500 text-[70px] absolute bottom-16 left-16 animate-spin-slow" />
-      </div>
-
       <SignedIn>
         <CurrentPlan />
       </SignedIn>

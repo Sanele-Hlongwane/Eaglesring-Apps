@@ -95,11 +95,6 @@ export default function Notifications() {
         <div className="p-6 bg-gradient-to-r from-gray-300 to-gray-500 dark:from-gray-800 dark:to-gray-600 text-gray-900 dark:text-gray-100 text-3xl font-semibold text-center">
           Notifications
         </div>
-        {/* Background Icons */}
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-            <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />
-            <FaShieldAlt className="text-blue-500 absolute top-1/3 right-10 text-[120px] rotate-6" />
-          </div>
 
         <div className="p-6">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">

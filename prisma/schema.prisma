@@ -88,6 +88,9 @@ model Pitch {
   fundingGoal          Float?
   attachments          String[]
   videoUrl             String?
+   investmentOpportunityId Int? // Make sure this field exists
+  investmentOpportunity InvestmentOpportunity? @relation(fields: [investmentOpportunityId], references: [id])
+
 
   User User[]
 }
@@ -135,11 +138,14 @@ model InvestmentOpportunity {
   description          String?
   amount               Float?
   entrepreneurProfileId Int
-  entrepreneurProfile  EntrepreneurProfile   @relation(fields: [entrepreneurProfileId], references: [id])
+  entrepreneurProfile   EntrepreneurProfile   @relation(fields: [entrepreneurProfileId], references: [id])
   investments          Investment[]          @relation("InvestmentOpportunityInvestments")
+
+  Pitch Pitch[] // This relationship allows multiple pitches to reference the investment opportunity
 
   Investment Investment[]
 }
+
 
 model InvestorProfile {
   id                    Int                   @id @default(autoincrement())

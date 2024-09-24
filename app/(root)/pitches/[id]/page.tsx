@@ -7,6 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "@/components/Loader";
 import EmptyState from "@/components/EmptyState";
+import CheckoutButton from '@/components/CheckoutButton';
 import {
   FaBuilding,
   FaDollarSign,
@@ -17,6 +18,9 @@ import {
   FaCalendarAlt,
   FaLinkedin,
 } from "react-icons/fa";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 interface Pitch {
   id: number;
@@ -103,6 +107,41 @@ const EntrepreneurPitchesPage = () => {
       hour12: true,
     })}`;
   };
+
+  const handleCheckout = async (pitchId: number, amount: number, pitchTitle: string) => {
+    const stripe = await stripePromise;
+    if (!stripe) {
+      toast.error('Stripe.js failed to load.');
+      return;
+    }
+
+    // Convert amount to cents
+    const amountInCents = Math.round(amount * 100); // Assuming amount is in rands
+
+    try {
+      const response = await axios.post('/api/checkout', {
+        pitchId,
+        amount: amountInCents,
+        pitchTitle,
+      });
+
+      if (response.status === 200) {
+        const { id } = response.data;
+        const { error } = await stripe.redirectToCheckout({ sessionId: id });
+        if (error) {
+          toast.error(error.message);
+        }
+      } else {
+        throw new Error('Failed to create checkout session');
+      }
+    } catch (err) {
+      toast.error('Failed to start checkout');
+      console.error('Error during checkout:', err);
+    }
+  };
+
+  if (loading) return <Loader />;
+  if (error) return <EmptyState message={error} />;
 
   return (
     <div className="p-8  space-y-8">
@@ -227,6 +266,12 @@ const EntrepreneurPitchesPage = () => {
                 {formatDate(pitch.updatedAt)}
               </div>
             </div>
+            <CheckoutButton
+                  pitchId={pitch.id}
+                  amount={pitch.fundingGoal || 0}
+                  pitchTitle={pitch.title}
+                  onClick={() => handleCheckout(pitch.id, pitch.fundingGoal || 0, pitch.title)}
+                />
           </div>
 
           <div

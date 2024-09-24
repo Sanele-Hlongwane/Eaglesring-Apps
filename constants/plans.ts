@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 
-
 export interface Plan {
   yearlyDiscount: boolean;
   name: string;
@@ -15,7 +14,6 @@ export interface Plan {
   unavailableFeatures: string[];
 }
 
-
 export const plans: Plan[] = [
   {
     name: 'Basic',
@@ -25,10 +23,10 @@ export const plans: Plan[] = [
       'Basic support - Available',
       'Community events - Available',
       'Newsletters - Available',
-      'Early access to updates - Not Available',
-      'Exclusive content - Not Available'
     ],
     unavailable: [
+      'Early access to updates - Not Available',
+      'Exclusive content - Not Available',
       'Premium content - Not Available',
       'Additional storage - Not Available'
     ],
@@ -50,12 +48,12 @@ export const plans: Plan[] = [
       'Dedicated account manager - Available',
       'Advanced analytics - Available',
       'Custom integrations - Available',
-      'Early access to updates - Not Available'
     ],
     unavailable: [
       'Exclusive content - Not Available',
       'Additional storage - Not Available',
-      'One-on-one training - Not Available'
+      'One-on-one training - Not Available',
+      'Early access to updates - Not Available',
     ],
     buttonLabel: 'Subscribe Now',
     stripePriceId: {
@@ -80,23 +78,20 @@ export const plans: Plan[] = [
       'Dedicated account manager - Available',
       'Advanced analytics - Available',
       'Custom integrations - Available',
-      'Exclusive content - Available'
+      'Exclusive content - Available',
+      'Additional storage - Available',
+      'Priority customer support - Available',
+      'One-on-one training - Available'
     ],
-    unavailable: [
-      'Additional storage - Not Available',
-      'Priority customer support - Not Available'
-    ],
+    unavailable: [],
     buttonLabel: 'Subscribe Now',
     stripePriceId: {
       monthly: process.env.NEXT_PUBLIC_PREMIUM_PLAN_PRICE_ID!,
       yearly: process.env.NEXT_PUBLIC_PREMIUM_ANNUAL_PRICE_ID!,
     },
-    description: 'The Premium plan includes all features of the Pro plan plus exclusive content and the highest level of support, including a dedicated account manager. It is perfect for users who need the most comprehensive support and features.',
-    details: 'This plan provides the most extensive range of features and support, including exclusive content and top-tier support services. It does not include some additional features like more storage or personal training.',
-    unavailableFeatures: [
-      'Additional storage',
-      'Priority customer support'
-    ],
+    description: 'The Premium plan includes all features of the Pro plan plus exclusive content, priority support, additional storage, and one-on-one training, offering the most comprehensive support available.',
+    details: 'This plan offers the most extensive range of features, including exclusive content, priority customer support, additional storage, and one-on-one training. Ideal for users who need the best services.',
+    unavailableFeatures: [],
     yearlyDiscount: false
   },
 ];

@@ -8,7 +8,7 @@ const Cancel = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push("/connections");
+      router.push("/friend-requests");
     }, 3000);
 
     return () => clearTimeout(timer);

@@ -24,28 +24,24 @@ export async function POST(request: Request) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
 
-    const amount_total = session.amount_total; // This can be number | null
-    const sessionId = session.id; // Unique identifier for the checkout session
-    const customer_email = session.customer_email; // Customer's email (optional)
-
-    const pitchId = session.metadata?.pitchId;
-    const pitchTitle = session.metadata?.pitchTitle;
-    const userId = session.metadata?.userId;
-
-    // Ensure required metadata is present
-    if (!pitchId || !pitchTitle || !userId) {
-      console.error('Missing required metadata:', {
-        pitchId,
-        pitchTitle,
-        userId,
-      });
-      return NextResponse.json({ error: 'Missing required metadata' }, { status: 400 });
-    }
-
     // Ensure amount_total is not null
+    const amount_total = session.amount_total; // This can be number | null
     if (amount_total === null) {
       console.error('Amount total is null');
       return NextResponse.json({ error: 'Amount total is required' }, { status: 400 });
+    }
+
+    // Extract data
+    const pitchId = session.metadata?.pitchId;
+    const pitchTitle = session.metadata?.pitchTitle;
+    const userId = session.metadata?.userId;
+    const customerEmail = session.customer_email; // Email of the customer
+    const investmentAmount = amount_total / 100; // Convert cents to your currency unit
+
+    // Ensure required metadata is present
+    if (!pitchId || !pitchTitle || !userId) {
+      console.error('Missing required metadata:', { pitchId, pitchTitle, userId });
+      return NextResponse.json({ error: 'Missing required metadata' }, { status: 400 });
     }
 
     try {
@@ -60,20 +56,15 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Pitch not found' }, { status: 404 });
       }
 
-      // Convert values to number
-      const investmentAmount = amount_total / 100; // Convert from cents to your currency unit
       const parsedUserId = parseInt(userId, 10);
       const parsedEntrepreneurId = pitch.entrepreneurId;
 
       if (isNaN(investmentAmount) || isNaN(parsedUserId) || !parsedEntrepreneurId) {
-        console.error('Invalid investment data:', {
-          investmentAmount,
-          userId,
-          entrepreneurId: parsedEntrepreneurId,
-        });
+        console.error('Invalid investment data:', { investmentAmount, userId, entrepreneurId: parsedEntrepreneurId });
         return NextResponse.json({ error: 'Invalid investment data' }, { status: 400 });
       }
 
+      // Create the investment record in the database
       await prisma.investment.create({
         data: {
           amount: investmentAmount,
@@ -83,6 +74,10 @@ export async function POST(request: Request) {
           investmentOpportunityId: parseInt(pitchId, 10),
         },
       });
+
+      // Optionally, send a confirmation email to the customer
+      // sendConfirmationEmail(customerEmail, investmentAmount, pitchTitle);
+
     } catch (error) {
       console.error('Error creating investment:', error);
       return NextResponse.json({ error: 'Failed to create investment' }, { status: 500 });

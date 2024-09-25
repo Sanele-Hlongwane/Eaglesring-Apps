@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   const sig = request.headers.get('Stripe-Signature') || '';
   const body = await request.json();
 
-  let event;
+  let event: Stripe.Event;
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
+    const session = event.data.object as Stripe.Checkout.Session;
 
     // Ensure amount_total is not null
     const amount_total = session.amount_total; // This can be number | null

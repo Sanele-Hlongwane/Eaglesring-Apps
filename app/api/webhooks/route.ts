@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import Stripe from 'stripe';
+import nodemailer from 'nodemailer';
+import { currentUser } from '@clerk/nextjs/server'; // Import currentUser from Clerk
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
@@ -8,11 +10,30 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const prisma = new PrismaClient();
 
+async function sendConfirmationEmail(customerEmail: string, investmentAmount: number, pitchTitle: string) {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail', // or your email service
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: customerEmail,
+    subject: 'Investment Confirmation',
+    text: `Thank you for your investment of ${investmentAmount} in "${pitchTitle}". We appreciate your support!`,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
 export async function POST(request: Request) {
   const sig = request.headers.get('Stripe-Signature') || '';
   const body = await request.json();
 
-  let event: Stripe.Event;
+  let event;
 
   try {
     event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
@@ -22,30 +43,25 @@ export async function POST(request: Request) {
   }
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
+    const session = event.data.object;
 
-    // Ensure amount_total is not null
-    const amount_total = session.amount_total; // This can be number | null
+    const amount_total = session.amount_total;
     if (amount_total === null) {
       console.error('Amount total is null');
       return NextResponse.json({ error: 'Amount total is required' }, { status: 400 });
     }
 
-    // Extract data
     const pitchId = session.metadata?.pitchId;
     const pitchTitle = session.metadata?.pitchTitle;
-    const userId = session.metadata?.userId;
-    const customerEmail = session.customer_email; // Email of the customer
-    const investmentAmount = amount_total / 100; // Convert cents to your currency unit
+    const userId = session.metadata?.userId; // This is the userId from your metadata
+    const investmentAmount = amount_total / 100;
 
-    // Ensure required metadata is present
     if (!pitchId || !pitchTitle || !userId) {
       console.error('Missing required metadata:', { pitchId, pitchTitle, userId });
       return NextResponse.json({ error: 'Missing required metadata' }, { status: 400 });
     }
 
     try {
-      // Fetch the pitch to get the entrepreneur's profile ID
       const pitch = await prisma.pitch.findUnique({
         where: { id: parseInt(pitchId, 10) },
         select: { entrepreneurId: true },
@@ -64,6 +80,10 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Invalid investment data' }, { status: 400 });
       }
 
+      // Get current user's email from Clerk
+      const user = await currentUser();
+      const customerEmail = user?.emailAddresses[0]?.emailAddress || null; // Get the email, defaulting to null if not available
+
       // Create the investment record in the database
       await prisma.investment.create({
         data: {
@@ -75,8 +95,12 @@ export async function POST(request: Request) {
         },
       });
 
-      // Optionally, send a confirmation email to the customer
-      // sendConfirmationEmail(customerEmail, investmentAmount, pitchTitle);
+      // Check if customerEmail is not null before sending confirmation email
+      if (customerEmail) {
+        await sendConfirmationEmail(customerEmail, investmentAmount, pitchTitle);
+      } else {
+        console.warn('Customer email is null, skipping email confirmation');
+      }
 
     } catch (error) {
       console.error('Error creating investment:', error);

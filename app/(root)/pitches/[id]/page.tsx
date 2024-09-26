@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Loader from "@/components/Loader";
 import EmptyState from "@/components/EmptyState";
 import CheckoutButton from '@/components/CheckoutButton';
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import {
   FaBuilding,
   FaDollarSign,
@@ -145,6 +146,8 @@ const EntrepreneurPitchesPage = () => {
 
   return (
     <div className="p-8  space-y-8">
+
+    <SignedIn>
       {commonDetails && (
         <div className="bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-300 dark:border-gray-700 rounded-2xl p-10  transition-transform duration-300 transform ">
           {commonDetails.imageUrl && (
@@ -332,7 +335,18 @@ const EntrepreneurPitchesPage = () => {
             </div>
           )}
         </div>
+
       ))}
+
+    </SignedIn>
+      
+    <SignedOut>
+      <div>
+       <EmptyState message={"Please login to view data."}/>
+      </div>
+      
+
+      </SignedOut>
 
       <ToastContainer
         position="bottom-right"
@@ -342,6 +356,7 @@ const EntrepreneurPitchesPage = () => {
         theme="dark"
       />
     </div>
+
   );
 };
 

@@ -27,7 +27,7 @@ async function sendConfirmationEmail(customerEmail: string, investmentAmount: nu
   }
 }
 
-// Webhook to handle successful payment
+// Handle POST requests for webhooks
 export async function POST(request: NextRequest) {
   const sig = request.headers.get('stripe-signature')!;
   const body = await request.text();

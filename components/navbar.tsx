@@ -22,7 +22,7 @@ export const Navbar = () => {
   const [role, setRole] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const pathname = usePathname(); // Get the current path for highlighting
+  const pathname = usePathname();
 
   useEffect(() => {
     const checkScreenSize = () => {

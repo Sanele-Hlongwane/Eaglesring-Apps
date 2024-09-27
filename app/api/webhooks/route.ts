@@ -134,16 +134,17 @@ export async function POST(request: Request) {
 // Webhook to handle successful payment
 export async function webhookHandler(request: Request) {
   let event;
+
   const sig = request.headers.get('stripe-signature')!;
-  try {
-    event = stripe.webhooks.constructEvent(
-      await request.text(),
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!  // Ensure this key is correct
-    );
-  } catch (err) {
-    return NextResponse.json({ error: 'Webhook signature verification failed.' }, { status: 400 });
-  }
+try {
+  event = stripe.webhooks.constructEvent(
+    await request.text(),
+    sig,
+    process.env.STRIPE_WEBHOOK_SECRET!  // Ensure this key is correct
+  );
+} catch (err) {
+  return NextResponse.json({ error: 'Webhook signature verification failed.' }, { status: 400 });
+}
 
 
   if (event.type === 'checkout.session.completed') {

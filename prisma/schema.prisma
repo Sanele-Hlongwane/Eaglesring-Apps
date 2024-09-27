@@ -13,15 +13,14 @@ enum Role {
 }
 
 model Notification {
-  id             Int        @id @default(autoincrement())
-  content        String
-  userId         Int        
-  user           User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  User           User[]     @relation("UserNotifications")
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User[]   @relation("UserNotifications")
 }
-
 
 enum MessageStatus {
   SENT
@@ -39,144 +38,164 @@ enum Stage {
 }
 
 model Message {
-  id                   Int                   @id @default(autoincrement())
-  content              String
-  senderId             Int
-  receiverId           Int
-  sender               User                  @relation("MessageSender", fields: [senderId], references: [id])
-  receiver             User                  @relation("MessageReceiver", fields: [receiverId], references: [id])
-  status               MessageStatus         @default(SENT) 
-  sentAt               DateTime              @default(now())
-  receivedAt           DateTime?
-  readAt               DateTime?
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
+  id         Int           @id @default(autoincrement())
+  content    String
+  senderId   Int
+  receiverId Int
+  sender     User          @relation("MessageSender", fields: [senderId], references: [id])
+  receiver   User          @relation("MessageReceiver", fields: [receiverId], references: [id])
+  status     MessageStatus @default(SENT)
+  sentAt     DateTime      @default(now())
+  receivedAt DateTime?
+  readAt     DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 }
 
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { currentUser } from '@clerk/nextjs/server';
-import Stripe from 'stripe';
+model User {
+  id                     Int                  @id @default(autoincrement())
+  clerkId                String               @unique
+  email                  String               @unique
+  name                   String?
+  imageUrl               String?
+  role                   Role
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  messagesSent           Message[]            @relation("MessageSender")
+  messagesReceived       Message[]            @relation("MessageReceiver")
+  investments            Investment[]
+  entrepreneurProfile    EntrepreneurProfile?
+  investorProfile        InvestorProfile?
+  pitches                Pitch[]
+  feedbacks              Feedback[]
+  interests              Interest[]
+  sentFriendRequests     FriendRequest[]      @relation("SentFriendRequests")
+  receivedFriendRequests FriendRequest[]      @relation("ReceivedFriendRequests")
+  notifications          Notification[]       @relation("UserNotifications")
+  Notification           Notification[]
+}
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
+model Pitch {
+  id                      Int                    @id @default(autoincrement())
+  title                   String
+  description             String
+  entrepreneurId          Int
+  entrepreneur            EntrepreneurProfile    @relation(fields: [entrepreneurId], references: [id])
+  feedbacks               Feedback[]
+  interests               Interest[]
+  createdAt               DateTime               @default(now())
+  updatedAt               DateTime               @updatedAt
+  fundingGoal             Float?
+  attachments             String[]
+  videoUrl                String?
+  investmentOpportunityId Int? // Make sure this field exists
+  investmentOpportunity   InvestmentOpportunity? @relation(fields: [investmentOpportunityId], references: [id])
 
-const prisma = new PrismaClient();
+  User User[]
+}
 
-export async function POST(request: Request) {
-  const user = await currentUser();
+model Investment {
+  id                      Int                   @id @default(autoincrement())
+  amount                  Float
+  date                    DateTime              @default(now())
+  title                   String
+  investorProfileId       Int
+  entrepreneurProfileId   Int
+  investorProfile         InvestorProfile       @relation(fields: [investorProfileId], references: [id])
+  entrepreneurProfile     EntrepreneurProfile   @relation(fields: [entrepreneurProfileId], references: [id])
+  investmentOpportunityId Int
+  investmentOpportunity   InvestmentOpportunity @relation(fields: [investmentOpportunityId], references: [id])
 
-  if (!user) {
-    return NextResponse.json({ error: 'User not authenticated.' }, { status: 401 });
-  }
+  User User[]
 
-  const { pitchId, amount, pitchTitle } = await request.json();
+  InvestmentOpportunity InvestmentOpportunity[] @relation("InvestmentOpportunityInvestments")
+}
 
-  if (!pitchId || !amount) {
-    return NextResponse.json({ error: 'Pitch ID and amount are required' }, { status: 400 });
-  }
+model InvestmentOpportunity {
+  id                    Int                 @id @default(autoincrement())
+  title                 String
+  description           String?
+  amount                Float?
+  entrepreneurProfileId Int
+  entrepreneurProfile   EntrepreneurProfile @relation(fields: [entrepreneurProfileId], references: [id])
+  investments           Investment[]        @relation("InvestmentOpportunityInvestments")
 
-  try {
-    const clerkId = user.id;
+  Pitch Pitch[] // This relationship allows multiple pitches to reference the investment opportunity
 
-    // Fetch the user from the database using clerkId
-    const dbUser = await prisma.user.findUnique({
-      where: { clerkId: clerkId }, 
-    });
+  Investment Investment[]
+}
 
-    if (!dbUser) {
-      return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
-    }
+model EntrepreneurProfile {
+  id                      Int                     @id @default(autoincrement())
+  userId                  Int                     @unique
+  user                    User                    @relation(fields: [userId], references: [id])
+  bio                     String?
+  company                 String?
+  businessStage           String?
+  fundingHistory          String?
+  linkedinUrl             String?
+  imageUrl                String? // Field for storing image URL
+  pitches                 Pitch[] // Pitches submitted by the entrepreneur
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+  investments             Investment[]
+  revenue                 Float? // Added revenue field
+  investmentOpportunities InvestmentOpportunity[] // Added field for investment opportunities
+}
 
-    // Fetch the pitch and its entrepreneur profile
-    const pitch = await prisma.pitch.findUnique({
-      where: { id: pitchId },
-      include: { entrepreneur: true, investmentOpportunity: true },
-    });
+model FriendRequest {
+  id         Int                 @id @default(autoincrement())
+  senderId   Int
+  receiverId Int
+  sender     User                @relation("SentFriendRequests", fields: [senderId], references: [id])
+  receiver   User                @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
+  status     FriendRequestStatus @default(PENDING)
+  createdAt  DateTime            @default(now())
+  updatedAt  DateTime            @updatedAt
 
-    if (!pitch) {
-      return NextResponse.json({ error: 'Pitch not found.' }, { status: 404 });
-    }
+  @@unique([senderId, receiverId])
+}
 
-    const entrepreneurProfile = pitch.entrepreneur;
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
 
-    // Fetch the investor profile (fixes the undefined investorProfile issue)
-    const investorProfile = await prisma.investorProfile.findUnique({
-      where: { userId: dbUser.id },
-    });
-
-    if (!investorProfile) {
-      return NextResponse.json({ error: 'Investor profile not found.' }, { status: 404 });
-    }
-
-    // Ensure the investment opportunity exists or create one
-    let investmentOpportunity = pitch.investmentOpportunity;
-    if (!investmentOpportunity) {
-      investmentOpportunity = await prisma.investmentOpportunity.create({
-        data: {
-          entrepreneurProfileId: entrepreneurProfile.id,
-          title: pitchTitle,
-          amount: 0,
-          description: `Investment opportunity for ${pitchTitle}`,
-        },
-      });
-    }
-
-    // Create a new Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'zar',
-            product_data: {
-              name: `Pitch: ${pitchTitle}`,
-            },
-            unit_amount: amount,
-          },
-          quantity: 1,
-        },
-      ],
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
-      customer_email: user.primaryEmailAddress?.emailAddress || '',
-      metadata: {
-        pitchId: pitchId.toString(),
-        pitchTitle: pitchTitle,
-        userId: investorProfile.id.toString(),
-        entrepreneurProfileId: entrepreneurProfile.id.toString(),
-        investmentOpportunityId: investmentOpportunity.id.toString(),
-      },
-    });
-
-    return NextResponse.json({ id: session.id });
-  } catch (error) {
-    console.error('Error creating checkout session:', error);
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
-  }
+model InvestorProfile {
+  id                    Int          @id @default(autoincrement())
+  userId                Int          @unique
+  user                  User         @relation(fields: [userId], references: [id])
+  investmentStrategy    String?
+  linkedinUrl           String?
+  investments           Investment[] // Investments made by the investor
+  feedbacks             Feedback[] // Feedback given by the investor
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  preferredIndustries   String[] // New field for preferred industries
+  riskTolerance         String? // New field for risk tolerance (e.g., low, medium, high)
+  investmentAmountRange Float[] // New field for acceptable investment amount range
 }
 
 model Feedback {
-  id                   Int                   @id @default(autoincrement())
-  content              String
-  investorId           Int
-  pitchId              Int
-  investor             InvestorProfile       @relation(fields: [investorId], references: [id])
-  pitch                Pitch                 @relation(fields: [pitchId], references: [id])
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
+  id         Int             @id @default(autoincrement())
+  content    String
+  investorId Int
+  pitchId    Int
+  investor   InvestorProfile @relation(fields: [investorId], references: [id])
+  pitch      Pitch           @relation(fields: [pitchId], references: [id])
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
 
   User User[]
 }
 
 model Interest {
-  id                   Int                   @id @default(autoincrement())
-  userId               Int
-  pitchId              Int
-  user                 User                  @relation(fields: [userId], references: [id])
-  pitch                Pitch                 @relation(fields: [pitchId], references: [id])
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime              @updatedAt
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  pitchId   Int
+  user      User     @relation(fields: [userId], references: [id])
+  pitch     Pitch    @relation(fields: [pitchId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

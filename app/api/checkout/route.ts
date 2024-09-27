@@ -23,85 +23,67 @@ export async function POST(request: Request) {
   }
 
   try {
-    const clerkId = user.id;
+    const clerkId = user.id; // Get the clerkId
 
     // Fetch the user from the database using clerkId
     const dbUser = await prisma.user.findUnique({
-      where: { clerkId: clerkId },
+      where: { clerkId: clerkId }, // Use Clerk ID
     });
 
     if (!dbUser) {
       return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
     }
 
-    // Fetch the pitch and its entrepreneur profile
-    const pitch = await prisma.pitch.findUnique({
-      where: { id: pitchId },
-      include: { entrepreneur: true, investmentOpportunity: true },
-    });
-
-    if (!pitch) {
-      return NextResponse.json({ error: 'Pitch not found.' }, { status: 404 });
-    }
-
-    const entrepreneurProfile = pitch.entrepreneur;
-
-    // Fetch or create the investor profile
+    // Check if investor profile exists
     let investorProfile = await prisma.investorProfile.findUnique({
-      where: { userId: dbUser.id },
+      where: { userId: dbUser.id }, // Ensure userId is a number
     });
 
+    // If investor profile does not exist, create it
     if (!investorProfile) {
-      // Create a new investor profile if it doesn't exist
       investorProfile = await prisma.investorProfile.create({
         data: {
-          userId: dbUser.id,
-          investmentStrategy: 'default strategy', // Optional: Adjust default data
-          linkedinUrl: '',                        // Optional: Adjust default data
-        },
-      });
-    }
-
-    // Ensure the investment opportunity exists or create one
-    let investmentOpportunity = pitch.investmentOpportunity;
-    if (!investmentOpportunity) {
-      investmentOpportunity = await prisma.investmentOpportunity.create({
-        data: {
-          entrepreneurProfileId: entrepreneurProfile.id,
-          title: pitchTitle,
-          amount: 0,
-          description: `Investment opportunity for ${pitchTitle}`,
+          userId: dbUser.id, // Ensure userId is a number
+          investmentStrategy: '', // Set default or required fields as needed
+          linkedinUrl: 'https://linkedin.com/in/your_profile',
+          preferredIndustries: [],
+          riskTolerance: '',
+          investmentAmountRange: [],
         },
       });
     }
 
     // Create a new Checkout Session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'zar',
-            product_data: {
-              name: `Pitch: ${pitchTitle}`,
-            },
-            unit_amount: amount,
-          },
-          quantity: 1,
+   // Inside your existing POST request handler
+const session = await stripe.checkout.sessions.create({
+  payment_method_types: ['card'],
+  line_items: [
+    {
+      price_data: {
+        currency: 'zar',
+        product_data: {
+          name: `Pitch: ${pitchTitle}`,
         },
-      ],
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
-      customer_email: user.primaryEmailAddress?.emailAddress || '',
-      metadata: {
-        pitchId: pitchId.toString(),
-        pitchTitle: pitchTitle,
-        userId: investorProfile.id.toString(),
-        entrepreneurProfileId: entrepreneurProfile.id.toString(),
-        investmentOpportunityId: investmentOpportunity.id.toString(),
+        unit_amount: amount,
       },
-    });
+      quantity: 1,
+    },
+  ],
+  mode: 'payment',
+  success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
+  cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
+  customer_email: user.primaryEmailAddress?.emailAddress || '',
+  metadata: {
+    pitchId: pitchId, // Include pitch ID
+    pitchTitle: pitchTitle, // Include pitch title
+    userId: investorProfile.id.toString(), // Include investor profile ID as a string
+    
+  },
+});
+
+
+    // The investment creation should be handled after a successful payment (in your success handler)
+    // If you want to save the investment immediately, you need to ensure payment confirmation first
 
     return NextResponse.json({ id: session.id });
   } catch (error) {

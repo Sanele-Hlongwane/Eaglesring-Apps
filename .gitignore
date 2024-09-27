@@ -8,6 +8,10 @@
 # testing
 /coverage
 
+# Environment variables
+.env
+.env.* # If you have multiple env files (e.g., .env.development, .env.production)
+
 # next.js
 /.next/
 /out/

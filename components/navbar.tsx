@@ -14,7 +14,7 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { SignInButton, SignedIn, SignedOut, UserButton, SignOutButton } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
-import eagleSvg from '@/public/images/Eagle.png';
+import eagleSvg from '@/public/images/EaglesRingLogo.png';
 import { usePathname } from 'next/navigation'; // Updated import
 import router from "next/router";
 
@@ -136,6 +136,7 @@ export const Navbar = () => {
 
   const commonLinks = (
     <>
+    <SignedOut>
        <NavbarMenuItem>
         <Link className={getLinkClasses('/')} href="/" onClick={() => handleLinkClick('/')}>
           Home
@@ -151,6 +152,7 @@ export const Navbar = () => {
           Pricing
         </Link>
       </NavbarMenuItem>
+      </SignedOut>
     </>
   );
 

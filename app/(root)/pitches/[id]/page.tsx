@@ -117,7 +117,7 @@ const EntrepreneurPitchesPage = () => {
     }
 
     // Convert amount to cents
-    const amountInCents = Math.round(amount * 100); // Assuming amount is in rands
+    const amountInCents = Math.round(amount * 100);
 
     try {
       const response = await axios.post('/api/checkout', {
@@ -162,7 +162,6 @@ const EntrepreneurPitchesPage = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent flex flex-col justify-end items-center text-white p-4">
                 <div className="mb-2 h-20 overflow-auto bg-opacity-5 backdrop-blur-md bg-white  rounded-lg p-2">
                   {" "}
-                  {/* Added blur and background */}
                   <p className="text-xs text-gray-100 dark:text-gray-300">
                     {commonDetails?.bio || "N/A"}
                   </p>
@@ -335,17 +334,13 @@ const EntrepreneurPitchesPage = () => {
             </div>
           )}
         </div>
-
       ))}
-
-    </SignedIn>
+      </SignedIn>
       
-    <SignedOut>
-      <div>
-       <EmptyState message={"Please login to view data."}/>
-      </div>
-      
-
+      <SignedOut>
+        <div>
+        <EmptyState message={"Please login to view data."}/>
+        </div>
       </SignedOut>
 
       <ToastContainer
@@ -356,7 +351,6 @@ const EntrepreneurPitchesPage = () => {
         theme="dark"
       />
     </div>
-
   );
 };
 

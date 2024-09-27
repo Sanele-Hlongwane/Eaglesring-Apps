@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { currentUser } from '@clerk/nextjs/server';
 import Stripe from 'stripe';
-import nodemailer from 'nodemailer';
-import { currentUser } from '@clerk/nextjs/server'; // Import currentUser from Clerk
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
@@ -10,101 +9,179 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const prisma = new PrismaClient();
 
+// Function to send confirmation email
 async function sendConfirmationEmail(customerEmail: string, investmentAmount: number, pitchTitle: string) {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail', // or your email service
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+  const sgMail = require('@sendgrid/mail');
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
+  const msg = {
     to: customerEmail,
+    from: 'sanelehlongwane61@gmail.com',
     subject: 'Investment Confirmation',
-    text: `Thank you for your investment of ${investmentAmount} in "${pitchTitle}". We appreciate your support!`,
+    text: `You have successfully invested ZAR ${investmentAmount} in ${pitchTitle}.`,
+    html: `<strong>Thank you for your investment of ZAR ${investmentAmount} in ${pitchTitle}!</strong>`,
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    await sgMail.send(msg);
+    console.log('Confirmation email sent');
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
 }
 
 export async function POST(request: Request) {
-  const sig = request.headers.get('Stripe-Signature') || '';
-  const body = await request.json();
+  const user = await currentUser();
 
-  let event;
-
-  try {
-    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
-  } catch (err) {
-    console.error('Error verifying webhook signature:', err);
-    return NextResponse.json({ error: 'Webhook Error' }, { status: 400 });
+  if (!user) {
+    return NextResponse.json({ error: 'User not authenticated.' }, { status: 401 });
   }
 
+  const { pitchId, amount, pitchTitle } = await request.json();
+
+  if (!pitchId || !amount) {
+    return NextResponse.json({ error: 'Pitch ID and amount are required' }, { status: 400 });
+  }
+
+  try {
+    const clerkId = user.id;
+
+    // Fetch user from the database using clerkId
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId: clerkId },
+    });
+
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
+    }
+
+    // Check if the investor profile exists or create one
+    let investorProfile = await prisma.investorProfile.findUnique({
+      where: { userId: dbUser.id },
+    });
+
+    if (!investorProfile) {
+      investorProfile = await prisma.investorProfile.create({
+        data: {
+          userId: dbUser.id,
+          investmentStrategy: '',
+          linkedinUrl: 'https://linkedin.com/in/your_profile',
+          preferredIndustries: [],
+          riskTolerance: '',
+          investmentAmountRange: [],
+        },
+      });
+    }
+
+    // Fetch the pitch and its entrepreneur profile
+    const pitch = await prisma.pitch.findUnique({
+      where: { id: pitchId },
+      include: { entrepreneur: true, investmentOpportunity: true },
+    });
+
+    if (!pitch) {
+      return NextResponse.json({ error: 'Pitch not found.' }, { status: 404 });
+    }
+
+    const entrepreneurProfile = pitch.entrepreneur;
+
+    // Ensure the investment opportunity exists, or create one
+    let investmentOpportunity = pitch.investmentOpportunity;
+    if (!investmentOpportunity) {
+      investmentOpportunity = await prisma.investmentOpportunity.create({
+        data: {
+          entrepreneurProfileId: entrepreneurProfile.id,
+          title: pitchTitle,
+          amount: 0, // Will adjust based on actual investments
+          description: `Investment opportunity for ${pitchTitle}`,
+        },
+      });
+    }
+
+    // Create Stripe Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'zar',
+            product_data: { name: `Pitch: ${pitchTitle}` },
+            unit_amount: amount * 100, // Convert to cents
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
+      cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
+      customer_email: user.primaryEmailAddress?.emailAddress || '',
+      metadata: {
+        pitchId: pitchId.toString(),
+        pitchTitle: pitchTitle,
+        userId: investorProfile.id.toString(),
+        entrepreneurProfileId: entrepreneurProfile.id.toString(),
+        investmentOpportunityId: investmentOpportunity.id.toString(),
+      },
+    });
+
+    return NextResponse.json({ id: session.id });
+  } catch (error) {
+    console.error('Error creating checkout session:', error);
+    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
+  }
+}
+
+// Webhook to handle successful payment
+export async function webhookHandler(request: Request) {
+  let event;
+  const sig = request.headers.get('stripe-signature')!;
+  try {
+    event = stripe.webhooks.constructEvent(
+      await request.text(),
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET!  // Ensure this key is correct
+    );
+  } catch (err) {
+    return NextResponse.json({ error: 'Webhook signature verification failed.' }, { status: 400 });
+  }
+
+
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
+    const session = event.data.object as Stripe.Checkout.Session;
 
-    const amount_total = session.amount_total;
-    if (amount_total === null) {
-      console.error('Amount total is null');
-      return NextResponse.json({ error: 'Amount total is required' }, { status: 400 });
-    }
-
-    const pitchId = session.metadata?.pitchId;
-    const pitchTitle = session.metadata?.pitchTitle;
-    const userId = session.metadata?.userId; // This is the userId from your metadata
-    const investmentAmount = amount_total / 100;
-
-    if (!pitchId || !pitchTitle || !userId) {
-      console.error('Missing required metadata:', { pitchId, pitchTitle, userId });
-      return NextResponse.json({ error: 'Missing required metadata' }, { status: 400 });
-    }
+    // Extract metadata
+    const {
+      pitchId,
+      pitchTitle,
+      userId,
+      entrepreneurProfileId,
+      investmentOpportunityId,
+    } = session.metadata as {
+      pitchId: string;
+      pitchTitle: string;
+      userId: string;
+      entrepreneurProfileId: string;
+      investmentOpportunityId: string;
+    };
 
     try {
-      const pitch = await prisma.pitch.findUnique({
-        where: { id: parseInt(pitchId, 10) },
-        select: { entrepreneurId: true },
-      });
-
-      if (!pitch) {
-        console.error('Pitch not found:', pitchId);
-        return NextResponse.json({ error: 'Pitch not found' }, { status: 404 });
-      }
-
-      const parsedUserId = parseInt(userId, 10);
-      const parsedEntrepreneurId = pitch.entrepreneurId;
-
-      if (isNaN(investmentAmount) || isNaN(parsedUserId) || !parsedEntrepreneurId) {
-        console.error('Invalid investment data:', { investmentAmount, userId, entrepreneurId: parsedEntrepreneurId });
-        return NextResponse.json({ error: 'Invalid investment data' }, { status: 400 });
-      }
-
-      // Get current user's email from Clerk
-      const user = await currentUser();
-      const customerEmail = user?.emailAddresses[0]?.emailAddress || null; // Get the email, defaulting to null if not available
-
-      // Create the investment record in the database
+      // Create the investment record
       await prisma.investment.create({
         data: {
-          amount: investmentAmount,
-          title: pitchTitle,
-          investorProfileId: parsedUserId,
-          entrepreneurProfileId: parsedEntrepreneurId,
-          investmentOpportunityId: parseInt(pitchId, 10),
+          amount: session.amount_total! / 100, // Convert from cents to ZAR
+          title: `Investment in ${pitchTitle}`,
+          investorProfileId: parseInt(userId),
+          entrepreneurProfileId: parseInt(entrepreneurProfileId),
+          investmentOpportunityId: parseInt(investmentOpportunityId),
         },
       });
 
-      // Check if customerEmail is not null before sending confirmation email
-      if (customerEmail) {
-        await sendConfirmationEmail(customerEmail, investmentAmount, pitchTitle);
-      } else {
-        console.warn('Customer email is null, skipping email confirmation');
-      }
+      // Send confirmation email
+      await sendConfirmationEmail(session.customer_email!, session.amount_total! / 100, pitchTitle);
 
+      console.log('Investment and email processed successfully');
     } catch (error) {
-      console.error('Error creating investment:', error);
-      return NextResponse.json({ error: 'Failed to create investment' }, { status: 500 });
+      console.error('Error processing investment:', error);
     }
   }
 

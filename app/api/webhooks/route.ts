@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { PrismaClient } from '@prisma/client';
 
-// Initialize Stripe and Prisma client
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' });
 const prisma = new PrismaClient();
 
-// Function to send confirmation email
 async function sendConfirmationEmail(customerEmail: string, investmentAmount: number, pitchTitle: string) {
   const sgMail = require('@sendgrid/mail');
   sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -27,7 +25,6 @@ async function sendConfirmationEmail(customerEmail: string, investmentAmount: nu
   }
 }
 
-// Handle POST requests for webhooks
 export async function POST(request: NextRequest) {
   const sig = request.headers.get('stripe-signature')!;
   const body = await request.text();
@@ -44,7 +41,6 @@ export async function POST(request: NextRequest) {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    // Extract metadata
     const {
       pitchId,
       pitchTitle,
@@ -60,10 +56,9 @@ export async function POST(request: NextRequest) {
     };
 
     try {
-      // Create the investment record in the database
       await prisma.investment.create({
         data: {
-          amount: session.amount_total! / 100, // Convert from cents to ZAR
+          amount: session.amount_total! / 100,
           title: `Investment in ${pitchTitle}`,
           investorProfileId: parseInt(userId),
           entrepreneurProfileId: parseInt(entrepreneurProfileId),
@@ -71,7 +66,6 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // Send confirmation email
       await sendConfirmationEmail(session.customer_email!, session.amount_total! / 100, pitchTitle);
 
       console.log('Investment and email processed successfully');

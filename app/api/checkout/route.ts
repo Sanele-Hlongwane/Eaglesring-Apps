@@ -9,129 +9,103 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const prisma = new PrismaClient();
 
-// Function to send confirmation email
-async function sendConfirmationEmail(customerEmail: string, investmentAmount: number, pitchTitle: string) {
-  const sgMail = require('@sendgrid/mail');
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+export async function POST(request: Request) {
+  const user = await currentUser();
 
-  const msg = {
-    to: customerEmail,
-    from: 'sanelehlongwane61@gmail.com',
-    subject: 'Investment Confirmation',
-    text: `You have successfully invested ZAR ${investmentAmount} in ${pitchTitle}.`,
-    html: `<strong>Thank you for your investment of ZAR ${investmentAmount} in ${pitchTitle}!</strong>`,
-  };
+  if (!user) {
+    return NextResponse.json({ error: 'User not authenticated.' }, { status: 401 });
+  }
+
+  const { pitchId, amount, pitchTitle } = await request.json();
+
+  if (!pitchId || !amount) {
+    return NextResponse.json({ error: 'Pitch ID and amount are required' }, { status: 400 });
+  }
 
   try {
-    await sgMail.send(msg);
-    console.log('Confirmation email sent');
-  } catch (error) {
-    console.error('Error sending email:', error);
-  }
-}
+    const clerkId = user.id;
 
-// Handler for creating checkout sessions
-export default async function handler(request: Request) {
-  if (request.method === 'POST') {
-    const user = await currentUser();
+    // Fetch the user from the database using clerkId
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId: clerkId },
+    });
 
-    if (!user) {
-      return NextResponse.json({ error: 'User not authenticated.' }, { status: 401 });
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
     }
 
-    const { pitchId, amount, pitchTitle } = await request.json();
+    // Fetch the pitch and its entrepreneur profile
+    const pitch = await prisma.pitch.findUnique({
+      where: { id: pitchId },
+      include: { entrepreneur: true, investmentOpportunity: true },
+    });
 
-    if (!pitchId || !amount) {
-      return NextResponse.json({ error: 'Pitch ID and amount are required' }, { status: 400 });
+    if (!pitch) {
+      return NextResponse.json({ error: 'Pitch not found.' }, { status: 404 });
     }
 
-    try {
-      const clerkId = user.id;
+    const entrepreneurProfile = pitch.entrepreneur;
 
-      // Fetch user from the database using clerkId
-      const dbUser = await prisma.user.findUnique({
-        where: { clerkId: clerkId },
-      });
+    // Fetch or create the investor profile
+    let investorProfile = await prisma.investorProfile.findUnique({
+      where: { userId: dbUser.id },
+    });
 
-      if (!dbUser) {
-        return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
-      }
-
-      // Check if the investor profile exists or create one
-      let investorProfile = await prisma.investorProfile.findUnique({
-        where: { userId: dbUser.id },
-      });
-
-      if (!investorProfile) {
-        investorProfile = await prisma.investorProfile.create({
-          data: {
-            userId: dbUser.id,
-            investmentStrategy: '',
-            linkedinUrl: 'https://linkedin.com/in/your_profile',
-            preferredIndustries: [],
-            riskTolerance: '',
-            investmentAmountRange: [],
-          },
-        });
-      }
-
-      // Fetch the pitch and its entrepreneur profile
-      const pitch = await prisma.pitch.findUnique({
-        where: { id: pitchId },
-        include: { entrepreneur: true, investmentOpportunity: true },
-      });
-
-      if (!pitch) {
-        return NextResponse.json({ error: 'Pitch not found.' }, { status: 404 });
-      }
-
-      const entrepreneurProfile = pitch.entrepreneur;
-
-      // Ensure the investment opportunity exists, or create one
-      let investmentOpportunity = pitch.investmentOpportunity;
-      if (!investmentOpportunity) {
-        investmentOpportunity = await prisma.investmentOpportunity.create({
-          data: {
-            entrepreneurProfileId: entrepreneurProfile.id,
-            title: pitchTitle,
-            amount: 0, // Will adjust based on actual investments
-            description: `Investment opportunity for ${pitchTitle}`,
-          },
-        });
-      }
-
-      // Create Stripe Checkout Session
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: [
-          {
-            price_data: {
-              currency: 'zar',
-              product_data: { name: `Pitch: ${pitchTitle}` },
-              unit_amount: amount * 100, // Convert to cents
-            },
-            quantity: 1,
-          },
-        ],
-        mode: 'payment',
-        success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
-        cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
-        customer_email: user.primaryEmailAddress?.emailAddress || '',
-        metadata: {
-          pitchId: pitchId.toString(),
-          pitchTitle: pitchTitle,
-          userId: investorProfile.id.toString(),
-          entrepreneurProfileId: entrepreneurProfile.id.toString(),
-          investmentOpportunityId: investmentOpportunity.id.toString(),
+    if (!investorProfile) {
+      // Create a new investor profile if it doesn't exist
+      investorProfile = await prisma.investorProfile.create({
+        data: {
+          userId: dbUser.id,
+          investmentStrategy: 'default strategy', // Optional: Adjust default data
+          linkedinUrl: '',                        // Optional: Adjust default data
         },
       });
-
-      return NextResponse.json({ id: session.id });
-    } catch (error) {
-      console.error('Error creating checkout session:', error);
-      return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
     }
-  } else {
-    return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
+
+    // Ensure the investment opportunity exists or create one
+    let investmentOpportunity = pitch.investmentOpportunity;
+    if (!investmentOpportunity) {
+      investmentOpportunity = await prisma.investmentOpportunity.create({
+        data: {
+          entrepreneurProfileId: entrepreneurProfile.id,
+          title: pitchTitle,
+          amount: 0,
+          description: `Investment opportunity for ${pitchTitle}`,
+        },
+      });
+    }
+
+    // Create a new Checkout Session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: 'zar',
+            product_data: {
+              name: `Pitch: ${pitchTitle}`,
+            },
+            unit_amount: amount,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
+      cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
+      customer_email: user.primaryEmailAddress?.emailAddress || '',
+      metadata: {
+        pitchId: pitchId.toString(),
+        pitchTitle: pitchTitle,
+        userId: investorProfile.id.toString(),
+        entrepreneurProfileId: entrepreneurProfile.id.toString(),
+        investmentOpportunityId: investmentOpportunity.id.toString(),
+      },
+    });
+
+    return NextResponse.json({ id: session.id });
+  } catch (error) {
+    console.error('Error creating checkout session:', error);
+    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
   }
 }

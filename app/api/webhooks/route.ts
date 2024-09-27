@@ -1,11 +1,9 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { PrismaClient } from '@prisma/client';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
-
+// Initialize Stripe and Prisma client
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' });
 const prisma = new PrismaClient();
 
 // Function to send confirmation email
@@ -30,16 +28,16 @@ async function sendConfirmationEmail(customerEmail: string, investmentAmount: nu
 }
 
 // Webhook to handle successful payment
-export async function POST(request: Request) {
-  let event;
+export async function POST(request: NextRequest) {
   const sig = request.headers.get('stripe-signature')!;
+  const body = await request.text();
+
+  let event: Stripe.Event;
+
   try {
-    event = stripe.webhooks.constructEvent(
-      await request.text(),
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET!  // Ensure this key is correct
-    );
+    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {
+    console.error('Webhook signature verification failed:', err);
     return NextResponse.json({ error: 'Webhook signature verification failed.' }, { status: 400 });
   }
 
@@ -62,7 +60,7 @@ export async function POST(request: Request) {
     };
 
     try {
-      // Create the investment record
+      // Create the investment record in the database
       await prisma.investment.create({
         data: {
           amount: session.amount_total! / 100, // Convert from cents to ZAR
@@ -79,6 +77,7 @@ export async function POST(request: Request) {
       console.log('Investment and email processed successfully');
     } catch (error) {
       console.error('Error processing investment:', error);
+      return NextResponse.json({ error: 'Error processing investment' }, { status: 500 });
     }
   }
 

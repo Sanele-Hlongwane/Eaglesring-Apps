@@ -92,7 +92,7 @@ export async function POST(request: Request) {
         data: {
           entrepreneurProfileId: entrepreneurProfile.id,
           title: pitchTitle,
-          amount: 0, // Will adjust based on actual investments
+          amount: 0, // Adjusted based on actual investments
           description: `Investment opportunity for ${pitchTitle}`,
         },
       });
@@ -133,36 +133,35 @@ export async function POST(request: Request) {
 
 // Webhook to handle successful payment
 export async function webhookHandler(request: Request) {
+  const sig = request.headers.get('stripe-signature')!;
   let event;
 
-  const sig = request.headers.get('stripe-signature')!;
-try {
-  event = stripe.webhooks.constructEvent(
-    await request.text(),
-    sig,
-    process.env.STRIPE_WEBHOOK_SECRET!  // Ensure this key is correct
-  );
-} catch (err) {
-  return NextResponse.json({ error: 'Webhook signature verification failed.' }, { status: 400 });
-}
-
+  try {
+    event = stripe.webhooks.constructEvent(
+      await request.text(),
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
+  } catch (err) {
+    return NextResponse.json({ error: 'Webhook signature verification failed.' }, { status: 400 });
+  }
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    // Extract metadata
+    // Extract and assert necessary metadata
     const {
       pitchId,
       pitchTitle,
       userId,
       entrepreneurProfileId,
       investmentOpportunityId,
-    } = session.metadata as {
-      pitchId: string;
-      pitchTitle: string;
-      userId: string;
-      entrepreneurProfileId: string;
-      investmentOpportunityId: string;
+    } = session.metadata as { 
+      pitchId: string; 
+      pitchTitle: string; 
+      userId: string; 
+      entrepreneurProfileId: string; 
+      investmentOpportunityId: string 
     };
 
     try {
@@ -179,7 +178,7 @@ try {
 
       // Send confirmation email
       await sendConfirmationEmail(session.customer_email!, session.amount_total! / 100, pitchTitle);
-
+      
       console.log('Investment and email processed successfully');
     } catch (error) {
       console.error('Error processing investment:', error);

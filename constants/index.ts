@@ -34,3 +34,33 @@ export const sidebarLinks = [
     '/images/avatar-4.png',
     '/images/avatar-5.png',
   ];
+
+  export const sidenavLinks = [
+    {
+      imgURL: '',
+      route: '/',
+      label: 'Overview',
+    },
+  
+    {
+      imgURL: '',
+      route: '/investments',
+      label: 'My Investments',
+    },
+    {
+      imgURL: '',
+      route: '/perfomance',
+      label: 'Perfomance Metrics',
+    },
+    {
+      imgURL: '',
+      route: '/notifications',
+      label: 'Notifications',
+    },
+    {
+      imgURL: '',
+      route: '/profile',
+      label: 'Profile',
+    },
+  ];
+  

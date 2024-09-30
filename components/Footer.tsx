@@ -21,10 +21,10 @@ export const Footer = () => {
   }, []);
 
   return (
-    <footer className="w-full bg-gradient-to-r from-gray-400 via-gray-400 to-gray-400 text-gray-900 dark:text-gray-200 dark:bg-gradient-to-r dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 py-10 relative shadow-lg z-10">
+    <footer className="w-full bg-gradient-to-r from-gray-400 via-gray-400 to-gray-400 text-gray-900 dark:text-gray-200 dark:bg-gradient-to-r dark:from-gray-800 dark:via-gray-800 dark:to-gray-800 py-10 shadow-lg mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {isSmallScreen ? (
-          <div className="flex flex-col items-center relative z-10">
+          <div className="flex flex-col items-center">
             <div className="flex flex-col items-center mb-6">
               <Link
                 href="https://www.icrdgroup.com"
@@ -32,7 +32,7 @@ export const Footer = () => {
                 className="flex items-center gap-1 text-current"
                 title="ICRD Group Holdings landing page"
               >
-                <span className="text-amber-700 dark:text-amber-300">Powered by</span>
+                <span className="text-amber-700 dark:text-blue-300">Powered by</span>
                 <p className="text-amber-700 dark:text-amber-400 font-bold text-xl">ICRD Group Holdings</p>
               </Link>
               <p className="mt-2 text-sm text-center">
@@ -40,7 +40,7 @@ export const Footer = () => {
               </p>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-6 mb-6">
+            <div className="flex flex-wrap justify-center text-sm gap-6 mb-6">
               <Link href="/contact" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Contact</Link>
               <Link href="/pricing" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Pricing</Link>
               <Link href="/faqs" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">FAQs</Link>
@@ -71,7 +71,7 @@ export const Footer = () => {
                 className="flex items-center gap-1 text-current mb-4"
                 title="ICRD Group Holdings landing page"
               >
-                <span className="text-amber-400 dark:text-amber-300">Powered by</span>
+                <span className="text-black dark:text-white">Powered by</span>
                 <p className="text-amber-500 dark:text-amber-400 font-bold text-xl">ICRD Group Holdings</p>
               </Link>
               <p className="mb-4">
@@ -80,8 +80,8 @@ export const Footer = () => {
             </div>
 
             <div className="flex flex-col items-start">
-              <p className="text-lg font-semibold mb-4">Quick Links</p>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-2 border-t border-gray-300 dark:border-gray-600 pt-4">
+              <p className="text-sm font-semibold mb-4">Quick Links</p>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-2 border-t text-sm border-gray-300 dark:border-gray-600 pt-4">
                 <Link href="/contact" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Contact</Link>
                 <Link href="/pricing" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Pricing</Link>
                 <Link href="/faqs" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">FAQs</Link>

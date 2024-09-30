@@ -277,6 +277,7 @@ export default function PitchesPage() {
                                 <button
                                   onClick={() => setIsEditing(false)}
                                   className="absolute top-[-90px] right-[-30px] text-red-500 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200"
+                                  title="Close"
                                 >
                                   <FaTimes size={24} />
                                 </button>

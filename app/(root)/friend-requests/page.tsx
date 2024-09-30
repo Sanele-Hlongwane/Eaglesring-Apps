@@ -205,14 +205,14 @@ const ProfilesPage = () => {
 
     return (
       <div className="relative min-h-screen h-screen ">
-        <div className="grid gap-1 grid-cols-1 xm-grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
+        <div className="grid gap-6 grid-cols-1 xm-grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
           {dataToDisplay.map((item: any) => (
             <div
               key={item.id}
-              className="relative bg-gradient-to-r from-gray-300 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-xl transition-transform transform "
+              className={`relative bg-gradient-to-r from-gray-300 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} dark:border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} rounded-xl p-6 shadow-xl transition-transform transform `}
             >
               {/* Badge for Role */}
-              <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md">
+              <div className={`absolute top-2 right-2 bg-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md`}>
                 {item.role}
               </div>
               <div className="flex  text-sm flex-col items-center">
@@ -220,7 +220,7 @@ const ProfilesPage = () => {
                   <img
                     src={item.imageUrl}
                     alt={item.name}
-                    className="w-28 h-28 rounded-full border-4 border-blue-600 shadow-md object-cover"
+                    className={`w-28 h-28 rounded-full border-4 border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} shadow-md object-cover`}
                   />
                 )}
                 <div className="mt-4 text-center">
@@ -231,7 +231,7 @@ const ProfilesPage = () => {
                     {item.email}
                   </p>
                   {item.entrepreneurProfile && (
-                    <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-blue-500 transition-transform transform hover:scale-105">
+                    <div className={`bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} `}>
                       <div className="mb-2">
                         <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
                           Company:
@@ -294,6 +294,42 @@ const ProfilesPage = () => {
                       </p>
                       <p className="text-gray-700 dark:text-gray-300">
                         {item.investorProfile.investmentStrategy}
+                      </p>
+                      <p className="font-semibold text-gray-800 dark:text-gray-100">
+                        Investment Focus:
+                      </p>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {item.investorProfile.investmentFocus}
+                      </p>
+                      <p className="font-semibold text-gray-800 dark:text-gray-100">
+                        Bio:
+                      </p>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {item.investorProfile.Bio}
+                      </p>
+                      <p className="font-semibold text-gray-800 dark:text-gray-100">
+                        LinkedIn:
+                      </p>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {item.investorProfile.linkedinUrl}
+                      </p>
+                      <p className="font-semibold text-gray-800 dark:text-gray-100">
+                        Preferred Industries:
+                      </p>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {item.investorProfile.preferredIndustries}
+                      </p>
+                      <p className="font-semibold text-gray-800 dark:text-gray-100">
+                        Risk Tolerance:
+                      </p>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {item.investorProfile.riskTolerance}
+                      </p>
+                      <p className="font-semibold text-gray-800 dark:text-gray-100">
+                        Investment Amount Range:
+                      </p>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {item.investorProfile.investmentAmountRange}
                       </p>
                     </div>
                   )}

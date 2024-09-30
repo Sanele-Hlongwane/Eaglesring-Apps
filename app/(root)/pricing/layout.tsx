@@ -1,11 +1,17 @@
-export default function PricingLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+import { Metadata } from "next";
+import { ReactNode } from "react";
+
+export const metadata: Metadata = {
+  title: "Pricing",
+  description: "Find the best pricing plan that fits your needs.",
+};
+
+const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
-    <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 w-full">
-      <div className="w-full max-w-screen-xl text-center">{children}</div>
-    </section>
+    <main>
+      <div className="w-full">{children}</div>
+    </main>
   );
-}
+};
+
+export default Layout;

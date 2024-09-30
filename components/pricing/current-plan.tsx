@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { plans, Plan } from "@/constants/plans";
 import Loader from "@/components/Loader";
 import { FaCheckCircle, FaTimesCircle, FaCreditCard, FaListAlt, FaCalendarAlt, FaCalendarCheck, FaCog } from "react-icons/fa";
+import LoadingDots from "../ui/LoadingDots";
 
 const CurrentPlan = () => {
   const { user } = useUser();
@@ -121,195 +122,132 @@ const CurrentPlan = () => {
   };
 
   return (
-   <div className="w-full px-6 py-12 mx-auto">
-  <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-    <div className="flex justify-center items-center bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4">
-      <h2 className="text-3xl font-bold">Current Plan</h2>
-    </div>
-    <div className="p-6">
-
-
-
-      
-    <div className="border-b border-gray-300 dark:border-gray-700">
-  <div className="flex flex-wrap justify-center gap-2 p-2">
-    {[
-      { name: "Overview", icon: FaListAlt, tab: "overview" },
-      { name: "Details", icon: FaCog, tab: "details" },
-      { name: "Manage", icon: FaTimesCircle, tab: "manage" },
-      { name: "Payment Methods", icon: FaCreditCard, tab: "payment" },
-    ].map((item) => (
-      <button
-        key={item.tab}
-        className={`flex items-center text-xs sm:text-sm md:text-base font-semibold py-2 px-3 sm:py-2.5 sm:px-4 border-b-2 ${
-          activeTab === item.tab
-            ? "border-blue-500 text-blue-600 dark:text-blue-400"
-            : "border-transparent text-gray-700 dark:text-gray-200"
-        } hover:border-blue-500 focus:outline-none`}
-        onClick={() => setActiveTab(item.tab as 'overview' | 'details' | 'manage' | 'payment')}
-        role="tab"
-        aria-selected={activeTab === item.tab}
-      >
-        <item.icon className="mr-1 sm:mr-2" />
-        <span className="hidden sm:inline">{item.name}</span>
-      </button>
-    ))}
-  </div>
-</div>
-
-
-
-      <div className="p-6 space-y-6 max-h-[calc(100vh-15rem)] overflow-y-auto">
-        {loading ? (
-          <div className="flex justify-center items-center h-48">
-            <Loader />
-          </div>
-        ) : activeTab === "overview" ? (
-          currentPlan ? (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-                <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                  Plan: <span className="font-bold">{currentPlan.name}</span>
-                </div>
-                <div className="text-lg text-gray-600 dark:text-gray-400">
-                  {isYearly
-                    ? `Yearly - R${currentPlan.yearlyPrice} per year`
-                    : `Monthly - R${currentPlan.monthlyPrice} per month`}
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-                <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">Next Billing Date</div>
-                <div className="text-lg text-gray-600 dark:text-gray-400">{subscriptionDetails?.nextBillingDate}</div>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-                <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">Subscription Start Date</div>
-                <div className="text-lg text-gray-600 dark:text-gray-400">{subscriptionDetails?.subscriptionStartDate}</div>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-                <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">Status</div>
-                <div
-                  className={`text-lg font-bold ${
-                    subscriptionDetails?.status === "active" ? "text-green-500" : "text-red-500"
-                  } flex items-center`}
+    <div className="w-full py-12 mx-auto">
+      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        <div className="flex justify-center items-center bg-gradient-to-r from-gray-300 to-blue-500 text-black dark:bg-gradient-to-r dark:from-blue-600 dark:to-blue-900 dark:text-white py-4">
+          <h2 className="text-3xl font-bold">Current Plan</h2>
+        </div>
+        <div className="p-6">
+          <div className="border-b border-gray-300 dark:border-gray-700">
+            <div className="flex flex-wrap justify-center gap-2 p-2">
+              {[
+                { name: "Overview", icon: FaListAlt, tab: "overview" },
+                { name: "Details", icon: FaCog, tab: "details" },
+                { name: "Manage", icon: FaTimesCircle, tab: "manage" },
+                { name: "Payment Methods", icon: FaCreditCard, tab: "payment" },
+              ].map((item) => (
+                <button
+                  key={item.tab}
+                  className={`flex items-center text-xs sm:text-sm md:text-base font-semibold py-2 px-3 sm:py-2.5 sm:px-4 border-b-2 ${
+                    activeTab === item.tab
+                      ? "border-blue-500 text-blue-600 dark:text-blue-400"
+                      : "border-transparent text-gray-700 dark:text-gray-200"
+                  } hover:border-blue-500 focus:outline-none`}
+                  onClick={() => setActiveTab(item.tab as 'overview' | 'details' | 'manage' | 'payment')}
+                  role="tab"
+                  aria-selected={activeTab === item.tab}
                 >
-                  {subscriptionDetails?.status === "active" ? (
-                    <>
-                      <FaCheckCircle className="mr-2" /> Active
-                    </>
-                  ) : (
-                    <>
-                      <FaTimesCircle className="mr-2" /> Inactive
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="text-center text-gray-700 dark:text-gray-300">You do not have an active plan.</p>
-          )
-        ) : activeTab === "details" ? (
-          currentPlan ? (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row items-start justify-between">
-                <div className="flex items-center">
-                  <FaListAlt className="mr-2" />
-                  <span className="font-semibold">Plan Details:</span>
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  {isYearly ? `Yearly - R${currentPlan.yearlyPrice} per year` : `Monthly - R${currentPlan.monthlyPrice} per month`}
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row items-start justify-between">
-                <div className="flex items-center">
-                  <FaCalendarAlt className="mr-2" />
-                  <span className="font-semibold">Next Billing Date:</span>
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  {subscriptionDetails?.nextBillingDate}
-                </div>
-              </div>
-              <div className="flex flex-col sm:flex-row items-start justify-between">
-                <div className="flex items-center">
-                  <FaCalendarCheck className="mr-2" />
-                  <span className="font-semibold">Subscription Start Date:</span>
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  {subscriptionDetails?.subscriptionStartDate}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="text-center text-gray-700 dark:text-gray-300">No details available.</p>
-          )
-        ) : activeTab === "manage" ? (
-          <div className="space-y-6">
-            <button
-              onClick={handleCancelSubscription}
-              className="w-full py-3 px-6 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-full shadow-md transition-colors duration-300"
-              aria-label="Cancel Subscription"
-            >
-              Cancel Subscription
-            </button>
-            <div>
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">Switch Plan</h3>
-              <button
-                onClick={() => setIsYearly(!isYearly)}
-                className="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-full shadow-md transition-colors duration-300"
-                aria-label={`Show ${isYearly ? "monthly" : "yearly"} plans`}
-              >
-                {isYearly ? "Show Monthly Plans" : "Show Yearly Plans"}
-              </button>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
-                {availablePlans.map((plan) => (
-                  <div
-                    key={plan.name}
-                    className={`p-6 rounded-lg shadow-md cursor-pointer ${
-                      currentPlan?.name === plan.name ? "border-2 border-blue-500" : "border"
-                    } bg-white dark:bg-gray-900 hover:shadow-lg transition-shadow duration-300`}
-                    onClick={() => {
-                      const confirmed = window.confirm(
-                        `Are you sure you want to switch to the ${plan.name} plan? The last added payment method will be used to complete this transaction.`
-                      );
-                      if (confirmed) {
-                        handleUpdatePlan(plan.stripePriceId);
-                      }
-                    }}
-                    role="button"
-                    aria-label={`Switch to ${plan.name} plan`}
-                  >
-                    <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-200">{plan.name}</h4>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      {isYearly ? `R${plan.yearlyPrice} per year` : `R${plan.monthlyPrice} per month`}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : activeTab === "payment" ? (
-          paymentMethods.length > 0 ? (
-            <div className="space-y-4">
-              {paymentMethods.map((method) => (
-                <div key={method.id} className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
-                  <div className="flex items-center">
-                    <FaCreditCard className="mr-2" />
-                    <span className="font-semibold">{method.cardBrand}</span>
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    **** **** **** {method.last4} - Exp: {method.expMonth}/{method.expYear}
-                  </div>
-                </div>
+                  <item.icon className="mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">{item.name}</span>
+                </button>
               ))}
             </div>
-          ) : (
-            <p className="text-center text-gray-700 dark:text-gray-300">No payment methods available.</p>
-          )
-        ) : null}
+          </div>
+
+          <div className="p-6 space-y-6 max-h-[calc(100vh-15rem)] overflow-y-auto">
+            {loading ? (
+              <div className="flex justify-center items-center h-48">
+                <LoadingDots />
+              </div>
+            ) : activeTab === "overview" ? (
+              currentPlan ? (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+                    <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                      Plan: <span className="font-bold">{currentPlan.name}</span>
+                    </div>
+                    <div className="text-lg text-gray-600 dark:text-gray-400">
+                      {isYearly
+                        ? `Yearly - R${currentPlan.yearlyPrice} per year`
+                        : `Monthly - R${currentPlan.monthlyPrice} per month`}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+                    <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">Next Billing Date</div>
+                    <div className="text-lg text-gray-600 dark:text-gray-400">{subscriptionDetails?.nextBillingDate}</div>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+                    <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">Subscription Start Date</div>
+                    <div className="text-lg text-gray-600 dark:text-gray-400">{subscriptionDetails?.subscriptionStartDate}</div>
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+                    <div className="text-lg font-semibold text-gray-800 dark:text-gray-200">Status</div>
+                    <div className={`text-lg font-bold ${subscriptionDetails?.status === "active" ? "text-green-600" : "text-red-600"}`}>
+                      {subscriptionDetails?.status}
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleCancelSubscription}
+                    className="bg-red-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-700 focus:outline-none"
+                  >
+                    Cancel Subscription
+                  </button>
+                </div>
+              ) : (
+                <div className="text-center text-gray-700 dark:text-gray-200">
+                  <p>No active subscription found. Consider subscribing to a plan!</p>
+                </div>
+              )
+            ) : activeTab === "details" ? (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Plan Details</h3>
+                <div className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
+                  <p>{currentPlan?.details}</p>
+                </div>
+              </div>
+            ) : activeTab === "manage" ? (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Manage Subscription</h3>
+                <div className="space-x-2">
+                {availablePlans.map((plan) => {
+                  const planId = typeof plan.stripePriceId === "string" ? plan.stripePriceId : isYearly ? plan.stripePriceId.yearly : plan.stripePriceId.monthly;
+
+                  return (
+                    <button
+                      key={planId} // Use planId here, which is guaranteed to be a string
+                      onClick={() => handleUpdatePlan(plan.stripePriceId)}
+                      className={`bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none ${currentPlan?.stripePriceId === plan.stripePriceId ? 'opacity-75' : ''}`}
+                      disabled={currentPlan?.stripePriceId === plan.stripePriceId}
+                    >
+                      Upgrade to {plan.name}
+                    </button>
+                  );
+                })}
+
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Payment Methods</h3>
+                {paymentMethods.length > 0 ? (
+                  paymentMethods.map((method) => (
+                    <div key={method.id} className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md flex justify-between items-center">
+                      <div>
+                        <div className="font-semibold">{method.brand} ending in {method.last4}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">{method.exp_month}/{method.exp_year}</div>
+                      </div>
+                      <button className="text-red-600 hover:underline">Remove</button>
+                    </div>
+                  ))
+                ) : (
+                  <p>No payment methods available.</p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
-
   );
 };
 

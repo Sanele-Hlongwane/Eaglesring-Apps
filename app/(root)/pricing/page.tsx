@@ -7,19 +7,25 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import CurrentPlan from "@/components/pricing/current-plan";
 import { plans } from "@/constants/plans";
-import { FaCheck, FaTimes} from "react-icons/fa";
+import { FaCheck, FaTimes, FaDollarSign, FaMoneyBillAlt, FaCalendar, FaCalendarAlt } from "react-icons/fa";
 import LoadingDots from "@/components/ui/LoadingDots";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  Button,
+} from "@nextui-org/react";
 
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 const SubscriptionForm = () => {
   const { user } = useUser();
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [isYearly, setIsYearly] = useState<boolean>(false);
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   useEffect(() => {}, [user?.primaryEmailAddress?.emailAddress]);
 
@@ -28,19 +34,19 @@ const SubscriptionForm = () => {
   };
 
   const handleSubmit = async (planName: string) => {
-    setIsLoading(true);
+    setLoadingPlan(planName);
     const userEmail = user?.primaryEmailAddress?.emailAddress;
 
     if (!planName || !user?.id || !userEmail) {
       toast.info("Please select a plan and ensure you are logged in.");
-      setIsLoading(false);
+      setLoadingPlan(null);
       return;
     }
 
     const selectedPlanData = plans.find((plan) => plan.name === planName);
     if (!selectedPlanData) {
       toast.info("Invalid plan selected.");
-      setIsLoading(false);
+      setLoadingPlan(null);
       return;
     }
 
@@ -53,6 +59,7 @@ const SubscriptionForm = () => {
 
     if (!priceId) {
       toast.info("Invalid price ID.");
+      setLoadingPlan(null);
       return;
     }
 
@@ -69,6 +76,7 @@ const SubscriptionForm = () => {
 
       if (!response.ok) {
         toast.error(`Error: ${data.message}`);
+        setLoadingPlan(null);
         return;
       }
 
@@ -81,107 +89,89 @@ const SubscriptionForm = () => {
       }
     } catch (error) {
       toast.error("An unexpected error occurred.");
+      setLoadingPlan(null);
     }
   };
 
   return (
-    <div className="relative container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-extrabold mb-18 text-center">
-        Subscription Plans
-      </h1>
-      <SignedIn>
-        <CurrentPlan />
-      </SignedIn>
-
-      <div className="flex justify-center mb-6 space-x-2">
+    <div className="py-8 px-4 bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 min-h-screen">
+      <h1 className="text-5xl font-extrabold mb-8 text-center text-gray-900 dark:text-white">Price plans</h1>
+      <div className="flex justify-center mb-6">
         <button
-          className={`px-6 py-3 rounded-l-md text-lg font-medium transition-all duration-300 ${
-            !isYearly
-              ? "bg-gradient-to-r from-green-400 to-green-600 text-white"
-              : "bg-gray-200 text-gray-700"
-          }`}
           onClick={() => setIsYearly(false)}
-          aria-pressed={!isYearly}
+          className={`px-8 py-3 rounded-l-lg transition duration-300 transform hover:scale-105 ${!isYearly ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white" : "bg-gray-200 text-gray-800"}`}
         >
           Monthly
         </button>
         <button
-          className={`px-6 py-3 rounded-r-md text-lg font-medium transition-all duration-300 ${
-            isYearly
-              ? "bg-gradient-to-r from-green-400 to-green-600 text-white"
-              : "bg-gray-200 text-gray-700"
-          }`}
           onClick={() => setIsYearly(true)}
-          aria-pressed={isYearly}
+          className={`px-8 py-3 rounded-r-lg transition duration-300 transform hover:scale-105 ${isYearly ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white" : "bg-gray-200 text-gray-800"}`}
         >
-          Yearly (Save 20%)
+          Yearly <p className={`${isYearly ? "text-green-300" : "text-green-800"}`}>(Save~17%)</p>
         </button>
       </div>
-
-      <form className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`border rounded-lg p-6 transition-transform duration-300 ${
-                selectedPlan === plan.name
-                  ? "border-green-600 shadow-lg transform scale-105"
-                  : "border-blue-800"
-              }`}
-              role="button"
-              tabIndex={0}
-              onClick={() => handlePlanSelect(plan.name)}
-              onKeyPress={(e) =>
-                e.key === "Enter" && handlePlanSelect(plan.name)
-              }
-              aria-label={`Select ${plan.name} plan`}
-            >
-              <h2 className="text-2xl font-semibold mb-2 flex items-center">
-                <span className="mr-2 text-green-600">{plan.name}</span>
-              </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {plans.map((plan) => (
+          <Card
+            key={plan.name}
+            onClick={() => handlePlanSelect(plan.name)}
+            className={`shadow-lg rounded-lg border-2 ${selectedPlan === plan.name ? "border-green-600" : "border-blue-800"}`}
+          >
+            <CardHeader className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-300 to-blue-400 rounded-t-lg text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-semibold">{plan.name}</h2>
+              <FaMoneyBillAlt className="text-3xl" />
+            </CardHeader>
+            <Divider />
+            <CardBody className="p-4">
               <p className="text-lg font-bold mb-4">
                 {isYearly ? (
-                  <>
-                    <span className="line-through text-gray-500">
-                      R{plan.monthlyPrice * 12}
-                    </span>{" "}
-                    R{plan.yearlyPrice} per year
-                  </>
-                ) : (
-                  `R${plan.monthlyPrice} per month`
-                )}
+                <>
+                  <span className="line-through text-red-500">
+                    R{plan.monthlyPrice * 12}
+                  </span>{" "}
+                  <span className="text-green-500">R{plan.yearlyPrice}</span> per year
+                </>
+              ) : (
+                <>
+                  <span className="text-green-500">R{plan.monthlyPrice}</span> per month
+                </>
+              )}
+
               </p>
               <ul className="list-disc list-inside mb-4 space-y-2">
                 {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center">
+                  <li key={index} className="flex items-center text-gray-900 dark:text-white">
                     <FaCheck className="text-green-500 mr-2" /> {feature}
                   </li>
                 ))}
                 {plan.unavailable.map((feature, index) => (
-                  <li
-                    key={index}
-                    className="flex items-center text-gray-500 line-through"
-                  >
+                  <li key={index} className="flex items-center text-gray-400 line-through">
                     <FaTimes className="text-red-500 mr-2" /> {feature}
                   </li>
                 ))}
               </ul>
-              <button
-                type="button"
+            </CardBody>
+            <Divider />
+            <CardFooter className="p-4">
+              <Button
                 className={`w-full py-2 px-4 rounded-lg font-bold transition-colors duration-300 ${
-                  selectedPlan === plan.name
-                    ? "bg-green-600 text-white"
-                    : "bg-blue-800 text-gray-200"
+                  selectedPlan === plan.name ? "bg-green-600 text-white" : "bg-blue-800 text-gray-200"
                 }`}
-                onClick={() => handleSubmit(plan.name)}
-                disabled={isLoading}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent triggering the card click event
+                  handleSubmit(plan.name);
+                }}
+                disabled={loadingPlan === plan.name}
               >
-                {isLoading ? <LoadingDots /> : "Subscribe"}
-              </button>
-            </div>
-          ))}
-        </div>
-      </form>
+                {loadingPlan === plan.name ? <LoadingDots /> : "Subscribe"}
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+      <SignedIn>
+        <CurrentPlan />
+      </SignedIn>
     </div>
   );
 };

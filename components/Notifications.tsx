@@ -2,23 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { 
-  FaSearch,
-  FaLightbulb,
-  FaShieldAlt,
-  FaComments,
-  FaUserTie,
-  FaChartLine,
-  FaRegGem,
-  FaLeaf,
-  FaHandsHelping,
-  FaGlobe,
-  FaRocket,
-  FaAward,
-  FaMedal, } from 'react-icons/fa';
 import { format } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import LoadingDots from './ui/LoadingDots';
+import { Button } from '@nextui-org/react';
 
 interface Notification {
   id: string;
@@ -91,43 +78,41 @@ export default function Notifications() {
 
   return (
     <div className="min-h-screen w-full p-0 m-0">
-      <div className="h-full max-w-full mx-auto min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white rounded-none shadow-none overflow-hidden">
-        <div className="p-6 bg-gradient-to-r from-gray-300 to-gray-500 dark:from-gray-800 dark:to-gray-600 text-gray-900 dark:text-gray-100 text-3xl font-semibold text-center">
+      <div className="h-full max-w-full mx-auto min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-800 dark:to-blue-800 text-gray-900 dark:text-white rounded-none shadow-none overflow-hidden">
+        <div className="p-6 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-900 dark:text-white text-3xl font-semibold text-center">
           Notifications
         </div>
 
         <div className="p-6">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div className="relative w-full sm:w-1/2">
-              <input
-                type="text"
-                placeholder="Search notifications"
-                className="w-full bg-gray-400 dark:bg-gray-600 rounded-full px-4 py-2 text-gray-900 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <FaSearch className="absolute top-2 right-4 text-gray-700 dark:text-gray-300" />
+          <div className="p-6 space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-transparent  bg-opacity-20 backdrop-filter backdrop-blur-lg p-6 rounded-lg ">
+              <div className="flex flex-col w-full sm:w-1/4">
+                <label className="text-sm font-bold dark:text-white mb-2">From</label>
+                <input
+                  type="date"
+                  className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2  focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col w-full sm:w-1/4">
+                <label className="text-sm font-bold dark:text-white mb-2">To</label>
+                <input
+                  type="date"
+                  className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+
+              <Button
+                className="w-full sm:w-auto px-10 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={handleSearch}
+              >
+                Filter
+              </Button>
             </div>
-            <input
-              type="date"
-              className="w-full sm:w-1/4 bg-gray-400 dark:bg-gray-600 rounded-full px-4 py-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-            />
-
-            <input
-              type="date"
-              className="w-full sm:w-1/4 bg-gray-400 dark:bg-gray-600 rounded-full px-4 py-2 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 shadow-sm"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-            />
-
-            <button
-              className="w-full sm:w-auto px-6 py-2 bg-gray-400 text-gray-900 dark:bg-gray-600 dark:text-gray-200 rounded-full shadow-lg hover:bg-gray-500 dark:hover:bg-gray-500 transition duration-200"
-              onClick={handleSearch}
-            >
-              Filter
-            </button>
           </div>
 
           <div className="mt-6">
@@ -179,4 +164,4 @@ export default function Notifications() {
       </div>
     </div>
   );
-}
+};

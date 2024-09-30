@@ -5,6 +5,8 @@ import axios from "axios";
 import { FaBuilding, FaInfoCircle, FaTag, FaDollarSign } from "react-icons/fa";
 import { useToast } from "@/components/ui/use-toast";
 import EmptyState from "@/components/EmptyState";
+import SideNav from "@/components/ui/investorSideBar";
+import Sidebar from "@/components/ui/investorSideBar";
 
 interface UserProfile {
   id: number;
@@ -63,10 +65,12 @@ const AcceptedRequestsPage = () => {
             : request.receiver;
 
         return (
+          
           <div
             key={user.id}
             className="relative bg-gradient-to-r from-gray-300 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-xl transition-transform transform"
           >
+            <Sidebar />
             <div className="absolute top-2 right-2 bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md">
               {user.role}
             </div>

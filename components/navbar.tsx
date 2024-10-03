@@ -14,8 +14,8 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { SignInButton, SignedIn, SignedOut, UserButton, SignOutButton } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import Image from 'next/image';
-import eagleSvg from '@/public/images/EaglesRingLogo.png';
-import { usePathname } from 'next/navigation'; // Updated import
+import eagleSvg from '@/public/images/Eagle.png';
+import { usePathname } from 'next/navigation';
 import router from "next/router";
 
 export const Navbar = () => {

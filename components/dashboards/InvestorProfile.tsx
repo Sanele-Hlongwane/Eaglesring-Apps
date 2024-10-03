@@ -58,7 +58,7 @@ export default function InvestorProfileCard() {
       <div className="bg-white dark:bg-gray-700 rounded-3xl p-10 w-full m-5 border border-gray-300 dark:bg-gray-800 dark:border-gray-700">
         {/* Profile Picture */}
         <div className="flex justify-center mb-6">
-          <Button 
+          <button 
             onClick={() => setIsPopupOpen(true)} 
             className="focus:outline-none" // Added class for accessibility
             aria-label="View profile picture"
@@ -68,7 +68,7 @@ export default function InvestorProfileCard() {
               alt="Profile"
               className="w-32 h-32 border-4 border-gray-300 dark:border-gray-600 cursor-pointer"
             />
-          </Button>
+          </button>
         </div>
 
           {isPopupOpen && (

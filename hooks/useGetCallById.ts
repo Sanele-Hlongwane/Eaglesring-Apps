@@ -1,21 +1,29 @@
+"use client";
+
 import { useEffect, useState } from 'react';
 import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
 
-export const useGetCallById = (id: string | string[]) => {
-  const [call, setCall] = useState<Call>();
-  const [isCallLoading, setIsCallLoading] = useState(true);
+// Assuming these methods should exist on Call
+interface ExtendedCall extends Call {
+  setPreferredIncomingVideoResolution?: (resolution: number) => void;
+  setIncomingVideoEnabled?: (enabled: boolean) => void;
+}
 
+export const useGetCallById = (id: string | string[]) => {
+  const [call, setCall] = useState<ExtendedCall | null>(null); // Use the extended type
+  const [isCallLoading, setIsCallLoading] = useState(true);
   const client = useStreamVideoClient();
 
   useEffect(() => {
     if (!client) return;
-    
+
     const loadCall = async () => {
       try {
-        // https://getstream.io/video/docs/react/guides/querying-calls/#filters
         const { calls } = await client.queryCalls({ filter_conditions: { id } });
 
-        if (calls.length > 0) setCall(calls[0]);
+        if (calls.length > 0) {
+          setCall(calls[0] as ExtendedCall); // Assert the type here
+        }
 
         setIsCallLoading(false);
       } catch (error) {

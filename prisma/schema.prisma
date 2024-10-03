@@ -110,6 +110,8 @@ model Investment {
   User User[]
 
   InvestmentOpportunity InvestmentOpportunity[] @relation("InvestmentOpportunityInvestments")
+
+  @@unique([investorProfileId, investmentOpportunityId])
 }
 
 model InvestmentOpportunity {

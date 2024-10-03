@@ -3,9 +3,41 @@
 import { Link } from "@nextui-org/link";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { useUser } from "@clerk/nextjs";
+import { toast } from "react-toastify";
 
 export const Footer = () => {
+
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const { user } = useUser();
+  const [loading, setLoading] = useState<boolean>(true);
+
+
+  useEffect(() => {
+    const fetchCurrentPlan = async () => {
+      if (user?.primaryEmailAddress?.emailAddress) {
+        try {
+          const response = await fetch(`/api/current-subscription?email=${encodeURIComponent(user.primaryEmailAddress.emailAddress)}`);
+          const data = await response.json();
+
+          if (response.ok) {
+            if (data.currentPlan) {
+              console.log(data.currentPlan);
+            }
+          } else {
+            toast.error(data.message || "An error occurred while fetching the subscription plan.");
+          }
+        } catch (error) {
+          console.error("Error fetching current plan:", error);
+          toast.error("An unexpected error occurred.");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchCurrentPlan();
+  }, [user?.primaryEmailAddress?.emailAddress]);
 
   useEffect(() => {
     const handleResize = () => {

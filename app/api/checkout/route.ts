@@ -100,33 +100,37 @@ export async function POST(request: Request) {
       },
     });
 
-    // Search for an existing Stripe customer using email
-    const email = user.primaryEmailAddress?.emailAddress || '';
-    let customer = null;
+    // Use the stripeCustomerId from the database if it exists
+    let customerId = dbUser.stripeCustomerId;
 
-    const existingCustomers = await stripe.customers.list({
-      email: email,
-      limit: 1, // We only care if there's one customer with this email
-    });
+    if (!customerId) {
+      const email = user.primaryEmailAddress?.emailAddress || '';
 
-    if (existingCustomers.data.length > 0) {
-      // If customer exists, update their details if necessary
-      customer = existingCustomers.data[0];
-    } else {
-      // Otherwise, create a new customer
-      customer = await stripe.customers.create({
+      // Search for an existing Stripe customer using email
+      const existingCustomers = await stripe.customers.list({
         email: email,
-        name: user.fullName || '',
-        metadata: {
-          clerkId: clerkId,
-        },
+        limit: 1,
       });
 
-      // Store the Stripe customer ID in the database
-      await prisma.user.update({
-        where: { id: dbUser.id },
-        data: { stripeCustomerId: customer.id },
-      });
+      if (existingCustomers.data.length > 0) {
+        customerId = existingCustomers.data[0].id;
+      } else {
+        // Create a new Stripe customer
+        const newCustomer = await stripe.customers.create({
+          email: email,
+          name: user.fullName || '',
+          metadata: {
+            clerkId: clerkId,
+          },
+        });
+        customerId = newCustomer.id;
+
+        // Store the Stripe customer ID in the database
+        await prisma.user.update({
+          where: { id: dbUser.id },
+          data: { stripeCustomerId: customerId },
+        });
+      }
     }
 
     // Create a new Checkout Session
@@ -147,7 +151,7 @@ export async function POST(request: Request) {
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
-      customer: customer.id,  // Attach the customer to the session
+      customer: customerId,  // Attach the customer to the session
       metadata: {
         pitchId: pitchId.toString(),
         pitchTitle: pitchTitle,

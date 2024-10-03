@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-06-20",
 });
+
+const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
   try {
@@ -17,7 +20,7 @@ export async function GET(request: Request) {
       );
     }
 
-    // Retrieve customer by email
+    // Retrieve customer by email from Stripe
     const customers = await stripe.customers.list({
       email,
       limit: 1,
@@ -29,6 +32,26 @@ export async function GET(request: Request) {
         { message: "Customer not found" },
         { status: 404 },
       );
+    }
+
+    // Fetch the user from the database by email
+    const dbUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!dbUser) {
+      return NextResponse.json(
+        { message: "User not found in the database" },
+        { status: 404 },
+      );
+    }
+
+    // Update the user's Stripe customer ID if it's not already set
+    if (!dbUser.stripeCustomerId) {
+      await prisma.user.update({
+        where: { email },
+        data: { stripeCustomerId: customer.id },
+      });
     }
 
     // Retrieve subscriptions

@@ -1,104 +1,107 @@
-import Stripe from "stripe";
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/prisma'; // Adjust the import path according to your project structure
-import { currentUser } from '@clerk/nextjs/server'; // Import Clerk's currentUser function
+import { PrismaClient } from '@prisma/client';
+import { currentUser } from '@clerk/nextjs/server';
+import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
+  apiVersion: '2024-06-20',
 });
 
-export async function POST(req: Request) {
+const prisma = new PrismaClient();
+
+interface InvestmentData {
+  amount: number;                     // Adjust based on your model
+  title: string;                      // Adjust based on your model
+  investorProfileId: number;          // Assuming this is a number
+  entrepreneurProfileId: number;       // Assuming this is a number
+  investmentOpportunityId: number;    // Assuming this is a number
+  pitchId?: number;                   // Optional if it can be null
+}
+
+async function saveInvestment(investmentData: InvestmentData) {
+  // Check if the investment already exists
+  const existingInvestment = await prisma.investment.findFirst({
+    where: {
+      AND: [
+        { investorProfileId: investmentData.investorProfileId },
+        { investmentOpportunityId: investmentData.investmentOpportunityId },
+      ],
+    },
+  });
+
+
+  // If it doesn't exist, create a new investment
+  if (!existingInvestment) {
+    return await prisma.investment.create({
+      data: investmentData,
+    });
+  } else {
+    console.log(`Investment already exists: ${existingInvestment.id}`);
+    return existingInvestment; // Return the existing investment if it already exists
+  }
+}
+
+export async function GET(request: Request) {
+  const user = await currentUser();
+
+  if (!user) {
+    return NextResponse.json({ error: 'User not authenticated.' }, { status: 401 });
+  }
+
   try {
-    // Retrieve the current user
-    const user = await currentUser();
-    console.log("Current user:", user);
-    
-    if (!user) {
-      console.error("User not authenticated");
-      return new Response(JSON.stringify({ error: "User not authenticated" }), { status: 401 });
+    const clerkId = user.id;
+
+    // Fetch the user from the database using clerkId
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId: clerkId },
+    });
+
+    if (!dbUser) {
+      return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
     }
 
-    // Parse JSON body from the request
-    const body = await req.json();
-    const { amount } = body; // Use only amount from the body; other fields are pulled from session metadata
-    console.log("Request body:", body);
-
-    // Fetch the customer object based on the current user's email
-    const customers = await stripe.customers.list({
-      email: user.emailAddresses[0].emailAddress,
-    });
-    console.log("Stripe customers:", customers);
-
-    if (customers.data.length === 0) {
-      console.error("Customer not found");
-      return new Response(JSON.stringify({ error: "Customer not found" }), { status: 404 });
-    }
-
-    const customerId = customers.data[0].id; // Get the customer ID
-    console.log("Customer ID:", customerId);
-
-    // Retrieve the list of checkout sessions for this customer
-    const sessions = await stripe.checkout.sessions.list({
-      customer: customerId,
-    });
-    console.log("Checkout sessions:", sessions);
-
-    // Filter sessions to find successful payments with mode 'payment'
-    const successfulSessions = sessions.data.filter((session) => 
-      session.payment_status === "paid" && session.mode === "payment"
-    );
-    console.log("Successful payment sessions:", successfulSessions);
-
-    // Process each successful session to create investment records if the required metadata is present
-    for (const session of successfulSessions) {
-      const { metadata } = session;
-      console.log("Processing session metadata:", metadata);
-
-      // Ensure metadata contains all the required fields
-      if (metadata && metadata.entrepreneurProfileId && metadata.investmentOpportunityId && metadata.pitchTitle && metadata.userId) {
-        console.log("Required metadata found for session:", session.id);
-        
-        // Convert metadata IDs to numbers
-        const investorProfileId = parseInt(metadata.userId, 10);
-        const entrepreneurProfileId = parseInt(metadata.entrepreneurProfileId, 10);
-        const investmentOpportunityId = parseInt(metadata.investmentOpportunityId, 10);
-
-        // Check if the investment already exists
-        const existingInvestment = await db.investment.findFirst({
-          where: {
-            investorProfileId, // Use converted number
-            entrepreneurProfileId, // Use converted number
-            investmentOpportunityId, // Use converted number
-            title: metadata.pitchTitle,
+    // Fetch investments made by the user from the database
+    const investments = await prisma.investment.findMany({
+      where: { investorProfileId: dbUser.id },
+      include: {
+        investmentOpportunity: {
+          include: {
+            entrepreneurProfile: true, // Include entrepreneur profile if needed
           },
-        });
-        console.log("Existing investment:", existingInvestment);
+        },
+      },
+    });
 
-        // If the investment does not exist, create it
-        if (!existingInvestment) {
-          console.log("Creating new investment record for:", metadata.pitchTitle);
-          await db.investment.create({
-            data: {
-              amount: parseFloat(amount), // Amount comes from the request body
-              title: metadata.pitchTitle, // Title comes from the metadata
-              investorProfile: { connect: { id: investorProfileId } },
-              entrepreneurProfile: { connect: { id: entrepreneurProfileId } },
-              investmentOpportunity: { connect: { id: investmentOpportunityId } },
-            },
-          });
-          console.log("Investment record created successfully.");
-        } else {
-          console.log("Investment record already exists, skipping creation.");
-        }
-      } else {
-        console.error("Missing required metadata in session:", session.id);
-      }
+
+    // Optionally, fetch Stripe data if needed
+    const stripeCustomerId = dbUser.stripeCustomerId;
+
+    if (stripeCustomerId) {
+      const charges = await stripe.charges.list({
+        customer: stripeCustomerId,
+        limit: 100, // Limit to the number of charges you want to retrieve
+      });
+
+      console.log('Stripe Charges:', charges.data);
     }
 
-    return new Response(JSON.stringify({ successfulSessions }), { status: 200 });
+    // Create and save new investments with metadata
+    for (const investment of investments) {
+      const investmentData: InvestmentData = {
+        amount: investment.amount, // Ensure this is defined correctly in your investment type
+        title: investment.title, // Ensure this field is present
+        investorProfileId: dbUser.id,
+        entrepreneurProfileId: investment.entrepreneurProfileId,
+        investmentOpportunityId: investment.investmentOpportunityId,
+      };
 
+      // Save investment only if it's new
+      await saveInvestment(investmentData);
+    }
+
+    return NextResponse.json({ investments });
   } catch (error) {
-    console.error("Error processing Stripe sessions:", error);
-    return new Response(JSON.stringify({ error: "Error processing Stripe sessions" }), { status: 500 });
+    console.error('Error fetching investments:', error);
+    return NextResponse.json({ error: 'Failed to fetch investments' }, { status: 500 });
   }
 }

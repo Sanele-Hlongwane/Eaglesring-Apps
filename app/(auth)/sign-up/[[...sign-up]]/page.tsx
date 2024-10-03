@@ -26,7 +26,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white m-10">
+    <main className="relative min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white ">
       {/* Background Icons */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />

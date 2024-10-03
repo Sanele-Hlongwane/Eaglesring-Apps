@@ -87,18 +87,20 @@ export default function Notifications() {
           <div className="p-6 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-transparent  bg-opacity-20 backdrop-filter backdrop-blur-lg p-6 rounded-lg ">
               <div className="flex flex-col w-full sm:w-1/4">
-                <label className="text-sm font-bold dark:text-white mb-2">From</label>
+              <label htmlFor="start-date" className="text-sm font-bold dark:text-white mb-2">From</label>
                 <input
+                  id="start-date" // Added id
                   type="date"
-                  className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2  focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+                  className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
 
               <div className="flex flex-col w-full sm:w-1/4">
-                <label className="text-sm font-bold dark:text-white mb-2">To</label>
+                <label htmlFor="end-date" className="text-sm font-bold dark:text-white mb-2">To</label>
                 <input
+                  id="end-date" // Added id
                   type="date"
                   className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
                   value={endDate}

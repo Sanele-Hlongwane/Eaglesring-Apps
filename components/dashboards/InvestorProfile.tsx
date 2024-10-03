@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { FaLightbulb, FaLinkedin, FaBriefcase, FaShieldAlt, FaDollarSign, FaEdit, FaMoneyBillWave } from 'react-icons/fa';
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
+import { Button } from "@nextui-org/react";
 
 // Define the structure of the profile object
 interface InvestorProfile {
@@ -57,13 +58,18 @@ export default function InvestorProfileCard() {
       <div className="bg-white dark:bg-gray-700 rounded-3xl p-10 w-full m-5 border border-gray-300 dark:bg-gray-800 dark:border-gray-700">
         {/* Profile Picture */}
         <div className="flex justify-center mb-6">
+          <Button 
+            onClick={() => setIsPopupOpen(true)} 
+            className="focus:outline-none" // Added class for accessibility
+            aria-label="View profile picture"
+          >
             <img
               src={profile?.imageUrl || "/default-profile.png"}
               alt="Profile"
               className="w-32 h-32 border-4 border-gray-300 dark:border-gray-600 cursor-pointer"
-              onClick={() => setIsPopupOpen(true)}
             />
-          </div>
+          </Button>
+        </div>
 
           {isPopupOpen && (
             <div className="fixed inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
@@ -73,13 +79,13 @@ export default function InvestorProfileCard() {
                   alt="Profile"
                   className="w-96 h-96 object-cover rounded-lg shadow-lg"
                 />
-                <button
+                <Button
                   className="absolute top-4 right-4 text-red-600 dark:text-red-400 text-2xl"
                   onClick={() => setIsPopupOpen(false)}
                   title="Close"
                 >
                   &times;
-                </button>
+                </Button>
               </div>
             </div>
           )}
@@ -151,14 +157,14 @@ export default function InvestorProfileCard() {
           </div>
         </div>
 
-        <button
+        <Button
           className="mt-6 w-full bg-gradient-to-r from-blue-700 to-blue-500 text-white rounded-lg py-3 flex items-center justify-center hover: transition duration-200"
           onClick={() => {
             router.push("/investor-profile");
           }}
         >
           <FaEdit className="mr-2" /> Edit Profile
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -27,6 +27,7 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
   const { user } = useUser();
   const router = useRouter();
   const [formData, setFormData] = useState<EntrepreneurProfile>(data || { id: 0 });
+  const [isPopupOpen, setIsPopupOpen] = useState(false); // For image popup
 
   useEffect(() => {
     if (data) {
@@ -67,11 +68,13 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
     <div className="w-full mx-auto p-1 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-lg">
       <div className="flex items-center mb-4">
         {user?.imageUrl && (
-          <img
-            src={user.imageUrl}
-            alt="Profile"
-            className="w-20 h-20 rounded-full border-4 border-gradient-to-r from-blue-500 to-green-500 shadow-md"
-          />
+          <button onClick={() => setIsPopupOpen(true)} className="focus:outline-none">
+            <img
+              src={user.imageUrl}
+              alt="Profile"
+              className="w-20 h-20 rounded-full border-4 border-gradient-to-r from-blue-500 to-green-500 shadow-md cursor-pointer"
+            />
+          </button>
         )}
         <div>
           <h2 className="text-xl lg:text-2xl ml-4 font-extrabold text-gray-900 dark:text-white animate-pulse">
@@ -82,6 +85,26 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
           </p>
         </div>
       </div>
+
+      {/* Image Popup */}
+      {isPopupOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
+          <div className="relative">
+            <img
+              src={user?.imageUrl}
+              alt="Profile"
+              className="w-96 h-96 object-cover rounded-lg shadow-lg"
+            />
+            <button
+              className="absolute top-4 right-4 text-red-600 dark:text-red-400 text-2xl"
+              onClick={() => setIsPopupOpen(false)}
+              title="Close"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mb-6">
         <p className="text-xs text-gray-800 dark:text-gray-300 mt-2">{data?.bio || "N/A"}</p>
@@ -114,7 +137,7 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
 
       <button
         onClick={handleEditClick}
-        className="mt-4 w-full py-2 border border-gray-800 text-white bg-gradient-to-r from-green-500 to-green-600 rounded-md transition-transform hover:bg-gradient-to-r hover:from-green-400 hover:to-green-500"
+        className="mt-4 w-full py-2 border border-gray-800 text-white bg-gradient-to-r from-green-500 to-green-600 rounded-md transition-transform transform hover:bg-gradient-to-r hover:from-green-400 hover:to-green-500 active:scale-95 active:bg-gradient-to-r active:from-green-600 active:to-green-700 shadow-lg hover:shadow-xl active:shadow-md"
       >
         Edit Profile
       </button>

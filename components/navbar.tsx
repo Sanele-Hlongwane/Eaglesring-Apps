@@ -93,7 +93,7 @@ export const Navbar = () => {
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
-          <Link className={getLinkClasses('/friend-requests')} href="/friend-requests" onClick={() => handleLinkClick('/friend-requests')}>
+          <Link className={getLinkClasses('/connections')} href="/connections" onClick={() => handleLinkClick('/connections')}>
             Connections
           </Link>
         </NavbarMenuItem>
@@ -123,7 +123,7 @@ export const Navbar = () => {
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/friend-requests')} href="/friend-requests" onClick={() => handleLinkClick('/friend-requests')}>
+              <Link className={getLinkClasses('/connections')} href="/connections" onClick={() => handleLinkClick('/connections')}>
                 Connections
               </Link>
             </NavbarMenuItem>

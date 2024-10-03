@@ -54,6 +54,11 @@ const AcceptedRequestsPage = () => {
   const [acceptedRequests, setAcceptedRequests] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // State for loading
   const { toast } = useToast();
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
+  const togglePopup = (userId: number | null) => {
+    setSelectedUserId(userId);
+  };
 
   const fetchAcceptedRequests = async () => {
     try {
@@ -86,6 +91,22 @@ const AcceptedRequestsPage = () => {
     return <EmptyState message={"No accepted requests found."} />;
   }
 
+  function formatInvestmentRange(range: number | null): string {
+    if (!range) {
+      return 'N/A';
+    }
+  
+    const formattedRange = range.toLocaleString('en-ZA', {
+      style: 'currency',
+      currency: 'ZAR',
+      minimumFractionDigits: 0,
+    }).replace('ZAR', 'R');
+  
+    return formattedRange;
+  }
+  
+  
+
   return (
     <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
       {acceptedRequests.map((request) => {
@@ -105,12 +126,37 @@ const AcceptedRequestsPage = () => {
             </div>
 
             <div className="flex flex-col items-center">
-              {user.imageUrl && (
+            {user.imageUrl && (
                 <img
                   src={user.imageUrl}
                   alt={user.name}
-                  className={`w-28 h-28 rounded-full border-4 border-${cardRoleBg} shadow-md object-cover`}
+                  className={`w-28 h-28 rounded-full border-4 border-${cardRoleBg} shadow-md object-cover cursor-pointer transition-transform hover:scale-105`}
+                  onClick={() => togglePopup(user.id)} // Pass user ID to togglePopup
                 />
+              )}
+
+              {/* Popup Modal for selected user */}
+              {selectedUserId === user.id && (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+                  title="Close"
+                  onClick={() => togglePopup(null)} 
+                >
+                  <div className="relative">
+                    <img
+                      src={user.imageUrl}
+                      title="View full image"
+                      alt={user.name}
+                      className={`w-96 h-96 rounded-full border-4 border-${cardRoleBg} shadow-lg object-cover`}
+                    />
+                    <button
+                      onClick={() => togglePopup(null)} 
+                      className="absolute top-0 right-0 text-gray-100 bg-red-800 bg-opacity-70 rounded-full p-2 m-2"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </div>
               )}
 
               <div className="mt-4 text-center">
@@ -162,59 +208,62 @@ const AcceptedRequestsPage = () => {
                 )}
                 {user.role === "INVESTOR" && user.investorProfile && (
                   <div className={`bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl mb-6 border-t-4 border-${cardRoleBg} dark:border-${cardRoleBg}`}>
-                    <div className="space-y-4">
-                      <div className="flex items-start space-x-2">
-                        <FaChartPie className="text-gray-600 dark:text-gray-400" />
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Focus</h3>
-                          <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentFocus}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <FaUser className="text-gray-600 dark:text-gray-400" />
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Bio</h3>
-                          <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.bio}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <FaBullseye className="text-gray-600 dark:text-gray-400" />
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Strategy</h3>
-                          <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentStrategy}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <FaLinkedin className="text-blue-600 dark:text-blue-400" />
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">LinkedIn</h3>
-                          <a href={user.investorProfile.linkedinUrl} className="text-blue-600 dark:text-blue-400 underline">
-                            {user.investorProfile.linkedinUrl}
-                          </a>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <FaBuilding className="text-gray-600 dark:text-gray-400" />
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Preferred Industries</h3>
-                          <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.preferredIndustries}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <FaShieldAlt className="text-gray-600 dark:text-gray-400" />
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Risk Tolerance</h3>
-                          <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.riskTolerance}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <FaMoneyBillWave className="text-gray-600 dark:text-gray-400" />
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Amount Range</h3>
-                          <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentAmountRange}</p>
-                        </div>
+                    <div className="space-y-6">
+                    <div className="flex items-start space-x-4">
+                      <FaChartPie className="text-green-600 dark:text-green-400 text-2xl" />
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Focus</h3>
+                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentFocus}</p>
                       </div>
                     </div>
+                    <div className="flex items-start space-x-4">
+                      <FaUser className="text-green-600 dark:text-green-400 text-2xl" />
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Bio</h3>
+                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.bio}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-4">
+                      <FaBullseye className="text-green-600 dark:text-green-400 text-2xl" />
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Strategy</h3>
+                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentStrategy}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-4">
+                      <FaLinkedin className="text-blue-600 dark:text-blue-400 text-2xl" />
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">LinkedIn</h3>
+                        <a href={user.investorProfile.linkedinUrl} className="text-blue-600 dark:text-blue-400 underline">
+                          {user.investorProfile.linkedinUrl}
+                        </a>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-4">
+                      <FaBuilding className="text-green-600 dark:text-green-400 text-2xl" />
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Preferred Industries</h3>
+                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.preferredIndustries}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-4">
+                      <FaShieldAlt className="text-green-600 dark:text-green-400 text-2xl" />
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Risk Tolerance</h3>
+                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.riskTolerance}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start space-x-4">
+                      <FaMoneyBillWave className="text-green-600 dark:text-green-400 text-2xl" />
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Amount Range</h3>
+                        <p className="text-gray-700 dark:text-gray-400">
+                          {formatInvestmentRange(user.investorProfile.investmentAmountRange)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   </div>
                 )}
                 {user.role === "ENTREPRENEUR" && (

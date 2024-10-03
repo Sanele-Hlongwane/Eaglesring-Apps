@@ -46,6 +46,7 @@ const ProfilesPage = () => {
   const [loadingId, setLoadingId] = useState<number | null>(null); // Loading state for buttons
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [roleFilter, setRoleFilter] = useState<string>("");
+  const [isPopupVisible, setPopupVisible] = useState(false);
 
   // Fetch profiles
   useEffect(() => {
@@ -201,7 +202,11 @@ const ProfilesPage = () => {
           message={`No ${activeTab === "all" ? "profiles" : activeTab + " requests"} found`}
         />
       );
-    }
+    };
+
+    const togglePopup = () => {
+      setPopupVisible(!isPopupVisible);
+    };
 
     return (
       <div className="relative  ">
@@ -216,13 +221,36 @@ const ProfilesPage = () => {
                 {item.role}
               </div>
               <div className="flex  text-sm flex-col items-center">
-                {item.imageUrl && (
-                  <img
-                    src={item.imageUrl}
-                    alt={item.name}
-                    className={`w-28 h-28 rounded-full border-4 border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} shadow-md object-cover`}
-                  />
-                )}
+              {item.imageUrl && (
+        <img
+          src={item.imageUrl}
+          alt={item.name}
+          className={`w-28 h-28 rounded-full border-4 border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} shadow-md object-cover cursor-pointer transition-transform hover:scale-105`}
+          onClick={togglePopup} // Add onClick event to toggle popup
+        />
+      )}
+
+      {/* Popup Modal */}
+      {isPopupVisible && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={togglePopup} // Close the popup when clicking outside the image
+        >
+          <div className="relative">
+            <img
+              src={item.imageUrl}
+              alt={item.name}
+              className="w-96 h-96 rounded-full border-4 border-white shadow-lg object-cover"
+            />
+            <button
+              onClick={togglePopup}
+              className="absolute top-0 right-0 text-white bg-black bg-opacity-70 rounded-full p-2 m-2"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
                 <div className="mt-4 text-center">
                   <h2 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                     {item.name}

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaLightbulb, FaLinkedin, FaBriefcase, FaShieldAlt, FaDollarSign, FaEdit, FaMoneyBillWave } from 'react-icons/fa';
+import { FaLightbulb, FaLinkedin, FaBriefcase, FaShieldAlt, FaMoneyBillWave, FaEdit } from "react-icons/fa";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
@@ -16,7 +16,7 @@ interface InvestorProfile {
   preferredIndustries: string[];
   riskTolerance: string;
   investmentAmountRange: string[];
-  imageUrl?: string; // Add profile picture URL
+  imageUrl?: string; // Profile picture URL
 }
 
 const formatAmount = (amount: string) => {
@@ -53,42 +53,52 @@ export default function InvestorProfileCard() {
     return <Loader />;
   }
 
+  const handleOutsideClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).classList.contains("popup-overlay")) {
+      setIsPopupOpen(false);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
       <div className="bg-white dark:bg-gray-700 rounded-3xl p-10 w-full m-5 border border-gray-300 dark:bg-gray-800 dark:border-gray-700">
         {/* Profile Picture */}
         <div className="flex justify-center mb-6">
-          <button 
-            onClick={() => setIsPopupOpen(true)} 
-            className="focus:outline-none" // Added class for accessibility
+          <button
+            onClick={() => setIsPopupOpen(true)}
+            className="focus:outline-none"
             aria-label="View profile picture"
           >
             <img
               src={profile?.imageUrl || "/default-profile.png"}
               alt="Profile"
-              className="w-32 h-32 border-4 border-gray-300 dark:border-gray-600 cursor-pointer"
+              className="w-32 h-32 border-4 border-gray-300 dark:border-gray-600 cursor-pointer rounded-full object-cover"
             />
           </button>
         </div>
 
-          {isPopupOpen && (
-            <div className="fixed inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
-              <div className="relative">
-                <img
-                  src={profile?.imageUrl || "/default-profile.png"}
-                  alt="Profile"
-                  className="w-96 h-96 object-cover rounded-lg shadow-lg"
-                />
-                <Button
-                  className="absolute top-4 right-4 text-red-600 dark:text-red-400 text-2xl"
-                  onClick={() => setIsPopupOpen(false)}
-                  title="Close"
-                >
-                  &times;
-                </Button>
-              </div>
+        {/* Popup for enlarged image */}
+        {isPopupOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 popup-overlay"
+            onClick={handleOutsideClick}
+          >
+            <div className="relative">
+              <img
+                src={profile?.imageUrl || "/default-profile.png"}
+                alt="Profile"
+                className="w-96 h-96 object-cover rounded-lg shadow-lg"
+              />
+              <Button
+                className="absolute top-4 right-4 text-red-600 dark:text-red-400 text-2xl"
+                onClick={() => setIsPopupOpen(false)}
+                title="Close"
+              >
+                &times;
+              </Button>
             </div>
-          )}
+          </div>
+        )}
 
         <h3 className="text-4xl font-serif font-semibold text-gray-800 mb-4 dark:text-gray-200">
           {profile?.bio || "Investor Profile"}

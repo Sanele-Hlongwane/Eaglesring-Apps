@@ -65,7 +65,7 @@ export default function SignUpPage() {
       </SignedIn>
 
       <SignedOut>
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center m-10 min-h-screen">
           <SignIn />
         </div>
       </SignedOut>

@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { StreamCall, StreamTheme } from '@stream-io/video-react-sdk';
 import { useParams } from 'next/navigation';
@@ -10,6 +9,7 @@ import { useGetCallById } from '@/hooks/useGetCallById';
 import Alert from '@/components/Alert';
 import MeetingSetup from '@/components/MeetingSetup';
 import MeetingRoom from '@/components/MeetingRoom';
+import { useState } from 'react';
 
 const MeetingPage = () => {
   const { id } = useParams();
@@ -31,21 +31,15 @@ const MeetingPage = () => {
 
   return (
     <main className="h-screen w-full">
-      {call.setPreferredIncomingVideoResolution && call.setIncomingVideoEnabled ? (
-        <StreamCall call={call}>
-          <StreamTheme>
-            {!isSetupComplete ? (
-              <MeetingSetup setIsSetupComplete={setIsSetupComplete} />
-            ) : (
-              <MeetingRoom />
-            )}
-          </StreamTheme>
-        </StreamCall>
-      ) : (
-        <p className="text-center text-3xl font-bold text-white">
-          Call data is incomplete.
-        </p>
-      )}
+      <StreamCall call={call}>
+        <StreamTheme>
+          {!isSetupComplete ? (
+            <MeetingSetup setIsSetupComplete={setIsSetupComplete} />
+          ) : (
+            <MeetingRoom />
+          )}
+        </StreamTheme>
+      </StreamCall>
     </main>
   );
 };

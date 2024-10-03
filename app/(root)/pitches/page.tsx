@@ -250,7 +250,7 @@ export default function PitchesPage() {
 
         <div className="pt-40 pb-10">
           {activeTab === "overview" && (
-            <div className="p-6 rounded-lg">
+            <div className="p-6 rounded-lg m-10 ">
               {/* Pitches List */}
               <ul className="space-y-4">
                 {pitches.length > 0 ? (

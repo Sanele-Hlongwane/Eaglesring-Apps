@@ -12,9 +12,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <main>
-      <Navbar />
       <div className="w-full">{children}</div>
-      <Footer />
     </main>
   );
 };

@@ -26,7 +26,7 @@ export default function SignUpPage() {
   };
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white ">
+    <main className="relative min-h-screen ">
       {/* Background Icons */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <FaLightbulb className="text-yellow-500 absolute top-16 left-20 text-[100px] rotate-12" />
@@ -35,7 +35,6 @@ export default function SignUpPage() {
         <FaUserTie className="text-red-500 absolute top-1/4 left-10 text-[90px] rotate-45" />
         <FaChartLine className="text-purple-500 absolute bottom-20 right-1/3 text-[110px] -rotate-6" />
         <FaRegGem className="text-pink-500 absolute bottom-1/4 left-2/3 text-[100px] rotate-12" />
-        {/* Additional Icons */}
         <FaHandsHelping className="text-yellow-400 absolute top-20 right-5 text-[90px] rotate-12" />
         <FaGlobe className="text-blue-400 absolute bottom-28 right-14 text-[100px] rotate-12" />
         <FaRocket className="text-red-400 absolute top-1/3 left-14 text-[80px] rotate-45" />

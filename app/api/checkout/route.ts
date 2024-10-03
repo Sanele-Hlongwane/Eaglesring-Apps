@@ -57,20 +57,33 @@ export async function POST(request: Request) {
       investorProfile = await prisma.investorProfile.create({
         data: {
           userId: dbUser.id,
-          investmentStrategy: 'default strategy', // Optional: Adjust default data
-          linkedinUrl: '',                        // Optional: Adjust default data
+          investmentStrategy: '',
+          linkedinUrl: '',
         },
       });
     }
 
-    // Ensure the investment opportunity exists or create one
-    let investmentOpportunity = pitch.investmentOpportunity;
+    // Convert amount from cents to rands
+    const amountInRands = amount / 100;
+
+    // Check if the investment opportunity already exists by title, description, or entrepreneur profile
+    let investmentOpportunity = await prisma.investmentOpportunity.findFirst({
+      where: {
+        entrepreneurProfileId: entrepreneurProfile.id,
+        OR: [
+          { title: pitchTitle },
+          { description: `Investment opportunity for ${pitchTitle}` },
+        ],
+      },
+    });
+
+    // If no investment opportunity exists, create one
     if (!investmentOpportunity) {
       investmentOpportunity = await prisma.investmentOpportunity.create({
         data: {
           entrepreneurProfileId: entrepreneurProfile.id,
           title: pitchTitle,
-          amount: 0,
+          amount: amountInRands,
           description: `Investment opportunity for ${pitchTitle}`,
         },
       });
@@ -79,13 +92,42 @@ export async function POST(request: Request) {
     // Create a new Investment record
     const investment = await prisma.investment.create({
       data: {
-        amount: amount,  // Use the provided amount
+        amount: amountInRands,
         title: pitchTitle,
         investorProfileId: investorProfile.id,
         entrepreneurProfileId: entrepreneurProfile.id,
         investmentOpportunityId: investmentOpportunity.id,
       },
     });
+
+    // Search for an existing Stripe customer using email
+    const email = user.primaryEmailAddress?.emailAddress || '';
+    let customer = null;
+
+    const existingCustomers = await stripe.customers.list({
+      email: email,
+      limit: 1, // We only care if there's one customer with this email
+    });
+
+    if (existingCustomers.data.length > 0) {
+      // If customer exists, update their details if necessary
+      customer = existingCustomers.data[0];
+    } else {
+      // Otherwise, create a new customer
+      customer = await stripe.customers.create({
+        email: email,
+        name: user.fullName || '',
+        metadata: {
+          clerkId: clerkId,
+        },
+      });
+
+      // Store the Stripe customer ID in the database
+      await prisma.user.update({
+        where: { id: dbUser.id },
+        data: { stripeCustomerId: customer.id },
+      });
+    }
 
     // Create a new Checkout Session
     const session = await stripe.checkout.sessions.create({
@@ -97,7 +139,7 @@ export async function POST(request: Request) {
             product_data: {
               name: `Pitch: ${pitchTitle}`,
             },
-            unit_amount: amount,  // Ensure amount is correctly set in cents
+            unit_amount: amount,  // Stripe expects the amount in cents
           },
           quantity: 1,
         },
@@ -105,7 +147,7 @@ export async function POST(request: Request) {
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
-      customer_email: user.primaryEmailAddress?.emailAddress || '',
+      customer: customer.id,  // Attach the customer to the session
       metadata: {
         pitchId: pitchId.toString(),
         pitchTitle: pitchTitle,

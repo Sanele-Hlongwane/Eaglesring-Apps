@@ -59,6 +59,7 @@ model User {
   name                   String?
   imageUrl               String?
   role                   Role
+  stripeCustomerId       String? 
   createdAt              DateTime             @default(now())
   updatedAt              DateTime             @updatedAt
   messagesSent           Message[]            @relation("MessageSender")

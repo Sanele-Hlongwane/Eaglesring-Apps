@@ -1,5 +1,7 @@
+import { Footer } from "@/components/Footer";
 import { Metadata } from "next";
 import { ReactNode } from "react";
+import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -9,7 +11,9 @@ export const metadata: Metadata = {
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <main>
+      <Navbar />
       <div className="w-full">{children}</div>
+      <Footer />
     </main>
   );
 };

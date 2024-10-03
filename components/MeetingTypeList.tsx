@@ -1,9 +1,9 @@
-/* eslint-disable camelcase */
+// MeetingTypeList.tsx
+
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-
 import HomeCard from './HomeCard';
 import MeetingModal from './MeetingModal';
 import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
@@ -27,12 +27,14 @@ const MeetingTypeList = () => {
   >(undefined);
   const [values, setValues] = useState(initialValues);
   const [callDetail, setCallDetail] = useState<Call>();
+  
+  // Initialize the Stream Video Client only in this component
   const client = useStreamVideoClient();
   const { user } = useUser();
   const { toast } = useToast();
 
   const createMeeting = async () => {
-    if (!client || !user) return;
+    if (!client || !user) return; // Ensure client and user are available
     try {
       if (!values.dateTime) {
         toast({ title: 'Please select a date and time' });
@@ -65,7 +67,7 @@ const MeetingTypeList = () => {
     }
   };
 
-  if (!client || !user) return <Loader />;
+  if (!client || !user) return <Loader />; // Show loading if client or user not ready
 
   const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meeting/${callDetail?.id}`;
 
@@ -107,21 +109,21 @@ const MeetingTypeList = () => {
           handleClick={createMeeting}
         >
           <div className="flex flex-col gap-2.5">
-          <label htmlFor="description" className="text-base font-normal leading-[22.4px] text-sky-2">
-            Add a description
-          </label>
-          <Textarea
-            id="description"
-            className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
-            onChange={(e) => setValues({ ...values, description: e.target.value })}
-          />
+            <label htmlFor="description" className="text-base font-normal leading-[22.4px] text-sky-2">
+              Add a description
+            </label>
+            <Textarea
+              id="description"
+              className="border-none bg-dark-3 focus-visible:ring-0 focus-visible:ring-offset-0"
+              onChange={(e) => setValues({ ...values, description: e.target.value })}
+            />
           </div>
           <div className="flex w-full flex-col gap-2.5">
             <label htmlFor="dateTime" className="text-base font-normal leading-[22.4px] text-sky-2">
               Select Date and Time
             </label>
             <ReactDatePicker
-              id="dateTime" // Add this line
+              id="dateTime"
               selected={values.dateTime}
               onChange={(date) => setValues({ ...values, dateTime: date! })}
               showTimeSelect

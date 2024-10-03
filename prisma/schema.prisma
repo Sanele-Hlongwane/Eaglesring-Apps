@@ -144,14 +144,14 @@ model EntrepreneurProfile {
 }
 
 model FriendRequest {
-  id         Int                 @id @default(autoincrement())
-  senderId   Int
-  receiverId Int
-  sender     User                @relation("SentFriendRequests", fields: [senderId], references: [id])
-  receiver   User                @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
-  status     FriendRequestStatus @default(PENDING)
-  createdAt  DateTime            @default(now())
-  updatedAt  DateTime            @updatedAt
+  id            Int                 @id @default(autoincrement())
+  senderId      Int
+  receiverId    Int
+  sender        User                @relation("SentFriendRequests", fields: [senderId], references: [id])
+  receiver      User                @relation("ReceivedFriendRequests", fields: [receiverId], references: [id])
+  status        FriendRequestStatus @default(PENDING)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
 
   @@unique([senderId, receiverId])
 }
@@ -163,19 +163,21 @@ enum FriendRequestStatus {
 }
 
 model InvestorProfile {
-  id                    Int          @id @default(autoincrement())
-  userId                Int          @unique
-  user                  User         @relation(fields: [userId], references: [id])
-  investmentStrategy    String?
-  linkedinUrl           String?
-  preferredIndustries   String[] // New field for preferred industries
-  riskTolerance         String? // New field for risk tolerance (e.g., low, medium, high)
-  investmentAmountRange Float[] // New field for acceptable investment amount range
+  id                        Int          @id @default(autoincrement())
+  userId                    Int          @unique
+  user                      User         @relation(fields: [userId], references: [id])
+  bio                     String?
+  imageUrl                  String?
+  investmentStrategy        String?
+  linkedinUrl               String?
+  preferredIndustries       String[] // New field for preferred industries
+  riskTolerance             String? // New field for risk tolerance (e.g., low, medium, high)
+  investmentAmountRange     Float[] // New field for acceptable investment amount range
 
-  investments           Investment[] // Investments made by the investor
-  feedbacks             Feedback[] // Feedback given by the investor
-  createdAt             DateTime     @default(now())
-  updatedAt             DateTime     @updatedAt
+  investments               Investment[] // Investments made by the investor
+  feedbacks                 Feedback[] // Feedback given by the investor
+  createdAt                 DateTime     @default(now())
+  updatedAt                 DateTime     @updatedAt
 }
 
 model Feedback {

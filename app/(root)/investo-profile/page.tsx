@@ -333,7 +333,7 @@ export default function InvestorProfilePage() {
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
-                className={`bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300 ${isSaving ? "opacity-70" : "hover:opacity-90"}`}
+                className={`bg-green-600 text-white px-6 py-3 rounded-full shadow-lg transition-opacity duration-300 ${isSaving ? "opacity-70" : "hover:opacity-90"}`}
                 disabled={isSaving}
               >
                 {isSaving ? < LoadingDots /> : "Save Changes"}

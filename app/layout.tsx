@@ -89,7 +89,7 @@ export default function RootLayout({
         >
           <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
             <div className="bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white">
-              <Navbar />
+              
               <main>
                 <Toaster />
                 <ToastContainer
@@ -103,7 +103,7 @@ export default function RootLayout({
                 />
                 {children}
               </main>
-              <Footer />
+             
             </div>
           </Providers>
         </body>

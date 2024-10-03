@@ -118,8 +118,6 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
       >
         Edit Profile
       </button>
-
-      <ToastContainer />
     </div>
   );
 };

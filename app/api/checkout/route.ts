@@ -18,6 +18,7 @@ export async function POST(request: Request) {
 
   const { pitchId, amount, pitchTitle } = await request.json();
 
+  // Validate input
   if (!pitchId || !amount) {
     return NextResponse.json({ error: 'Pitch ID and amount are required' }, { status: 400 });
   }
@@ -75,6 +76,17 @@ export async function POST(request: Request) {
       });
     }
 
+    // Create a new Investment record
+    const investment = await prisma.investment.create({
+      data: {
+        amount: amount,  // Use the provided amount
+        title: pitchTitle,
+        investorProfileId: investorProfile.id,
+        entrepreneurProfileId: entrepreneurProfile.id,
+        investmentOpportunityId: investmentOpportunity.id,
+      },
+    });
+
     // Create a new Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -85,7 +97,7 @@ export async function POST(request: Request) {
             product_data: {
               name: `Pitch: ${pitchTitle}`,
             },
-            unit_amount: amount,
+            unit_amount: amount,  // Ensure amount is correctly set in cents
           },
           quantity: 1,
         },
@@ -100,6 +112,7 @@ export async function POST(request: Request) {
         userId: investorProfile.id.toString(),
         entrepreneurProfileId: entrepreneurProfile.id.toString(),
         investmentOpportunityId: investmentOpportunity.id.toString(),
+        investmentId: investment.id.toString(),  // Include investment ID for reference
       },
     });
 

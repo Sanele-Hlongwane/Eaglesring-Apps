@@ -5,8 +5,8 @@ import { Navbar } from "@/components/navbar";
 import Sidebar from "@/components/Sidebar";
 
 export const metadata: Metadata = {
-  title: "Pitches Management",
-  description: "Find and connect with entrepreneurs.",
+  title: "Privacy Policy",
+  description: "We care about your privacy here at Eagles Rings. Read and undersatnd our policies.",
 };
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {

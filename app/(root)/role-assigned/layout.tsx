@@ -1,3 +1,5 @@
+import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/navbar";
 import { Metadata } from "next";
 import { ReactNode } from "react";
 
@@ -9,12 +11,10 @@ export const metadata: Metadata = {
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
-    <main className="relative w-full min-h-screen">
-      <div className="flex w-full min-h-screen">
-        <section className="flex w-full flex-col justify-center items-center min-h-screen">
-          <div className="w-full">{children}</div>
-        </section>
-      </div>
+    <main>
+      <Navbar />
+      <div className="w-full">{children}</div>
+      <Footer />
     </main>
   );
 };

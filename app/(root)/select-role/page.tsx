@@ -73,17 +73,19 @@ export default function SelectRole() {
   }
 
   return (
-    <div className="max-w-md mx-auto my-20 p-6 bg-gradient-to-br from-gray-200 to-gray-100 dark:from-gray-900 dark:to-blue-900 rounded-xl shadow-lg space-y-6">
+    <div className="w-full  p-6 bg-gradient-to-br from-gray-200 to-gray-100 dark:from-gray-900 dark:to-blue-900 h-screen rounded-xl shadow-lg space-y-10">
       {isLoaded && isSignedIn && (
         <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 text-center">
-          Welcome to Eagles Ring, {userName}!
+          Welcome to Eagles Ring, <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-700 via-orange-600 to-blue-800 dark:from-yellow-400 dark:via-pink-500 dark:to-purple-500">
+          {userName}! || "Friend"}!
+            </span>
         </h2>
       )}
       <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center">
         Select Your Role
       </h3>
       <p className="text-center text-gray-600 dark:text-gray-300">
-        Choose your role to get started on your entrepreneurial journey with us.
+        Choose your role to get started on your journey with us.
       </p>
       <form ref={formRef} onSubmit={handleRoleAssignment} className="space-y-4">
         <div className="relative">

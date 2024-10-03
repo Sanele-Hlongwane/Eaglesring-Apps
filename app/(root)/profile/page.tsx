@@ -267,22 +267,31 @@ export default function EntrepreneurProfilePage() {
                 LinkedIn URL
               </label>
               <input
-                type="text"
+                type="url" // Change input type to 'url' for better validation
                 id="linkedinUrl"
                 value={linkedinUrl}
                 onChange={(e) => setLinkedinUrl(e.target.value)}
-                placeholder="LinkedIn profile URL"
+                placeholder="https://linkedin.com/in/your_profile"
                 className="mt-3 p-4 w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 focus:ring-4 focus:ring-green-400 dark:focus:ring-green-500"
+                pattern="https?://(www\.)?linkedin\.com/in/[^ ]+" // Updated regex pattern for LinkedIn URLs
+                required // Ensure the field is required
               />
+              <span className="text-sm text-red-500 mt-1 hidden" id="urlError">
+                Please enter a valid LinkedIn URL (e.g., https://linkedin.com/in/your_profile).
+              </span>
+              
+              {/* Conditionally render the "View Profile" link */}
               {linkedinUrl && (
-                <a
-                  href={linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block mt-2 text-green-500 hover:text-green-700"
-                >
-                  View LinkedIn Profile
-                </a>
+                <div className="mt-3">
+                  <a
+                    href={linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    View LinkedIn Profile
+                  </a>
+                </div>
               )}
             </div>
             <div className="relative">

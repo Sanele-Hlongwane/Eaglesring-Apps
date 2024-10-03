@@ -4,11 +4,6 @@ import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/navbar";
 import Sidebar from "@/components/Sidebar";
 
-export const metadata: Metadata = {
-  title: "Pitches Management",
-  description: "Find and connect with entrepreneurs.",
-};
-
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <main>

@@ -32,6 +32,7 @@ import {
   FaAward,
   FaMedal,
 } from "react-icons/fa";
+import InvestorProfileCard from "@/components/dashboards/InvestorProfile";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -226,6 +227,7 @@ export default function DashboardPage() {
       <div className="relative min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white">
         <main className="flex flex-col items-center justify-center w-full h-full px-6 py-16 text-center">
           <h1 className="text-2xl font-bold">Dashboard</h1>
+          <InvestorProfileCard />
           <LatestNotifications />
         </main>
       </div>

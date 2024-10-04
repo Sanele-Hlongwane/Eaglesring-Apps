@@ -47,7 +47,7 @@ const ProfilesPage = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [roleFilter, setRoleFilter] = useState<string>("");
   const [isPopupVisible, setPopupVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
   // Fetch profiles
   useEffect(() => {
@@ -205,8 +205,8 @@ const ProfilesPage = () => {
       );
     };
 
-    const togglePopup = (imageUrl: string | null) => {
-      setSelectedImage(imageUrl);
+    const togglePopup = (userId: number | null) => {
+      setSelectedUserId(userId);
     };
 
     return (
@@ -225,7 +225,10 @@ const ProfilesPage = () => {
                 {item.imageUrl && (
                   <button
                     className={`w-28 h-28 rounded-full border-4 border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} shadow-md object-cover cursor-pointer transition-transform hover:scale-105`}
-                    onClick={() => togglePopup(item.imageUrl)}
+                    onClick={() => togglePopup(item.id)}
+                    tabIndex={0}
+                    onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && togglePopup(item.id)}
+                    aria-label={`View ${item.name}'s profile image`}
                   >
                     <img
                       src={item.imageUrl}
@@ -251,7 +254,7 @@ const ProfilesPage = () => {
                       />
                       <button
                         onClick={() => togglePopup(null)}
-                        className="absolute top-0 right-0 text-white bg-black bg-opacity-70 rounded-full p-2 m-2"
+                        className="absolute top-0 right-0 text-white bg-red-900 bg-opacity-70 rounded-full p-2 m-2"
                       >
                         ✕
                       </button>

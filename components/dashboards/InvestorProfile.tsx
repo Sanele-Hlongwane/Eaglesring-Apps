@@ -91,10 +91,10 @@ export default function InvestorProfileCard() {
         {isPopupOpen && (
           <div
             className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 popup-overlay"
-            onClick={(e) => handleOutsideClick(e)}  // Pass event object `e`
+            onClick={(e) => handleOutsideClick(e)}
             role="button"
             tabIndex={0}
-            onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && handleOutsideClick(e)}  // Pass event object `e` for keyboard interaction
+            onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && handleOutsideClick(e)}
           >
             <div className="relative">
               <img

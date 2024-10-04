@@ -123,24 +123,24 @@ const AcceptedRequestsPage = () => {
           >
             <div className={`absolute top-2 right-2 bg-${cardRoleBg} text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md`}>
               {user.role}
-                </div>
+            </div>
 
-                <div className="flex flex-col items-center">
-                {user.imageUrl && (
-      <button
-        className="cursor-pointer transition-transform hover:scale-105 focus:outline-none"
-        onClick={() => togglePopup(user.id)}
-        tabIndex={0} // Allow keyboard focus
-        onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && togglePopup(user.id)} // Handle keyboard input
-        aria-label={`View ${user.name}'s profile image`} // Provide an accessible label
-      >
-        <img
-          src={user.imageUrl}
-          alt={user.name}
-          className={`w-28 h-28 rounded-full border-4 border-${cardRoleBg} shadow-md object-cover`}
-        />
-      </button>
-    )}
+            <div className="flex flex-col items-center">
+              {user.imageUrl && (
+                <button
+                  className="cursor-pointer transition-transform hover:scale-105 focus:outline-none"
+                  onClick={() => togglePopup(user.id)}
+                  tabIndex={0}
+                  onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && togglePopup(user.id)}
+                  aria-label={`View ${user.name}'s profile image`}
+                >
+                <img
+                    src={user.imageUrl}
+                    alt={user.name}
+                    className={`w-28 h-28 rounded-full border-4 border-${cardRoleBg} shadow-md object-cover`}
+                  />
+                </button>
+              )}
 
               {selectedUserId === user.id && (
                 <div

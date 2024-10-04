@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
 import axios from "axios";
 import { FaBuilding, FaInfoCircle, FaTag, FaDollarSign, FaMoneyBillWave, FaLinkedin, FaChartPie, FaBullseye, FaUser } from "react-icons/fa";
 import { useToast } from "@/components/ui/use-toast";
@@ -40,12 +40,12 @@ interface EntrepreneurProfile {
 }
 
 interface InvestorProfile {
-  investmentFocus: string;
+  investmentSrategy: string;
   bio: string;
   portfolioCompanies: string[];
   investmentStrategy: string;
   linkedinUrl: string;
-  preferredIndustries: string;
+  preferredIndustries: string[];
   riskTolerance: string;
   investmentAmountRange: number | null;
 }
@@ -54,7 +54,12 @@ const AcceptedRequestsPage = () => {
   const [acceptedRequests, setAcceptedRequests] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState<boolean>(true); // State for loading
   const { toast } = useToast();
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);  
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded((prev) => !prev);
+  }; 
 
   const togglePopup = (userId: number | null) => {
     setSelectedUserId(userId);
@@ -151,6 +156,7 @@ const AcceptedRequestsPage = () => {
                   tabIndex={0}
                   onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && togglePopup(null)}
                 >
+                  
                   <div className="relative">
                     <img
                       src={user.imageUrl}
@@ -177,104 +183,112 @@ const AcceptedRequestsPage = () => {
                 </p>
 
                 {user.role === "ENTREPRENEUR" && user.entrepreneurProfile && (
-                  <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-blue-500 ">
-                    <div className="mb-2">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Company:</h4>
-                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaBuilding className="text-blue-500 mr-2" />
-                        <span className="text-gray-800 dark:text-gray-300">{user.entrepreneurProfile.company}</span>
-                      </div>
-                    </div>
-
-                    <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Bio:</h4>
-                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaInfoCircle className="text-blue-500 mr-2" />
-                        <span className="text-gray-700 dark:text-gray-400">{user.entrepreneurProfile.bio}</span>
-                      </div>
-                    </div>
-
-                    <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Business Stage:</h4>
-                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaTag className="text-blue-500 mr-2" />
-                        <span className="text-gray-700 dark:text-gray-400">{user.entrepreneurProfile.businessStage}</span>
-                      </div>
-                    </div>
-
-                    <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Revenue:</h4>
-                      <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
-                        <FaMoneyBillWave className="text-blue-500 mr-2" />
-                        <span className="text-green-700 dark:text-green-800">
-                          R{user.entrepreneurProfile.revenue
-                            ? user.entrepreneurProfile.revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-                            : "N/A"}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {user.role === "INVESTOR" && user.investorProfile && (
-                  <div className={`bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl mb-6 border-t-4 border-${cardRoleBg} dark:border-${cardRoleBg}`}>
+                  <div className="bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg mb-6 border-t-4 border-blue-500 text-left">
                     <div className="space-y-6">
-                    <div className="flex items-start space-x-4">
-                      <FaChartPie className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Focus</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentFocus}</p>
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaBuilding className="text-blue-500 dark:text-blue-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">Company:</h4>
+                          <p className="text-gray-700 dark:text-gray-300">{user.entrepreneurProfile.company}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaUser className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Bio</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.bio}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaBullseye className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Strategy</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentStrategy}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaLinkedin className="text-blue-600 dark:text-blue-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">LinkedIn</h3>
-                        <a href={user.investorProfile.linkedinUrl} className="text-blue-600 dark:text-blue-400 underline">
-                          {user.investorProfile.linkedinUrl}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaBuilding className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Preferred Industries</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.preferredIndustries}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaShieldAlt className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Risk Tolerance</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.riskTolerance}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaMoneyBillWave className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Amount Range</h3>
-                        <p className="text-gray-700 dark:text-gray-400">
-                          {formatInvestmentRange(user.investorProfile.investmentAmountRange)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
 
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaInfoCircle className="text-blue-500 dark:text-blue-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">Bio:</h4>
+                          <p className="text-gray-700 dark:text-gray-300">{user.entrepreneurProfile.bio}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaTag className="text-blue-500 dark:text-blue-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">Business Stage:</h4>
+                          <p className="text-gray-700 dark:text-gray-300">{user.entrepreneurProfile.businessStage}</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaMoneyBillWave className="text-blue-500 dark:text-blue-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">Revenue:</h4>
+                          <p className="text-green-700 dark:text-green-800">
+                            R{user.entrepreneurProfile.revenue
+                              ? user.entrepreneurProfile.revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                              : "N/A"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 )}
+
+                {user.role === "INVESTOR" && user.investorProfile && (
+                  <div
+                    className={`bg-white dark:bg-gray-900 p-6 rounded-lg shadow-lg mb-6 border-t-4 border-${cardRoleBg} dark:border-${cardRoleBg} text-left`}
+                  >
+                    <div className="space-y-6">
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaHandsHelping className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">Investment Strategy:</h4>
+                          <p className="text-gray-700 dark:text-gray-300">
+                            {user.investorProfile.investmentStrategy}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaLinkedin className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">LinkedIn:</h4>
+                          <a
+                            href={user.investorProfile.linkedinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {user.investorProfile.linkedinUrl}
+                          </a>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaBullseye className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">Preferred Industries:</h4>
+                          <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300">
+                            {user.investorProfile.preferredIndustries.map((industry, index) => (
+                              <li key={index}>{industry}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaUserTie className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">Risk Tolerance:</h4>
+                          <p className="text-gray-700 dark:text-gray-300">
+                            {user.investorProfile.riskTolerance}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start space-x-4 transition-transform transform hover:scale-105">
+                        <FaMoneyBillWave className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h4 className="text-lg font-semibold">Investment Amount Range:</h4>
+                          <p className="text-gray-700 dark:text-gray-300">
+                            {formatInvestmentRange(user.investorProfile.investmentAmountRange)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {user.role === "ENTREPRENEUR" && (
                   <a
                     href={`/pitches/${user.id}`} 

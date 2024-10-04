@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal } from "react";
 import AcceptedRequestsPage from "@/components/Accepted";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import LoadingDots from "@/components/ui/LoadingDots";
 import Loader from "@/components/Loader";
 import EmptyState from "@/components/EmptyState";
-import { FaBuilding, FaCheckCircle, FaInbox, FaInfoCircle, FaMoneyBillWave, FaPaperPlane, FaSearch, FaTag, FaTrashAlt, FaUsers } from "react-icons/fa";
+import { FaBuilding, FaBullseye, FaCheckCircle, FaHandsHelping, FaInbox, FaIndustry, FaInfoCircle, FaLinkedin, FaMoneyBillWave, FaPaperPlane, FaSearch, FaTag, FaTrashAlt, FaUsers, FaUserTie } from "react-icons/fa";
 
 interface Profile {
   id: number;
@@ -21,7 +21,13 @@ interface Profile {
     bio: string;
   };
   investorProfile?: {
+    bio: string;
+    portfolioCompanies: string[];
     investmentStrategy: string;
+    linkedinUrl: string;
+    preferredIndustries: string[];
+    riskTolerance: string;
+    investmentAmountRange: number | null;
   };
 }
 
@@ -209,6 +215,16 @@ const ProfilesPage = () => {
       setSelectedUserId(userId);
     };
 
+    const formatAmount = (amount: { toString: () => string; }) => {
+      if (amount) {
+        return "R" + amount
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+          .trim();
+      }
+      return "R0";
+    }
+
     return (
       <div className="relative  ">
         <div className="grid gap-6 grid-cols-1 xm-grid-cols-1 sm:grid-cols-1 lg:grid-cols-3">
@@ -270,108 +286,122 @@ const ProfilesPage = () => {
                     {item.email}
                   </p>
                   {item.entrepreneurProfile && (
-                    <div className={`bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"} `}>
+                    <div className={`bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-${item.role === "ENTREPRENEUR" ? "blue-600" : "green-600"}`}>
                       <div className="mb-2">
-                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                          Company:
-                        </h4>
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Company:</h4>
                         <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                           <FaBuilding className="text-blue-500 mr-2" />
-                          <span className="text-gray-800 dark:text-gray-300">
-                            {item.entrepreneurProfile.company}
-                          </span>
+                          <span className="text-gray-800 dark:text-gray-300">{item.entrepreneurProfile.company}</span>
                         </div>
                       </div>
 
                       <div className="mb-4">
-                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                          Bio:
-                        </h4>
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Bio:</h4>
                         <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                           <FaInfoCircle className="text-blue-500 mr-2" />
-                          <span className="text-gray-700 dark:text-gray-400">
-                            {item.entrepreneurProfile.bio}
-                          </span>
+                          <span className="text-gray-700 dark:text-gray-400">{item.entrepreneurProfile.bio}</span>
                         </div>
                       </div>
 
                       <div className="mb-4">
-                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                          Business Stage:
-                        </h4>
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Business Stage:</h4>
                         <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                           <FaTag className="text-blue-500 mr-2" />
-                          <span className="text-gray-700 dark:text-gray-400">
-                            {item.entrepreneurProfile.businessStage}
-                          </span>
+                          <span className="text-gray-700 dark:text-gray-400">{item.entrepreneurProfile.businessStage}</span>
                         </div>
                       </div>
 
                       <div className="mb-4">
-                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                          Revenue:
-                        </h4>
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Revenue:</h4>
                         <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                           <FaMoneyBillWave className="mr-2 text-green-600 dark:text-green-400" />
                           <span className="font-semibold">Funding Goal:</span>
                           <span className="text-green-700 text-bold dark:text-green-800">
                             R
                             {item.entrepreneurProfile.revenue
-                              ? item.entrepreneurProfile.revenue
-                                  .toString()
-                                  .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
+                              ? item.entrepreneurProfile.revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                               : "N/A"}
                           </span>
                         </div>
                       </div>
                     </div>
                   )}
+
                   {item.investorProfile && (
-                    <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
-                      <p className="font-semibold text-gray-800 dark:text-gray-100">
-                        Investment Strategy:
-                      </p>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {item.investorProfile.investmentStrategy}
-                      </p>
-                      <p className="font-semibold text-gray-800 dark:text-gray-100">
-                        Investment Focus:
-                      </p>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {item.investorProfile.investmentFocus}
-                      </p>
-                      <p className="font-semibold text-gray-800 dark:text-gray-100">
-                        Bio:
-                      </p>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {item.investorProfile.Bio}
-                      </p>
-                      <p className="font-semibold text-gray-800 dark:text-gray-100">
-                        LinkedIn:
-                      </p>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {item.investorProfile.linkedinUrl}
-                      </p>
-                      <p className="font-semibold text-gray-800 dark:text-gray-100">
-                        Preferred Industries:
-                      </p>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {item.investorProfile.preferredIndustries}
-                      </p>
-                      <p className="font-semibold text-gray-800 dark:text-gray-100">
-                        Risk Tolerance:
-                      </p>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {item.investorProfile.riskTolerance}
-                      </p>
-                      <p className="font-semibold text-gray-800 dark:text-gray-100">
-                        Investment Amount Range:
-                      </p>
-                      <p className="text-gray-700 dark:text-gray-300">
-                        {item.investorProfile.investmentAmountRange}
-                      </p>
+                    <div className={`bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-${item.role === "INVESTOR" ? "green-600" : "blue-600"}`}>
+                      <div className="mb-2">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Investment Strategy:</h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaHandsHelping className="text-green-600 dark:text-green-400 mr-2" />
+                          <span className="text-gray-700 dark:text-gray-300">{item.investorProfile.investmentStrategy}</span>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Investment Focus:</h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaBullseye className="text-green-600 dark:text-green-400 mr-2" />
+                          <span className="text-gray-700 dark:text-gray-300">{item.investorProfile.investmentFocus}</span>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Bio:</h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaInfoCircle className="text-green-600 dark:text-green-400 mr-2" />
+                          <span className="text-gray-700 dark:text-gray-300">{item.investorProfile.bio}</span>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">LinkedIn:</h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaLinkedin className="text-blue-600 dark:text-blue-400 mr-2" />
+                          <a
+                            href={item.investorProfile.linkedinUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline"
+                          >
+                            {item.investorProfile.linkedinUrl}
+                          </a>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Preferred Industries:</h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaIndustry className="text-green-600 dark:text-green-400 mr-2" />
+                          <ul className="list-disc pl-5 text-gray-700 dark:text-gray-300">
+                            {item.investorProfile.preferredIndustries.map((industry: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, index: Key | null | undefined) => (
+                              <li key={index}>{industry}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Risk Tolerance:</h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaUserTie className="text-green-600 dark:text-green-400 mr-2" />
+                          <span className="text-gray-700 dark:text-gray-300">{item.investorProfile.riskTolerance}</span>
+                        </div>
+                      </div>
+
+                      <div className="mb-4">
+                        <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                          Investment Amount Range:
+                        </h4>
+                        <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
+                          <FaMoneyBillWave className="mr-2 text-green-600 dark:text-green-400" />
+                          <span className="text-gray-700 dark:text-gray-300">
+                            {formatAmount(item.investorProfile.investmentAmountRange)}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   )}
+
                   {activeTab === "all" && (
                     <button
                       onClick={() => sendFriendRequest(item.id)}

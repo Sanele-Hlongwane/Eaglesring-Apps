@@ -53,11 +53,22 @@ export default function InvestorProfileCard() {
     return <Loader />;
   }
 
-  const handleOutsideClick = (e: React.MouseEvent) => {
-    if ((e.target as HTMLElement).classList.contains("popup-overlay")) {
+  const handleOutsideClick = (e: React.MouseEvent | React.KeyboardEvent) => {
+    // For mouse click events
+    if ('clientX' in e) {
+      console.log("Mouse click event triggered");
+      // You can handle mouse event logic here (e.g., closing the modal)
+      setIsPopupOpen(false);
+    }
+  
+    // For keyboard events (Enter or Space)
+    if ('key' in e && (e.key === 'Enter' || e.key === ' ')) {
+      console.log("Keyboard event triggered");
+      // Handle keyboard event logic here (e.g., closing the modal)
       setIsPopupOpen(false);
     }
   };
+  
 
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
@@ -77,11 +88,13 @@ export default function InvestorProfileCard() {
           </button>
         </div>
 
-        {/* Popup for enlarged image */}
         {isPopupOpen && (
           <div
             className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 popup-overlay"
-            onClick={handleOutsideClick}
+            onClick={(e) => handleOutsideClick(e)}  // Pass event object `e`
+            role="button"
+            tabIndex={0}
+            onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && handleOutsideClick(e)}  // Pass event object `e` for keyboard interaction
           >
             <div className="relative">
               <img

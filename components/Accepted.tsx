@@ -126,21 +126,26 @@ const AcceptedRequestsPage = () => {
             </div>
 
             <div className="flex flex-col items-center">
-            {user.imageUrl && (
+              {user.imageUrl && (
                 <img
                   src={user.imageUrl}
                   alt={user.name}
                   className={`w-28 h-28 rounded-full border-4 border-${cardRoleBg} shadow-md object-cover cursor-pointer transition-transform hover:scale-105`}
-                  onClick={() => togglePopup(user.id)} // Pass user ID to togglePopup
+                  onClick={() => togglePopup(user.id)} 
+                  role="button"   // Make it accessible as a button
+                  tabIndex={0}    // Allow keyboard focus
+                  onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && togglePopup(user.id)} // Handle keyboard input
                 />
               )}
 
-              {/* Popup Modal for selected user */}
               {selectedUserId === user.id && (
                 <div
                   className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
                   title="Close"
-                  onClick={() => togglePopup(null)} 
+                  onClick={() => togglePopup(null)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && togglePopup(null)}
                 >
                   <div className="relative">
                     <img

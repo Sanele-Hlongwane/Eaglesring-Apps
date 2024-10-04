@@ -234,12 +234,13 @@ const ProfilesPage = () => {
                   </button>
                 )}
 
-
-                {/* Popup Modal */}
                 {isPopupVisible && (
                   <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-                    onClick={togglePopup} // Close the popup when clicking outside the image
+                    onClick={togglePopup}
+                    role="button"
+                    tabIndex={0}
+                    onKeyPress={(e) => e.key === 'Enter' && togglePopup()} // Handle keyboard interaction
                   >
                     <div className="relative">
                       <img
@@ -256,6 +257,7 @@ const ProfilesPage = () => {
                     </div>
                   </div>
                 )}
+
                 <div className="mt-4 text-center">
                   <h2 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                     {item.name}

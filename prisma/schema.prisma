@@ -37,20 +37,32 @@ enum Stage {
   EXIT
 }
 
-model Message {
-  id         Int           @id @default(autoincrement())
-  content    String
-  senderId   Int
-  receiverId Int
-  sender     User          @relation("MessageSender", fields: [senderId], references: [id])
-  receiver   User          @relation("MessageReceiver", fields: [receiverId], references: [id])
-  status     MessageStatus @default(SENT)
-  sentAt     DateTime      @default(now())
-  receivedAt DateTime?
-  readAt     DateTime?
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
+model Conversation {
+  id         Int       @id @default(autoincrement())
+  participants User[]  @relation("ConversationParticipants")
+  messages    Message[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
+
+model Message {
+  id                Int           @id @default(autoincrement())
+  content           String
+  senderId         Int
+  conversationId    Int
+  receiverId        Int
+  sender           User          @relation("MessageSender", fields: [senderId], references: [id])
+  receiver         User          @relation("MessageReceiver", fields: [receiverId], references: [id])
+  status           MessageStatus @default(SENT)
+  sentAt           DateTime      @default(now())
+  receivedAt       DateTime?
+  readAt           DateTime?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  conversation     Conversation  @relation(fields: [conversationId], references: [id])
+}
+
 
 model User {
   id                     Int                  @id @default(autoincrement())
@@ -64,6 +76,7 @@ model User {
   updatedAt              DateTime             @updatedAt
   messagesSent           Message[]            @relation("MessageSender")
   messagesReceived       Message[]            @relation("MessageReceiver")
+  conversations          Conversation[]        @relation("ConversationParticipants")
   investments            Investment[]
   entrepreneurProfile    EntrepreneurProfile?
   investorProfile        InvestorProfile?

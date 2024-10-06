@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     console.error("No user found. Please log in.");
     return NextResponse.json(
       { error: "User not found. Please log in." },
-      { status: 401 },
+      { status: 401 }
     );
   }
 
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
       console.error("No corresponding database user found.");
       return NextResponse.json(
         { error: "Database user not found." },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -58,15 +58,49 @@ export async function GET(request: Request) {
     });
 
     console.debug(
-      `Fetched ${acceptedRequests.length} accepted friend requests`,
+      `Fetched ${acceptedRequests.length} accepted friend requests`
     );
 
-    // Return the requests in the desired format
-    const response = acceptedRequests.map((req) => {
+    const response = [];
+
+    for (const req of acceptedRequests) {
       const isSender = req.senderId === userId;
       const userData = isSender ? req.receiver : req.sender;
 
-      return {
+      // Check for existing conversation between the current user and the other user
+      const existingConversation = await prisma.conversation.findFirst({
+        where: {
+          participants: {
+            some: {
+              id: {
+                in: [userId, userData.id], // Check for both participants
+              },
+            },
+          },
+        },
+        include: {
+          participants: true,
+        },
+      });
+
+      if (!existingConversation) {
+        // Create a new conversation if it does not exist
+        const newConversation = await prisma.conversation.create({
+          data: {
+            participants: {
+              connect: [
+                { id: userId },
+                { id: userData.id },
+              ],
+            },
+          },
+        });
+        console.log(`New conversation created with ID: ${newConversation.id}`);
+      } else {
+        console.log(`Conversation already exists with ID: ${existingConversation.id}`);
+      }
+
+      response.push({
         id: userData.id,
         name: userData.name,
         email: userData.email,
@@ -75,18 +109,15 @@ export async function GET(request: Request) {
         entrepreneurProfile: userData.entrepreneurProfile,
         investorProfile: userData.investorProfile,
         status: req.status,
-      };
-    });
+      });
+    }
 
     return NextResponse.json(response);
   } catch (error) {
     console.error("Error fetching accepted requests:", error);
     return NextResponse.json(
       { error: "Failed to fetch accepted requests" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
-
-
-

@@ -87,6 +87,21 @@ model User {
   receivedFriendRequests FriendRequest[]      @relation("ReceivedFriendRequests")
   notifications          Notification[]       @relation("UserNotifications")
   Notification           Notification[]
+
+  blockedUsers           Block[]              @relation("BlockingUser")
+  blockedByUsers         Block[]              @relation("BlockedUser")
+}
+
+model Block {
+  id            Int     @id @default(autoincrement())
+  blockerId     Int
+  blockedId     Int
+  createdAt     DateTime @default(now())
+
+  blocker       User    @relation("BlockingUser", fields: [blockerId], references: [id])
+  blocked       User    @relation("BlockedUser", fields: [blockedId], references: [id])
+
+  @@unique([blockerId, blockedId])
 }
 
 model Pitch {

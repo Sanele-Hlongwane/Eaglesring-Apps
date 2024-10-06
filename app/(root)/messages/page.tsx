@@ -193,39 +193,46 @@ const MessagesPage = () => {
           </button>
         </div>
         {!showNewChatList ? (
-          <ul>
-            {chats.map((chat) => (
-              <li
-                key={chat.id}
-                onClick={() => handleChatClick(chat)}
-                className="p-4 mb-2 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer flex justify-between items-center"
-              >
-                <div>
-                  <div className="font-bold dark:text-gray-300">{chat.name}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
-                  <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
-                </div>
-                <div className="text-gray-500 dark:text-gray-400">
-                  {chat.lastMessageStatus === "SENT" && <FaCheck />}
-                  {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
-                  {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-blue-500" />}
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <ul>
-            {friends.map((friend) => (
-              <li
-                key={friend.id}
-                onClick={() => handleNewChatClick(friend)}
-                className="p-4 mb-2 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
-              >
-                {friend.name}
-              </li>
-            ))}
-          </ul>
-        )}
+  <ul>
+    {chats.map((chat) => (
+      <li key={chat.id} className="mb-2">
+        <button
+          type="button" // Specify the button type
+          onClick={() => handleChatClick(chat)}
+          className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
+        >
+          <div className="flex justify-between items-center">
+            <div>
+              <div className="font-bold dark:text-gray-300">{chat.name}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
+              <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
+            </div>
+            <div className="text-gray-500 dark:text-gray-400">
+              {chat.lastMessageStatus === "SENT" && <FaCheck />}
+              {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
+              {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-blue-500" />}
+            </div>
+          </div>
+        </button>
+      </li>
+    ))}
+  </ul>
+) : (
+  <ul>
+    {friends.map((friend) => (
+      <li key={friend.id} className="mb-2">
+        <button
+          type="button" // Specify the button type
+          onClick={() => handleNewChatClick(friend)}
+          className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
+        >
+          {friend.name}
+        </button>
+      </li>
+    ))}
+  </ul>
+)}
+
       </div>
 
       {/* Chat Messages */}

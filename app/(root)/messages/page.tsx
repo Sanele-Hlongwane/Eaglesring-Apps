@@ -199,40 +199,32 @@ const MessagesPage = () => {
             <FaPlus />
           </button>
         </div>
-        {!showNewChatList ? (
-          <ul>
-            {chats.map((chat) => (
-              <li
-                key={chat.id}
-                onClick={() => handleChatClick(chat)}
-                className="p-4 mb-2 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer flex justify-between items-center"
-              >
-                <div>
-                  <div className="font-bold dark:text-gray-300">{chat.name}</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
-                  <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
-                </div>
-                <div className="text-gray-500 dark:text-gray-400">
-                  {chat.lastMessageStatus === "SENT" && <FaCheck />}
-                  {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
-                  {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-blue-500" />}
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <ul>
-            {friends.map((friend) => (
-              <li
-                key={friend.id}
-                onClick={() => handleNewChatClick(friend)}
-                className="p-4 mb-2 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
-              >
-                {friend.name}
-              </li>
-            ))}
-          </ul>
-        )}
+        <ul>
+  {chats.map((chat) => (
+    <li
+      key={chat.id}
+      className="p-4 mb-2 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer flex justify-between items-center"
+    >
+      <button
+        type="button" // Use button to make it explicit
+        onClick={() => handleChatClick(chat)}
+        className="w-full text-left" // Makes the button full-width and left-aligned
+      >
+        <div>
+          <div className="font-bold dark:text-gray-300">{chat.name}</div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
+          <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
+        </div>
+      </button>
+      <div className="text-gray-500 dark:text-gray-400">
+        {chat.lastMessageStatus === "SENT" && <FaCheck />}
+        {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
+        {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-blue-500" />}
+      </div>
+    </li>
+  ))}
+</ul>
+
       </div>
 
       {/* Chat Messages */}

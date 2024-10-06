@@ -199,10 +199,11 @@ const MessagesPage = () => {
   };
   
   return (
+       <div className="w-full ">
+       {navVisible && <Navbar />}
     <div className="relative flex flex-col md:flex-row h-screen dark:bg-gray-900">
-      <Navbar />
       {/* Chat List */}
-      <div className={`w-full md:w-1/3 bg-gray-100 dark:bg-gray-800 p-4 border-r border-gray-300 dark:border-gray-700 ${activeChat ? "hidden md:block" : "block"}`}>
+      <div className={`md:w-1/3 bg-gray-100 dark:bg-gray-800 p-4 border-r border-gray-300 dark:border-gray-700 ${activeChat ? "hidden md:block" : "block"}`}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold dark:text-gray-200">Chats</h2>
           <button
@@ -321,6 +322,7 @@ const MessagesPage = () => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

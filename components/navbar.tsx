@@ -88,8 +88,8 @@ export const Navbar = () => {
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/meetings')} href="/meetings" onClick={() => handleLinkClick('/meetings')}>
-                Meetings
+              <Link className={getLinkClasses('/messages')} href="/messages" onClick={() => handleLinkClick('/messages')}>
+                Messages
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
@@ -118,8 +118,8 @@ export const Navbar = () => {
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/meetings')} href="/meetings" onClick={() => handleLinkClick('/meetings')}>
-                Meetings
+              <Link className={getLinkClasses('/messages')} href="/messages" onClick={() => handleLinkClick('/messages')}>
+                Messages
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>

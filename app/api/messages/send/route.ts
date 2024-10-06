@@ -35,12 +35,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check for an existing conversation
+    // Check for an existing conversation with either participant
     let conversation = await prisma.conversation.findFirst({
       where: {
         participants: {
           some: {
-            id: dbUser.id,
+            id: { in: [dbUser.id, receiverId] },
           },
         },
       },

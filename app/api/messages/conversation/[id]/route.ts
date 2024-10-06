@@ -65,7 +65,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
             }
         });
 
-        console.log(messages); // Log the fetched messages
         return NextResponse.json( messages);   
     } catch (error) {
         console.error("Error fetching messages:", error);

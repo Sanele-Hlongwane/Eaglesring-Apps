@@ -17,6 +17,7 @@ export async function POST(request: Request) {
   try {
     const dbUser = await prisma.user.findUnique({
       where: { clerkId: user.id },
+      select: { id: true, name: true }, // Fetch user id and name
     });
 
     if (!dbUser) {
@@ -26,32 +27,55 @@ export async function POST(request: Request) {
       );
     }
 
-    // Parse the JSON body to get the conversation ID
-    const { conversationId } = await request.json();
-
-    // Check if conversationId is a valid number
-    if (!conversationId || isNaN(conversationId)) {
-      return NextResponse.json(
-        { error: "Invalid conversation ID." },
-        { status: 400 }
-      );
-    }
-
-    // Fetch messages for a specific conversation
-    const messages = await prisma.message.findMany({
+    // Fetch all conversations for the user
+    const conversations = await prisma.conversation.findMany({
       where: {
-        conversationId: Number(conversationId), // Ensure it's a number
+        participants: {
+          some: { id: dbUser.id }, // Only fetch conversations where the user is a participant
+        },
       },
-      orderBy: {
-        sentAt: 'asc', // Optional: Order messages by sentAt field
+      include: {
+        messages: {
+          orderBy: {
+            sentAt: 'desc', // Get messages ordered by sentAt in descending order
+          },
+          take: 1, // Only get the latest message
+          include: {
+            sender: {
+              select: {
+                id: true, // Include the sender's id
+                name: true, // Include the sender's name
+              },
+            },
+            receiver: {
+              select: {
+                id: true, // Include the receiver's id
+                name: true, // Include the receiver's name
+              },
+            },
+          },
+        },
+        participants: { // Include participant ids and names
+          select: {
+            id: true, // Include participant id
+            name: true, // Include participant name
+          },
+        },
       },
     });
 
-    return NextResponse.json(messages);
+    // Map the conversations to include the latest message and the user's name
+    const formattedConversations = conversations.map(conversation => ({
+      conversationId: conversation.id,
+      latestMessage: conversation.messages[0] || null, // Latest message or null if none
+      participants: conversation.participants, // Include participants info
+    }));
+
+    return NextResponse.json({ userName: dbUser.name, conversations: formattedConversations });
   } catch (error) {
-    console.error("Error fetching conversation:", error);
+    console.error("Error fetching conversations:", error);
     return NextResponse.json(
-      { error: "Failed to fetch conversation." },
+      { error: "Failed to fetch conversations." },
       { status: 500 }
     );
   }

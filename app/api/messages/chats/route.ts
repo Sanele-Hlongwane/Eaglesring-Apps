@@ -1,11 +1,11 @@
-// src/app/api/messages/chats/route.ts
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(request: Request) {
+export async function GET(request: Request, { params }: { params: { id: string } }) {
+  console.log("Received parameters:", params); // Log the params
   const user = await currentUser();
 
   if (!user) {
@@ -18,6 +18,7 @@ export async function GET(request: Request) {
   try {
     const dbUser = await prisma.user.findUnique({
       where: { clerkId: user.id },
+      select: { id: true, name: true }, // Fetch user id and name
     });
 
     if (!dbUser) {
@@ -27,6 +28,50 @@ export async function GET(request: Request) {
       );
     }
 
+    // Fetch all conversations for the user
+    const conversations = await prisma.conversation.findMany({
+      where: {
+        participants: {
+          some: { id: dbUser.id }, // Only fetch conversations where the user is a participant
+        },
+      },
+      include: {
+        messages: {
+          orderBy: {
+            sentAt: 'desc', // Get messages ordered by sentAt in descending order
+          },
+          take: 1, // Only get the latest message
+          include: {
+            sender: {
+              select: {
+                id: true, // Include the sender's id
+                name: true, // Include the sender's name
+              },
+            },
+            receiver: {
+              select: {
+                id: true, // Include the receiver's id
+                name: true, // Include the receiver's name
+              },
+            },
+          },
+        },
+        participants: { // Include participant ids and names
+          select: {
+            id: true, // Include participant id
+            name: true, // Include participant name
+          },
+        },
+      },
+    });
+
+    // Map the conversations to include the latest message and the user's name
+    const formattedConversations = conversations.map(conversation => ({
+      id: conversation.id,
+      latestMessage: conversation.messages[0] || null, // Latest message or null if none
+      participants: conversation.participants, // Include participants info
+    }));
+
     // Fetch messages where the user is either the sender or receiver
     const messages = await prisma.message.findMany({
       where: {
@@ -35,13 +80,35 @@ export async function GET(request: Request) {
           { receiverId: dbUser.id },
         ],
       },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        receiver: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        sentAt: 'desc', // Order messages by sentAt in descending order
+      },
     });
 
-    return NextResponse.json(messages);
+    // Return both conversations and messages
+    return NextResponse.json({
+      userName: dbUser.name,
+      conversations: formattedConversations,
+      messages,
+    });
   } catch (error) {
-    console.error("Error fetching messages:", error);
+    console.error("Error fetching conversations and messages:", error);
     return NextResponse.json(
-      { error: "Failed to fetch messages." },
+      { error: "Failed to fetch conversations and messages." },
       { status: 500 }
     );
   }

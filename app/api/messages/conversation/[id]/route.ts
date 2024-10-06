@@ -4,76 +4,74 @@ import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(request: Request) {
-  const user = await currentUser();
+export async function GET(request: Request, { params }: { params: { id: string } }) {
+    console.log("Received id:", params.id); // Log the conversation ID received
 
-  if (!user) {
-      return NextResponse.json(
-          { error: "User not authenticated." },
-          { status: 401 }
-      );
-  }
+    const user = await currentUser();
 
-  try {
-      const dbUser = await prisma.user.findUnique({
-          where: { clerkId: user.id },
-      });
+    if (!user) {
+        return NextResponse.json(
+            { error: "User not authenticated." },
+            { status: 401 }
+        );
+    }
 
-      if (!dbUser) {
-          return NextResponse.json(
-              { error: "User not found in database." },
-              { status: 404 }
-          );
-      }
+    try {
+        const dbUser = await prisma.user.findUnique({
+            where: { clerkId: user.id },
+            select: { id: true }, // Only fetch user id
+        });
 
-      // Extract conversationId from query parameters
-      const url = new URL(request.url);
-      const conversationIdString = url.searchParams.get("conversationId");
-      const conversationId = Number(conversationIdString); // Convert it to a number
+        if (!dbUser) {
+            return NextResponse.json(
+                { error: "User not found in database." },
+                { status: 404 }
+            );
+        }
 
-      // Check if conversationId is a valid number
-      if (isNaN(conversationId)) {
-          return NextResponse.json(
-              { error: "Invalid conversation ID." },
-              { status: 400 }
-          );
-      }
+        const conversationId = parseInt(params.id, 10);
+        console.log("Fetching messages for conversation ID:", conversationId);
 
-      console.log("Fetching messages for conversation ID:", conversationId);
+        // Check if conversationId is a valid number
+        if (isNaN(conversationId) || conversationId <= 0) {
+            console.error("Invalid conversation ID:", params.id);
+            return NextResponse.json(
+                { error: "Invalid conversation ID." },
+                { status: 400 }
+            );
+        }
 
-      const messages = await prisma.message.findMany({
-          where: {
-              conversationId: conversationId,
-          },
-          orderBy: {
-              sentAt: 'asc',
-          },
-          include: {
-              sender: {
-                  select: {
-                      id: true,
-                      name: true,
-                      imageUrl: true,
-                  },
-              },
-              receiver: {
-                  select: {
-                      id: true,
-                      name: true,
-                      imageUrl: true,
-                  },
-              },
-          },
-      });
+        // Fetch messages for the specified conversation ID
+        const messages = await prisma.message.findMany({
+            where: {
+                conversationId: conversationId, // Use conversationId to filter messages
+            },
+            include: {
+                sender: {
+                    select: {
+                        id: true,
+                        name: true
+                    },
+                },
+                receiver: {
+                    select: {
+                        id: true,
+                        name: true
+                    },
+                },
+            },
+            orderBy: {
+                sentAt: "asc"
+            }
+        });
 
-      console.log("Fetched messages:", messages.length, messages);
-
-      return NextResponse.json(messages);
-  } catch (error) {
-      console.error("Error fetching messages:", error);
-      return NextResponse.json(
-          { error: "Failed to fetch messages." },
-          { status: 500 }
-      );
-  }
+        console.log(messages); // Log the fetched messages
+        return NextResponse.json( messages);   
+    } catch (error) {
+        console.error("Error fetching messages:", error);
+        return NextResponse.json(
+            { error: "Failed to fetch messages." },
+            { status: 500 }
+        );
+    }
 }

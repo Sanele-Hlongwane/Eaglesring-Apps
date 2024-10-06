@@ -35,13 +35,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check for an existing conversation with either participant
+    // Check if both users are participants in the same conversation
     let conversation = await prisma.conversation.findFirst({
       where: {
         participants: {
-          some: {
-            id: { in: [dbUser.id, receiverId] },
-          },
+          every: { id: { in: [dbUser.id, receiverId] } }, // Check for both users
         },
       },
       include: {

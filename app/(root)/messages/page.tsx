@@ -83,7 +83,7 @@ const MessagesPage = () => {
       
       const chatList: Chat[] = chatData.conversations.map((conversation: Conversation) => ({
         id: conversation.id,
-        name: conversation.participants.map(p => p.name).join(", "),
+        name: conversation.participants[0]?.name || "",
         lastMessage: conversation.latestMessage ? conversation.latestMessage.content : "",
         lastMessageTime: formatMessageTime(conversation.latestMessage?.sentAt || ""),
         lastMessageStatus: conversation.latestMessage ? conversation.latestMessage.status : "SENT",
@@ -273,30 +273,40 @@ const MessagesPage = () => {
                 className="rounded-full mr-4"
               />
               <div>
-                <h2 className="text-lg font-bold dark:text-gray-300">{activeChat.participants.map(p => p.name).join(", ")}</h2>
+                <h2 className="text-lg font-bold dark:text-gray-300">{activeChat.participants[0]?.name || ""}</h2>
               </div>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
-              {activeChat?.messages?.map((message) => (
-
-                <div
-                  key={message.id}
-                  className={`flex items-end mb-4 ${
-                    message.senderId === activeChat.participants[0].id ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div className={`max-w-xs rounded-lg p-4 shadow ${message.senderId === activeChat.participants[0].id ? "bg-blue-500 text-white" : "bg-gray-300 dark:bg-gray-700 text-black dark:text-gray-200"}`}>
-                    {message.content}
-                    <div className="flex items-center text-xs mt-2">
-                      <span>{formatMessageTime(message.sentAt)}</span>
-                      {message.status === "SENT" && <FaCheck className="ml-2" />}
-                      {message.status === "RECEIVED" && <FaCheckDouble className="ml-2" />}
-                      {message.status === "READ" && <FaCheckDouble className="ml-2 text-blue-500" />}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+  {activeChat?.messages?.map((message) => (
+    <div
+      key={message.id}
+      className={`flex items-end mb-4 ${
+        message.senderId === activeChat.participants[0].id ? "justify-start" : "justify-end"
+      }`}
+    >
+      <div
+        className={`max-w-xs rounded-lg p-4 shadow ${
+          message.senderId === activeChat.participants[0].id
+            ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-gray-200"
+            : "bg-blue-500 text-white"
+        }`}
+      >
+        {message.content}
+        <div className="flex items-center text-xs mt-2">
+          <span>{formatMessageTime(message.sentAt)}</span>
+          {/* Show status icons only for messages on the right side */}
+          {message.senderId !== activeChat.participants[0].id && (
+            <>
+              {message.status === "SENT" && <FaCheck className="ml-2" />}
+              {message.status === "RECEIVED" && <FaCheckDouble className="ml-2" />}
+              {message.status === "READ" && <FaCheckDouble className="ml-2 text-blue-500" />}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
             <div className="p-4 border-t border-gray-300 dark:border-gray-700 flex items-center">
               <input
                 type="text"

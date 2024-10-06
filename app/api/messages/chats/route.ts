@@ -66,11 +66,25 @@ export async function GET(request: Request, { params }: { params: { id: string }
     });
 
     // Map the conversations to include the latest message and the user's name
-    const formattedConversations = conversations.map(conversation => ({
-      id: conversation.id,
-      latestMessage: conversation.messages[0] || null, // Latest message or null if none
-      participants: conversation.participants, // Include participants info
-    }));
+    const formattedConversations = conversations.map(conversation => {
+      // Find the current user index
+      const userIndex = conversation.participants.findIndex(p => p.id === dbUser.id);
+      
+      // Reorder participants: if the user is found, rearrange
+      const participants = [...conversation.participants];
+
+      if (userIndex !== -1) {
+        // Remove the user from their current position and insert them at index 1
+        const [currentUser] = participants.splice(userIndex, 1);
+        participants.splice(1, 0, currentUser);
+      }
+
+      return {
+        id: conversation.id,
+        latestMessage: conversation.messages[0] || null, // Latest message or null if none
+        participants, // Rearranged participants
+      };
+    });
 
     // Fetch messages where the user is either the sender or receiver
     const messages = await prisma.message.findMany({

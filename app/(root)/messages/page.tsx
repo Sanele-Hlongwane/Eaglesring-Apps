@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { Navbar } from "@/components/navbar";
 import { FaPaperPlane, FaCheck, FaCheckDouble, FaPlus } from "react-icons/fa";
 
 // Define Message Type
@@ -44,6 +45,24 @@ const MessagesPage = () => {
   const [newMessage, setNewMessage] = useState("");
   const [showNewChatList, setShowNewChatList] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
+  const [navVisible, setNavVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setNavVisible(false);
+      } else {
+        setNavVisible(true);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    
+    // Cleanup the event listener
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     fetchChatsAndConversations();
@@ -181,6 +200,7 @@ const MessagesPage = () => {
   
   return (
     <div className="relative flex flex-col md:flex-row h-screen dark:bg-gray-900">
+      <Navbar />
       {/* Chat List */}
       <div className={`w-full md:w-1/3 bg-gray-100 dark:bg-gray-800 p-4 border-r border-gray-300 dark:border-gray-700 ${activeChat ? "hidden md:block" : "block"}`}>
         <div className="flex justify-between items-center mb-4">

@@ -172,9 +172,7 @@ export const Navbar = () => {
   );
 
   return (
-    <NextUINavbar maxWidth="xl" position="sticky" className={`fixed top-0 left-0 right-0 transition-transform duration-300 ${
-        scrollingDown ? '-translate-y-full' : 'translate-y-0'
-      } bg-gray-300 dark:bg-gray-900 shadow-md z-50`}>
+    <NextUINavbar maxWidth="xl" position="sticky" className="bg-gray-300 dark:bg-gray-900">
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <Link className="flex justify-start items-center gap-1" href="/">

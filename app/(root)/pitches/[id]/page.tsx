@@ -162,20 +162,7 @@ const EntrepreneurPitchesPage = () => {
     }
   };
 
-   // Fetch feedback for the pitches when the component mounts
-   useEffect(() => {
-    const fetchFeedback = async () => {
-      try {
-        const response = await axios.get(`/api/feedback/${id}`); // Fetch feedback for the entrepreneur
-        setFeedback(response.data);
-      } catch (err) {
-        console.error("Error fetching feedback:", err);
-        toast.error("Failed to fetch feedback");
-      }
-    };
-
-    fetchFeedback();
-  }, [id]);
+   
 
   const handleFeedbackSubmit = async (pitchId: number) => {
     try {

@@ -117,24 +117,6 @@ const AcceptedRequestsPage = () => {
         const cardColorHover = isEntrepreneur ? "blue" : "green";
         const [feedback, setFeedback] = useState<string>("");
 
-const handleFeedbackSubmit = async (pitchId: number) => {
-  try {
-    const response = await axios.post('/api/feedback', {
-      pitchId,
-      feedback,
-    });
-
-    if (response.status === 201) {
-      toast.success("Feedback submitted successfully!");
-      setFeedback(""); // Clear the feedback input
-      // Optionally, you can fetch the updated feedback list here
-    }
-  } catch (error) {
-    console.error("Error submitting feedback:", error);
-    toast.error("Failed to submit feedback.");
-  }
-};
-
         return (
           <div
             key={user.id}

@@ -28,6 +28,17 @@ export async function GET(request: Request, { params }: { params: { id: string }
       );
     }
 
+    // Update the status of messages where current user is the receiver and status is SENT
+    await prisma.message.updateMany({
+      where: {
+        receiverId: dbUser.id,
+        status: "SENT",
+      },
+      data: {
+        status: "RECEIVED",
+      },
+    });
+
     // Fetch all conversations for the user
     const conversations = await prisma.conversation.findMany({
       where: {

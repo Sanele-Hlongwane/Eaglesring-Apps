@@ -12,14 +12,20 @@ enum Role {
   INVESTOR
 }
 
+enum NotificationStatus {
+  ENABLED
+  DISABLED
+}
+
 model Notification {
-  id        Int      @id @default(autoincrement())
-  content   String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  User      User[]   @relation("UserNotifications")
+  id             Int                @id @default(autoincrement())
+  content        String
+  userId         Int
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  status         NotificationStatus  @default(ENABLED) // New status field to indicate if the user wants to receive notifications
+  User           User[]             @relation("UserNotifications")
 }
 
 enum MessageStatus {

@@ -29,6 +29,16 @@ export async function GET(request: Request, { params }: { params: { id: string }
             );
         }
 
+        // Update the status of messages where current user is the receiver and status is SENT
+        await prisma.message.updateMany({
+            where: {
+            receiverId: dbUser.id,
+            },
+            data: {
+            status: "READ",
+            },
+        });
+
         const conversationId = parseInt(params.id, 10);
         console.log("Fetching messages for conversation ID:", conversationId);
 

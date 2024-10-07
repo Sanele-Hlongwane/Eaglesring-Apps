@@ -127,14 +127,14 @@ const MessagesPage = () => {
   const formatMessageTime = (time: string) => {
     const now = new Date();
     const messageDate = new Date(time);
-    const difference = now.getTime() - messageDate.getTime();
-    
-    if (difference < 86400000) { // less than 24 hours
+    const isToday = now.toDateString() === messageDate.toDateString();
+  
+    if (isToday) {
       const hours = messageDate.getHours().toString().padStart(2, "0");
       const minutes = messageDate.getMinutes().toString().padStart(2, "0");
       return `${hours}:${minutes}`;
     }
-    
+  
     return messageDate.toLocaleDateString("en-GB", {
       year: "numeric",
       month: "short",
@@ -197,6 +197,8 @@ const MessagesPage = () => {
     });
     setShowNewChatList(false);
   };
+
+  
   
   return (
     <div className="">
@@ -214,125 +216,124 @@ const MessagesPage = () => {
             </button>
           </div>
           {!showNewChatList ? (
-  <ul>
-    {chats.map((chat) => (
-      <li key={chat.id} className="mb-2">
-        <button
-          type="button" // Specify the button type
-          onClick={() => handleChatClick(chat)}
-          className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
-        >
-          <div className="flex justify-between items-center">
-            <div>
-              <div className="font-bold dark:text-gray-300">{chat.name}</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
-              <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
-            </div>
-            <div className="text-gray-500 dark:text-gray-400">
-              {chat.lastMessageStatus === "SENT" && <FaCheck />}
-              {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
-              {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-blue-500" />}
-            </div>
-          </div>
-        </button>
-      </li>
-    ))}
-  </ul>
-) : (
-  <ul>
-    {friends.map((friend) => (
-      <li key={friend.id} className="mb-2">
-        <button
-          type="button" // Specify the button type
-          onClick={() => handleNewChatClick(friend)}
-          className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
-        >
-          {friend.name}
-        </button>
-      </li>
-    ))}
-  </ul>
-)}
+            <ul>
+              {chats.map((chat) => (
+                <li key={chat.id} className="mb-2">
+                  <button
+                    type="button" // Specify the button type
+                    onClick={() => handleChatClick(chat)}
+                    className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="font-bold dark:text-gray-300">{chat.name}</div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
+                      </div>
+                      <div className="text-gray-500 dark:text-gray-400">
+                        {chat.lastMessageStatus === "SENT" && <FaCheck />}
+                        {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
+                        {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-green-600" />}
+                      </div>
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul>
+              {friends.map((friend) => (
+                <li key={friend.id} className="mb-2">
+                  <button
+                    type="button" // Specify the button type
+                    onClick={() => handleNewChatClick(friend)}
+                    className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
+                  >
+                    {friend.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
 
-      </div>
-
-      {/* Chat Messages */}
-      <div className={`w-full md:w-2/3 flex flex-col ${activeChat ? "block" : "hidden md:block"}`}>
-        {activeChat ? (
-          <>
-            <div className="p-4 bg-gray-200 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 flex items-center">
-              <button
-                className="text-sm md:hidden mr-4 text-blue-500"
-                onClick={() => setActiveChat(null)}
-              >
-                Back
-              </button>
-              <img
-                src="https://via.placeholder.com/40"
-                alt={activeChat.participants[0].name}
-                className="rounded-full mr-4"
-              />
-              <div>
-                <h2 className="text-lg font-bold dark:text-gray-300">{activeChat.participants[0]?.name || ""}</h2>
-              </div>
-            </div>
-            <div className="flex-1 overflow-y-auto p-4">
-  {activeChat?.messages?.map((message) => (
-    <div
-      key={message.id}
-      className={`flex items-end mb-4 ${
-        message.senderId === activeChat.participants[0].id ? "justify-start" : "justify-end"
-      }`}
-    >
-      <div
-        className={`max-w-xs rounded-lg p-4 shadow ${
-          message.senderId === activeChat.participants[0].id
-            ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-gray-200"
-            : "bg-blue-500 text-white"
-        }`}
-      >
-        {message.content}
-        <div className="flex items-center text-xs mt-2">
-          <span>{formatMessageTime(message.sentAt)}</span>
-          {/* Show status icons only for messages on the right side */}
-          {message.senderId !== activeChat.participants[0].id && (
+        {/* Chat Messages */}
+        <div className={`w-full md:w-2/3 flex flex-col ${activeChat ? "block" : "hidden md:block"}`}>
+          {activeChat ? (
             <>
-              {message.status === "SENT" && <FaCheck className="ml-2" />}
-              {message.status === "RECEIVED" && <FaCheckDouble className="ml-2" />}
-              {message.status === "READ" && <FaCheckDouble className="ml-2 text-blue-500" />}
+              <div className="p-4 bg-gray-200 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 flex items-center">
+                <button
+                  className="text-sm md:hidden mr-4 text-blue-500"
+                  onClick={() => setActiveChat(null)}
+                >
+                  Back
+                </button>
+                <img
+                  src="https://via.placeholder.com/40"
+                  alt={activeChat.participants[0].name}
+                  className="rounded-full mr-4"
+                />
+                <div>
+                  <h2 className="text-lg font-bold dark:text-gray-300">{activeChat.participants[0]?.name || ""}</h2>
+                </div>
+              </div>
+              <div className="flex-1 overflow-y-auto p-4">
+                {activeChat?.messages?.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex items-end mb-4 ${
+                      message.senderId === activeChat.participants[0].id ? "justify-start" : "justify-end"
+                    }`}
+                  >
+                    <div
+                      className={`max-w-xs rounded-lg p-4 shadow ${
+                        message.senderId === activeChat.participants[0].id
+                          ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-gray-200"
+                          : "bg-blue-400 text-white"
+                      }`}
+                    >
+                      {message.content}
+                      <div className="flex items-center text-xs mt-2">
+                        <span>{formatMessageTime(message.sentAt)}</span>
+                        {/* Show status icons only for messages on the right side */}
+                        {message.senderId !== activeChat.participants[0].id && (
+                          <>
+                            {message.status === "SENT" && <FaCheck className="ml-2" />}
+                            {message.status === "RECEIVED" && <FaCheckDouble className="ml-2" />}
+                            {message.status === "READ" && <FaCheckDouble className="ml-2 text-green-600" />}
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="p-4 border-t border-gray-300 dark:border-gray-700 flex items-center">
+                <input
+                  type="text"
+                  placeholder="Type your message"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  className="flex-1 p-2 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 dark:text-white"
+                />
+                <button onClick={handleSendMessage} className="p-2 ml-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                  <FaPaperPlane />
+                </button>
+              </div>
             </>
+          ) : (
+            <div className="flex flex-col items-center justify-center h-full">
+              <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-300">Select a chat to start messaging</h2>
+              <button
+                className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+                onClick={() => setShowNewChatList(true)}
+              >
+                Start New Chat
+              </button>
+            </div>
           )}
         </div>
       </div>
-    </div>
-  ))}
-</div>
-            <div className="p-4 border-t border-gray-300 dark:border-gray-700 flex items-center">
-              <input
-                type="text"
-                placeholder="Type your message"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                className="flex-1 p-2 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 dark:text-white"
-              />
-              <button onClick={handleSendMessage} className="p-2 ml-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
-                <FaPaperPlane />
-              </button>
-            </div>
-          </>
-        ) : (
-          <div className="flex flex-col items-center justify-center h-full">
-            <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-300">Select a chat to start messaging</h2>
-            <button
-              className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-              onClick={() => setShowNewChatList(true)}
-            >
-              Start New Chat
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
     </div>
   );
 };

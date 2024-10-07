@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { currentUser } from '@clerk/nextjs/server';
+import sgMail from '@sendgrid/mail';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -8,6 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 const prisma = new PrismaClient();
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export async function POST(request: Request) {
   const user = await currentUser();
@@ -35,10 +37,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
     }
 
-    // Fetch the pitch and its entrepreneur profile
+    // Fetch the pitch and its entrepreneur profile including user model
     const pitch = await prisma.pitch.findUnique({
       where: { id: pitchId },
-      include: { entrepreneur: true, investmentOpportunity: true },
+      include: {
+        entrepreneur: {
+          include: {
+            user: true, // Include user model to access email
+          },
+        },
+        investmentOpportunity: true,
+      },
     });
 
     if (!pitch) {
@@ -161,6 +170,19 @@ export async function POST(request: Request) {
         investmentId: investment.id.toString(),  // Include investment ID for reference
       },
     });
+
+    // Use the email from the entrepreneur's user model
+    if (entrepreneurProfile.user && entrepreneurProfile.user.email) {
+      const emailContent = {
+        to: entrepreneurProfile.user.email, // Ensure email is retrieved from user model
+        from: "sanelehlongwane61@gmail.com",
+        subject: `New Investment in ${pitchTitle}`,
+        text: `You have received an investment of R${amountInRands} from ${dbUser.name}.`,
+        html: `<p>Congratulations, ${entrepreneurProfile.user.name}!</p><p>You have received an investment of R${amountInRands} from ${dbUser.name} for your pitch: ${pitchTitle}.</p>`,
+      };
+
+      await sgMail.send(emailContent);
+    }
 
     return NextResponse.json({ id: session.id });
   } catch (error) {

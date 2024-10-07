@@ -291,7 +291,7 @@ const AcceptedRequestsPage = () => {
 
                 {user.role === "ENTREPRENEUR" && (
                   <a
-                    href={`/pitches/${user.id}`} 
+                    href={`/messages`} 
                     className={`mt-4 bg-${cardRoleBg} text-white py-2 px-4 rounded-lg shadow-md hover:bg-${cardColorHover}-700`}
                   >
                     View Pitches
@@ -299,7 +299,7 @@ const AcceptedRequestsPage = () => {
                 )}
 
                 <a
-                  href={`/chat/${user.id}`}
+                  href={`/messages`}
                   className={`mt-4 ml-4 bg-${cardColor} text-white py-2 px-4 rounded-lg shadow-md hover:bg-${cardColorHover}-700`}
                 >
                   Message

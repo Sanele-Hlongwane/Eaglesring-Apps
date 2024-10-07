@@ -46,6 +46,8 @@ const MessagesPage = () => {
   const [showNewChatList, setShowNewChatList] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
   const [navVisible, setNavVisible] = useState(true);
+  const [blockedUsers, setBlockedUsers] = useState([]);
+  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -132,15 +134,17 @@ const MessagesPage = () => {
     if (isToday) {
       const hours = messageDate.getHours().toString().padStart(2, "0");
       const minutes = messageDate.getMinutes().toString().padStart(2, "0");
-      return `${hours}:${minutes}`;
+      return `Today at ${hours}:${minutes}`;
     }
   
+    // Format for dates that are not today
     return messageDate.toLocaleDateString("en-GB", {
       year: "numeric",
       month: "short",
       day: "numeric",
-    });
+    }) + ` at ${messageDate.getHours().toString().padStart(2, "0")}:${messageDate.getMinutes().toString().padStart(2, "0")}`;
   };
+  
 
   const handleSendMessage = async () => {
     if (!newMessage || !activeChat) return;
@@ -209,36 +213,37 @@ const MessagesPage = () => {
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold dark:text-gray-200">Chats</h2>
             <button
-              className="hidden md:block p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
+              className="hidden md:block p-2 bg-blue-500 text-white rounded-full hover:bg-blue-800 transition"
               onClick={() => setShowNewChatList(!showNewChatList)}
             >
               <FaPlus />
             </button>
           </div>
-          {!showNewChatList ? (
-            <ul>
-              {chats.map((chat) => (
-                <li key={chat.id} className="mb-2">
-                  <button
-                    type="button" // Specify the button type
-                    onClick={() => handleChatClick(chat)}
-                    className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
-                  >
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <div className="font-bold dark:text-gray-300">{chat.name}</div>
-                        <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
-                        <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
+          <div className="max-h-screen overflow-y-auto">
+            {!showNewChatList ? (
+              <ul>
+                {chats.map((chat) => (
+                  <li key={chat.id} className="mb-2">
+                    <button
+                      type="button" // Specify the button type
+                      onClick={() => handleChatClick(chat)}
+                      className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="font-bold dark:text-gray-300">{chat.name}</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
+                        </div>
+                        <div className="text-gray-500 dark:text-gray-400">
+                          {chat.lastMessageStatus === "SENT" && <FaCheck />}
+                          {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
+                          {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-green-600 dark:text-green-500" />}  
+                        </div>
                       </div>
-                      <div className="text-gray-500 dark:text-gray-400">
-                        {chat.lastMessageStatus === "SENT" && <FaCheck />}
-                        {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
-                        {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-green-600" />}
-                      </div>
-                    </div>
-                  </button>
-                </li>
-              ))}
+                    </button>
+                  </li>
+                ))}
             </ul>
           ) : (
             <ul>
@@ -255,6 +260,7 @@ const MessagesPage = () => {
               ))}
             </ul>
           )}
+        </div>
         </div>
 
         {/* Chat Messages */}
@@ -289,18 +295,17 @@ const MessagesPage = () => {
                       className={`max-w-xs rounded-lg p-4 shadow ${
                         message.senderId === activeChat.participants[0].id
                           ? "bg-gray-300 dark:bg-gray-700 text-black dark:text-gray-200"
-                          : "bg-blue-400 text-white"
+                          : "bg-blue-300 dark:bg-blue-800 text-black dark:text-white"
                       }`}
                     >
                       {message.content}
                       <div className="flex items-center text-xs mt-2">
                         <span>{formatMessageTime(message.sentAt)}</span>
-                        {/* Show status icons only for messages on the right side */}
                         {message.senderId !== activeChat.participants[0].id && (
                           <>
                             {message.status === "SENT" && <FaCheck className="ml-2" />}
                             {message.status === "RECEIVED" && <FaCheckDouble className="ml-2" />}
-                            {message.status === "READ" && <FaCheckDouble className="ml-2 text-green-600" />}
+                            {message.status === "READ" && <FaCheckDouble className="ml-2 text-green-600 dark:text-green-500" />}
                           </>
                         )}
                       </div>

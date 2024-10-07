@@ -17,7 +17,16 @@ export async function POST(request: Request) {
   try {
     const dbUser = await prisma.user.findUnique({
       where: { clerkId: user.id },
-      select: { id: true, name: true }, // Fetch user id and name
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        imageUrl: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+        // Add any other fields you want to include in the response
+      },
     });
 
     if (!dbUser) {
@@ -71,7 +80,7 @@ export async function POST(request: Request) {
       participants: conversation.participants, // Include participants info
     }));
 
-    return NextResponse.json({ userName: dbUser.name, conversations: formattedConversations });
+    return NextResponse.json({ user: dbUser, conversations: formattedConversations });
   } catch (error) {
     console.error("Error fetching conversations:", error);
     return NextResponse.json(

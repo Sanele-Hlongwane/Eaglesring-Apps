@@ -306,14 +306,12 @@ const EntrepreneurPitchesPage = () => {
                 {formatDate(pitch.updatedAt)}
               </div>
             </div>
-            {userRole === "INVESTOR" && ( 
                   <CheckoutButton
                   pitchId={pitch.id}
                   amount={pitch.fundingGoal || 0}
                   pitchTitle={pitch.title}
                   onClick={() => handleCheckout(pitch.id, pitch.fundingGoal || 0, pitch.title)}
                 />
-                )}
           </div>
 
           <div

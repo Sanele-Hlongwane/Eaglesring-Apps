@@ -178,7 +178,7 @@ export async function POST(request: Request) {
         from: "sanelehlongwane61@gmail.com",
         subject: `New Investment in ${pitchTitle}`,
         text: `You have received an investment of R${amountInRands} from ${dbUser.name}.`,
-        html: `<p>Congratulations, ${entrepreneurProfile.user.name}!</p><p>You have received an investment of R${amountInRands} from ${dbUser.name} for your pitch: ${pitchTitle} on the Eagles Ring web [https://eaglesring.vercel.app]. You will receive your funds within 2 working days through the card you subscribed with. If you wish to receive it thhrough another method contact us eaglesring@fincance.com.  </p>`,
+        html: `<p>Congratulations, ${entrepreneurProfile.user.name}!</p><p>You have received an investment of R${amountInRands} from ${dbUser.name} for your pitch: ${pitchTitle} on the Eagles Ring web https://eaglesring.vercel.app . You will receive your funds within 2 working days through the card you subscribed with. If you wish to receive it thhrough another method contact us eaglesring@fincance.com.  </p>`,
       };
 
       await sgMail.send(emailContent);

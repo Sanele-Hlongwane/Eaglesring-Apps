@@ -3,7 +3,7 @@
 import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
 import axios from "axios";
 import { FaBuilding, FaInfoCircle, FaTag, FaDollarSign, FaMoneyBillWave, FaLinkedin, FaChartPie, FaBullseye, FaUser } from "react-icons/fa";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "react-toastify";
 import EmptyState from "@/components/EmptyState";
 import Loader from "@/components/Loader";
 import {
@@ -52,8 +52,7 @@ interface InvestorProfile {
 
 const AcceptedRequestsPage = () => {
   const [acceptedRequests, setAcceptedRequests] = useState<UserProfile[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // State for loading
-  const { toast } = useToast();
+  const [loading, setLoading] = useState<boolean>(true); 
   const [selectedUserId, setSelectedUserId] = useState<number | null>(null);  
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -70,11 +69,7 @@ const AcceptedRequestsPage = () => {
       const { data } = await axios.get("/api/opportunities/accepted");
       setAcceptedRequests(data);
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Failed to fetch accepted requests",
-        variant: "destructive",
-      });
+      toast( "Failed to fetch accepted requests");
     } finally {
       setLoading(false);
     }
@@ -120,6 +115,25 @@ const AcceptedRequestsPage = () => {
         const cardColor = isEntrepreneur ? "blue-600" : "green-600";
         const cardRoleBg = isEntrepreneur ? "blue-600" : "green-600";
         const cardColorHover = isEntrepreneur ? "blue" : "green";
+        const [feedback, setFeedback] = useState<string>("");
+
+const handleFeedbackSubmit = async (pitchId: number) => {
+  try {
+    const response = await axios.post('/api/feedback', {
+      pitchId,
+      feedback,
+    });
+
+    if (response.status === 201) {
+      toast.success("Feedback submitted successfully!");
+      setFeedback(""); // Clear the feedback input
+      // Optionally, you can fetch the updated feedback list here
+    }
+  } catch (error) {
+    console.error("Error submitting feedback:", error);
+    toast.error("Failed to submit feedback.");
+  }
+};
 
         return (
           <div
@@ -291,7 +305,7 @@ const AcceptedRequestsPage = () => {
 
                 {user.role === "ENTREPRENEUR" && (
                   <a
-                    href={`/messages`} 
+                    href={`/pitches/${user.id}`} 
                     className={`mt-4 bg-${cardRoleBg} text-white py-2 px-4 rounded-lg shadow-md hover:bg-${cardColorHover}-700`}
                   >
                     View Pitches

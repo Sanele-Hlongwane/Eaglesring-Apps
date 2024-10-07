@@ -47,6 +47,13 @@ interface Entrepreneur {
   updatedAt: string;
 }
 
+interface Feedback {
+  id: number;
+  pitchId: number;
+  content: string;
+  createdAt: string;
+}
+
 const EntrepreneurPitchesPage = () => {
   const { id } = useParams();
   const [pitches, setPitches] = useState<Pitch[]>([]);
@@ -54,6 +61,10 @@ const EntrepreneurPitchesPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [expandedPitchId, setExpandedPitchId] = useState<number | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null); // State to hold user role
+
+  const [feedback, setFeedback] = useState<Feedback[]>([]);
+  const [newFeedback, setNewFeedback] = useState<string>("");
 
   useEffect(() => {
     const fetchPitchesAndProfile = async () => {
@@ -93,6 +104,16 @@ const EntrepreneurPitchesPage = () => {
   if (error) return <EmptyState message={error} />;
   if (pitches.length === 0)
     return <EmptyState message="No pitches found for this user." />;
+
+  const fetchUserRole = async () => {
+    try {
+      const userResponse = await axios.get('/api/user/role'); // Your API to fetch user role
+      setUserRole(userResponse.data.role);
+    } catch (err) {
+      console.error("Error fetching user role:", err);
+      toast.error("Failed to fetch user role");
+    }
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -138,6 +159,36 @@ const EntrepreneurPitchesPage = () => {
     } catch (err) {
       toast.error('Failed to start checkout');
       console.error('Error during checkout:', err);
+    }
+  };
+
+   // Fetch feedback for the pitches when the component mounts
+   useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        const response = await axios.get(`/api/feedback/${id}`); // Fetch feedback for the entrepreneur
+        setFeedback(response.data);
+      } catch (err) {
+        console.error("Error fetching feedback:", err);
+        toast.error("Failed to fetch feedback");
+      }
+    };
+
+    fetchFeedback();
+  }, [id]);
+
+  const handleFeedbackSubmit = async (pitchId: number) => {
+    try {
+      const response = await axios.post(`/api/feedback`, {
+        pitchId,
+        content: newFeedback,
+      });
+      setFeedback((prevFeedback) => [...prevFeedback, response.data]);
+      setNewFeedback(""); // Clear input after submission
+      toast.success("Feedback submitted successfully!");
+    } catch (err) {
+      console.error("Error submitting feedback:", err);
+      toast.error("Failed to submit feedback");
     }
   };
 
@@ -231,7 +282,7 @@ const EntrepreneurPitchesPage = () => {
 
           <div className="flex items-center justify-center mt-4">
             <button className="bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-800 text-white font-bold py-2 px-6 rounded-lg shadow-md transition-transform duration-300 transform hover:scale-110">
-              Connect with Entrepreneur
+              Message
             </button>
           </div>
         </div>
@@ -268,12 +319,14 @@ const EntrepreneurPitchesPage = () => {
                 {formatDate(pitch.updatedAt)}
               </div>
             </div>
-            <CheckoutButton
+            {userRole === "INVESTOR" && ( 
+                  <CheckoutButton
                   pitchId={pitch.id}
                   amount={pitch.fundingGoal || 0}
                   pitchTitle={pitch.title}
                   onClick={() => handleCheckout(pitch.id, pitch.fundingGoal || 0, pitch.title)}
                 />
+                )}
           </div>
 
           <div
@@ -332,24 +385,11 @@ const EntrepreneurPitchesPage = () => {
                 </div>
               )}
             </div>
+            
           )}
         </div>
       ))}
       </SignedIn>
-      
-      <SignedOut>
-        <div>
-        <EmptyState message={"Please login to view data."}/>
-        </div>
-      </SignedOut>
-
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar
-        closeOnClick
-        theme="dark"
-      />
     </div>
   );
 };

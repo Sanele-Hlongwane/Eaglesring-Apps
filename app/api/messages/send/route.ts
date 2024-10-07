@@ -74,6 +74,15 @@ export async function POST(request: Request) {
       },
     });
 
+    // Create a notification for the receiver
+    await prisma.notification.create({
+      data: {
+        content: `New message from ${dbUser.name}: ${content}`,
+        userId: receiverId,
+        status: "ENABLED",
+      },
+    });
+
     return NextResponse.json(message);
   } catch (error) {
     console.error("Error sending message:", error);

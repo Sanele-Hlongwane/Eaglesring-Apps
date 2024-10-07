@@ -4,7 +4,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import sgMail from "@sendgrid/mail";
 
 const prisma = new PrismaClient();
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export async function POST(request: Request) {
   const user = await currentUser();

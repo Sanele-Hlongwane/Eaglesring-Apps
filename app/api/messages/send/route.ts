@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
+import sgMail from "@sendgrid/mail";
 
 const prisma = new PrismaClient();
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export async function POST(request: Request) {
   const user = await currentUser();
@@ -82,6 +84,25 @@ export async function POST(request: Request) {
         status: "ENABLED",
       },
     });
+
+
+    // Get the receiver's email to send the email notification
+    const receiverUser = await prisma.user.findUnique({
+      where: { id: receiverId },
+      select: { email: true, name: true },
+    });
+
+    if (receiverUser && receiverUser.email) {
+      const msg = {
+        to: receiverUser.email,
+        from: "sanelehlongwane61@gmail.com",
+        subject: `New message from ${dbUser.name}`,
+        text: content,
+        html: `<p>You have a new message from ${dbUser.name}:</p><p>${content}</p>`,
+      };
+
+      await sgMail.send(msg);
+    }
 
     return NextResponse.json(message);
   } catch (error) {

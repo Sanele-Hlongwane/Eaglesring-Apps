@@ -37,10 +37,11 @@ export async function GET(request: Request) {
         entrepreneurProfile: {
           select: {
             id: true,
-            imageUrl: true, // Include imageUrl if needed
-            user: { // Reference the User model to access name
+            imageUrl: true,
+
+            user: {
               select: {
-                name: true // Select name from User
+                name: true,
               }
             }
           },

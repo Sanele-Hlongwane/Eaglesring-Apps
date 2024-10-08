@@ -210,7 +210,6 @@ model InvestorProfile {
   preferredIndustries       String[] // New field for preferred industries
   riskTolerance             String? // New field for risk tolerance (e.g., low, medium, high)
   investmentAmountRange     Float[] // New field for acceptable investment amount range
-
   investments               Investment[] // Investments made by the investor
   feedbacks                 Feedback[] // Feedback given by the investor
   createdAt                 DateTime     @default(now())

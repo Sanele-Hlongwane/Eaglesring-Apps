@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
+import {} from "@nextui-org/user";
+import { RangeCalendar, Card, User, Spacer, Skeleton, CardFooter } from "@nextui-org/react";
 import { Line, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, LineElement, PointElement, LinearScale, CategoryScale, Title } from "chart.js";
-import { Skeleton } from "@nextui-org/skeleton"; // You can keep this import if you want to use skeletons.
+import EmptyState from "./EmptyState";
 
 ChartJS.register(ArcElement, Tooltip, Legend, LineElement, PointElement, LinearScale, CategoryScale, Title);
 
@@ -13,7 +15,7 @@ interface Investment {
   id: number;
   amount: number;
   date: string;
-  investorProfile: {
+  entrepreneurProfile: {
     id: number;
     imageUrl: string | null;
     linkedinUrl: string;
@@ -37,7 +39,7 @@ const InvestorInvestments = () => {
   useEffect(() => {
     const fetchInvestments = async () => {
       try {
-        const response = await axios.get("/api/investments/entrepreneur");
+        const response = await axios.get("/api/investments/investor");
         setInvestments(response.data);
       } catch (error) {
         setError("Unable to fetch investments.");
@@ -117,65 +119,66 @@ const InvestorInvestments = () => {
           Total Amount Invested: <span className="text-green-700">R{formatAmount(totalInvestments)}</span>
         </p>
         <div className="flex flex-col md:flex-row justify-center gap-8">
-          <div className="w-full md:w-1/2">
-            <div className="mb-5" style={{ height: '300px' }}>
+          <Card className="w-full md:w-1/2">
+            <h3 className="text-lg font-bold bg-gray-900 dark:bg-gray-100 text-white dark:text-black">Investment Breakdown</h3>
+            <div className="mb-5 bg-gray-100 dark:bg-gray-900 text-black dark:text-white" style={{ height: "300px" }}>
               {loading ? <Skeleton className="h-full" /> : <Pie data={chartData} />}
             </div>
-          </div>
-          <div className="w-full md:w-1/2">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">Investment Over Time (in Rands)</h2>
-            <div className="mb-5" style={{ height: '300px' }}>
+          </Card>
+          <Card className="w-full md:w-1/2">
+            <h3 className="text-lg font-bold bg-gray-900 dark:bg-gray-100 text-white dark:text-black">Investment Over Time (in Rands)</h3>
+            <div className="mb-5 bg-gray-100 dark:bg-gray-900 text-black dark:text-white" style={{ height: "300px" }}>
               {loading ? <Skeleton className="h-full" /> : <Line data={lineChartData} />}
             </div>
-          </div>
+          </Card>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         {loading ? (
-          Array.from({ length: 6 }).map((_, index) => (
-            <Skeleton key={index} className="h-60 rounded-lg" />
-          ))
-        ) : (
+          Array.from({ length: 6 }).map((_, index) => <Skeleton key={index} className="h-60 rounded-lg" />)
+        ) : investments.length > 0 ? (
           investments.map((investment) => (
-            <div
+            <Card
               key={investment.id}
               className="relative bg-white dark:bg-gray-800 shadow-xl rounded-lg p-8 border border-gray-200 dark:border-gray-700 transform hover:scale-105 hover:shadow-2xl transition-transform duration-300 ease-in-out"
             >
-              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
+              <div className="flex flex-col items-center">
                 <div className="w-20 h-20 bg-gradient-to-tr from-blue-500 to-green-400 dark:from-green-700 dark:to-blue-700 rounded-full flex items-center justify-center shadow-lg">
-                  {investment.investorProfile.imageUrl ? (
+                  {investment.entrepreneurProfile.imageUrl ? (
                     <Image
                       src="/icon.png"
-                      alt={`${investment.investorProfile.user.name}'s profile picture`}
+                      alt={`${investment.entrepreneurProfile.user.name}'s profile picture`}
                       width={50}
                       height={50}
                       className="rounded-full border border-gray-300 dark:border-gray-600"
                     />
                   ) : (
                     <span className="text-white font-bold text-2xl">
-                      {investment.investorProfile.user.name.charAt(0)}
+                      {investment.entrepreneurProfile.user.name.charAt(0)}
                     </span>
                   )}
                 </div>
-              </div>
-              <div className="text-center mt-16">
-                <p className="text-gray-700 dark:text-gray-300 font-semibold text-lg">
-                  Entrepreneur: <span className="font-bold">{investment.investorProfile.user.name}</span>
-                </p>
-                <p className="text-green-700 dark:text-green-400 font-semibold text-lg">
+                <h4 className="text-center mt-4 text-gray-700 dark:text-gray-300 font-semibold">
+                  Entrepreneur: <span className="font-bold">{investment.entrepreneurProfile.user.name || "Unknown Investor"}</span>
+                </h4>
+                <p className="text-green-700 dark:text-green-400 font-semibold text-lg mt-1">
                   Amount: R{formatAmount(investment.amount)}
                 </p>
-                <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-3 mt-2">
-                  {investment.investmentOpportunity.title}
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mt-2">
+                  {investment.investmentOpportunity.title || "No Title Available"}
                 </h2>
-                <p className="text-gray-600 dark:text-gray-400 mb-6 px-4">{investment.investmentOpportunity.description}</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-2 px-4">
+                  {investment.investmentOpportunity.description || "No Description Available"}
+                </p>
                 <p className="text-blue-600 dark:text-blue-400 text-sm italic">
                   {formatDate(investment.date)}
                 </p>
               </div>
-            </div>
+            </Card>
           ))
+        ) : (
+          <EmptyState message="No investments found."/>
         )}
       </div>
     </div>

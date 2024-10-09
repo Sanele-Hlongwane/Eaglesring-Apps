@@ -1,4 +1,4 @@
-// src/app/api/investments/investor/route.ts
+// src/app/api/investments/entrepreneur/route.ts
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   try {
     const dbUser = await prisma.user.findUnique({
       where: { clerkId: user.id },
-      include: { investorProfile: true }, // Include the investor profile
+      include: { investorProfile: true }, // Include the entrepreneur profile
     });
 
     if (!dbUser) {
@@ -30,30 +30,30 @@ export async function GET(request: Request) {
 
     // Fetch investments where the current user is the investor
     const investments = await prisma.investment.findMany({
-      where: {
-        investorProfileId: dbUser.investorProfile?.id, // Ensure the user has an investor profile
-      },
-      include: {
-        entrepreneurProfile: {
-          select: {
-            id: true,
-            imageUrl: true,
-
-            user: {
-              select: {
-                name: true,
+        where: {
+          investorProfileId: dbUser.investorProfile?.id, // Ensure the user has an investor profile
+        },
+        include: {
+          entrepreneurProfile: {
+            select: {
+              id: true, 
+              imageUrl: true, // Include imageUrl if needed
+              user: { // Reference the User model to access name
+                select: {
+                  name: true // Select name from User
+                }
               }
-            }
+            },
+          },
+          investmentOpportunity: {
+            select: { id: true, title: true, description: true }, // Include investment opportunity details
           },
         },
-        investmentOpportunity: {
-          select: { id: true, title: true, description: true }, // Include investment opportunity details
+        orderBy: {
+          date: "desc", // Order investments by date, descending
         },
-      },
-      orderBy: {
-        date: "desc", // Order investments by date, descending
-      },
-    });
+      });
+      
 
     return NextResponse.json(investments);
   } catch (error) {

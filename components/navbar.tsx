@@ -113,13 +113,13 @@ export const Navbar = () => {
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/entr-investments')} href="/entr-investments" onClick={() => handleLinkClick('/entr-investments')}>
-                Investments
+              <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
+                Notifications
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
-              <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
-                Notifications
+              <Link className={getLinkClasses('/entr-investments')} href="/entr-investments" onClick={() => handleLinkClick('/entr-investments')}>
+                Investments
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>

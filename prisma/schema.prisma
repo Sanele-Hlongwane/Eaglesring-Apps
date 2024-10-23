@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DIRECT_URL")
 }
 
 enum Role {
@@ -18,14 +18,15 @@ enum NotificationStatus {
 }
 
 model Notification {
-  id             Int                @id @default(autoincrement())
+  id             Int                  @id @default(autoincrement())
   content        String
   userId         Int
-  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  status         NotificationStatus  @default(ENABLED) // New status field to indicate if the user wants to receive notifications
-  User           User[]             @relation("UserNotifications")
+  read           Boolean              @default(false)
+  user           User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  status         NotificationStatus   @default(ENABLED)
+  User           User[]               @relation("UserNotifications")
 }
 
 enum MessageStatus {

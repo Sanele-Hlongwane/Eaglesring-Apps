@@ -98,6 +98,17 @@ export async function POST(request: Request) {
       });
     }
 
+    // Create a new Investment record
+    const investment = await prisma.investment.create({
+      data: {
+        amount: amountInRands,
+        title: pitchTitle,
+        investorProfileId: investorProfile.id,
+        entrepreneurProfileId: entrepreneurProfile.id,
+        investmentOpportunityId: investmentOpportunity.id,
+      },
+    });
+
     // Use the stripeCustomerId from the database if it exists
     let customerId = dbUser.stripeCustomerId;
 
@@ -156,8 +167,22 @@ export async function POST(request: Request) {
         userId: investorProfile.id.toString(),
         entrepreneurProfileId: entrepreneurProfile.id.toString(),
         investmentOpportunityId: investmentOpportunity.id.toString(),
+        investmentId: investment.id.toString(),
       },
     });
+
+    // Use the email from the entrepreneur's user model
+    if (entrepreneurProfile.user && entrepreneurProfile.user.email) {
+      const emailContent = {
+        to: entrepreneurProfile.user.email, // Ensure email is retrieved from user model
+        from: "sanelehlongwane61@gmail.com",
+        subject: `New Investment in ${pitchTitle}`,
+        text: `You have received an investment of R${amountInRands} from ${dbUser.name}.`,
+        html: `<p>Congratulations, ${entrepreneurProfile.user.name}!</p><p>You have received an investment of R${amountInRands} from ${dbUser.name} for your pitch: ${pitchTitle} on the Eagles Ring web and you will receive your funds within 2 working days through the card you subscribed with, if you wish to receive it through another method please contact us.  </p>`,
+      };
+
+      await sgMail.send(emailContent);
+    }
 
     return NextResponse.json({ id: session.id });
   } catch (error) {

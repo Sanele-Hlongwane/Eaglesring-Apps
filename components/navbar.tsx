@@ -22,6 +22,7 @@ export const Navbar = () => {
   const [role, setRole] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState<number>(0);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -54,6 +55,23 @@ export const Navbar = () => {
     }
 
     fetchUserRole();
+  }, []);
+
+  // Fetch notification count
+  useEffect(() => {
+    async function fetchNotificationCount() {
+      try {
+        const response = await fetch('/api/notifications/count');
+        if (response.ok) {
+          const data = await response.json();
+          setNotificationCount(data.count);
+        }
+      } catch (error) {
+        console.error("Failed to fetch notifications count", error);
+      }
+    }
+
+    fetchNotificationCount();
   }, []);
 
   const handleLinkClick = (href: string) => {
@@ -89,7 +107,7 @@ export const Navbar = () => {
             </NavbarMenuItem>
             <NavbarMenuItem>
               <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
-                Notifications
+                Notifications {notificationCount > 0 && <span className="badge">{notificationCount}</span>}
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>
@@ -114,7 +132,7 @@ export const Navbar = () => {
             </NavbarMenuItem>
             <NavbarMenuItem>
               <Link className={getLinkClasses('/notifications')} href="/notifications" onClick={() => handleLinkClick('/notifications')}>
-                Notifications
+                Notifications {notificationCount > 0 && <span className="badge">{notificationCount}</span>}
               </Link>
             </NavbarMenuItem>
             <NavbarMenuItem>

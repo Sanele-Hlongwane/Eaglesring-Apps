@@ -61,7 +61,7 @@ export const Navbar = () => {
   useEffect(() => {
     async function fetchNotificationCount() {
       try {
-        const response = await fetch('/api/notifications/count');
+        const response = await fetch('/api/get-notifications/count');
         if (response.ok) {
           const data = await response.json();
           setNotificationCount(data.count);

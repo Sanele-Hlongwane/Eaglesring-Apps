@@ -14,8 +14,8 @@ body {
   padding: 0.2rem 0.5rem;
   border-radius: 50%;
   position: absolute; /* Absolute positioning */
-  top: 0; /* Top right corner */
-  right: 0; /* Top right corner */
+  top: 5; /* Top right corner */
+  right: 5; /* Top right corner */
   transform: translate(50%, -50%); /* Fine-tune position */
   font-size: 0.75rem;
   margin-left: 0.5rem;

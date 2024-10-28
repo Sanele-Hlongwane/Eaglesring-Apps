@@ -89,7 +89,7 @@ export default function Notifications() {
               <div className="flex flex-col w-full sm:w-1/4">
               <label htmlFor="start-date" className="text-sm font-bold dark:text-white mb-2">From</label>
                 <input
-                  id="start-date" // Added id
+                  id="start-date"
                   type="date"
                   className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
                   value={startDate}
@@ -100,7 +100,7 @@ export default function Notifications() {
               <div className="flex flex-col w-full sm:w-1/4">
                 <label htmlFor="end-date" className="text-sm font-bold dark:text-white mb-2">To</label>
                 <input
-                  id="end-date" // Added id
+                  id="end-date"
                   type="date"
                   className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
                   value={endDate}

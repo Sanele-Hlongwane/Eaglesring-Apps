@@ -72,6 +72,11 @@ export const Navbar = () => {
     }
 
     fetchNotificationCount();
+    const intervalId = setInterval(fetchNotificationCount, 1000);
+
+    return () => {
+      clearInterval(intervalId); 
+    };
   }, []);
 
   const handleLinkClick = (href: string) => {

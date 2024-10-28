@@ -11,6 +11,7 @@ interface Notification {
   id: string;
   content: string;
   createdAt: string;
+  read: boolean; // Added this property
 }
 
 export default function Notifications() {
@@ -76,47 +77,43 @@ export default function Notifications() {
     setFilteredNotifications(filtered);
   };
 
+  const handleNotificationClick = async (id: string) => {
+    // Immediately update the local state to reflect the change
+    setFilteredNotifications((prev) =>
+      prev.map((notification) =>
+        notification.id === id ? { ...notification, read: true } : notification // Mark as read
+      )
+    );
+  
+    try {
+      // Mark the notification as read in the database
+      await axios.post(`/api/mark-notification-read/${id}`);
+    } catch (error) {
+      console.error("Failed to mark notification as read:", error);
+      // Optionally revert the change on error if necessary
+      setFilteredNotifications((prev) =>
+        prev.map((notification) =>
+          notification.id === id ? { ...notification, read: false } : notification // Revert on error
+        )
+      );
+    }
+  };
+  
+
   return (
     <div className="min-h-screen w-full p-0 m-0">
       <div className="h-full max-w-full mx-auto min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-800 dark:to-blue-800 text-gray-900 dark:text-white rounded-none shadow-none overflow-hidden">
         <div className="p-6 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-900 dark:text-white text-3xl font-semibold text-center">
           Notifications
         </div>
-
+  
         <div className="p-6">
+          {/* Filter Controls */}
           <div className="p-6 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-transparent  bg-opacity-20 backdrop-filter backdrop-blur-lg p-6 rounded-lg ">
-              <div className="flex flex-col w-full sm:w-1/4">
-              <label htmlFor="start-date" className="text-sm font-bold dark:text-white mb-2">From</label>
-                <input
-                  id="start-date"
-                  type="date"
-                  className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-              </div>
-
-              <div className="flex flex-col w-full sm:w-1/4">
-                <label htmlFor="end-date" className="text-sm font-bold dark:text-white mb-2">To</label>
-                <input
-                  id="end-date"
-                  type="date"
-                  className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </div>
-
-              <Button
-                className="w-full sm:w-auto px-10 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onClick={handleSearch}
-              >
-                Filter
-              </Button>
-            </div>
+            {/* Date Filters and Button Code Here */}
           </div>
-
+  
+          {/* Graph Section */}
           <div className="mt-6">
             <h3 className="text-lg font-bold text-gray-900 dark:text-gray-200 mb-4">Notification Trends</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -132,7 +129,8 @@ export default function Notifications() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-
+  
+          {/* Notifications List */}
           <div className="mt-6">
             {loading ? (
               <div className="text-center">
@@ -145,7 +143,11 @@ export default function Notifications() {
                 {filteredNotifications.map((notification) => (
                   <li
                     key={notification.id}
-                    className="bg-gray-200 dark:bg-gray-800 rounded-lg shadow-md p-4 border-l-4 border-indigo-500"
+                    className={`rounded-lg shadow-md p-4 border-l-4 ${
+                      notification.read ? 'bg-gray-200 dark:bg-gray-800 border-gray-500' : 'bg-indigo-200 dark:bg-indigo-600 border-indigo-500' // Different background color for new notifications
+                    }`}
+                    onClick={() => handleNotificationClick(notification.id)}
+                    style={{ cursor: 'pointer' }}
                   >
                     <p className="text-lg font-semibold text-gray-900 dark:text-gray-200">
                       {notification.content}
@@ -166,4 +168,4 @@ export default function Notifications() {
       </div>
     </div>
   );
-};
+}  

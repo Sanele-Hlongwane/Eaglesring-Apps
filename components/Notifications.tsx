@@ -86,11 +86,9 @@ export default function Notifications() {
     );
   
     try {
-      // Mark the notification as read in the database
       await axios.post(`/api/mark-notification-read/${id}`);
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
-      // Optionally revert the change on error if necessary
       setFilteredNotifications((prev) =>
         prev.map((notification) =>
           notification.id === id ? { ...notification, read: false } : notification // Revert on error
@@ -108,12 +106,39 @@ export default function Notifications() {
         </div>
   
         <div className="p-6">
-          {/* Filter Controls */}
           <div className="p-6 space-y-6">
-            {/* Date Filters and Button Code Here */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-transparent bg-opacity-20 backdrop-filter backdrop-blur-lg p-6 rounded-lg ">
+              <div className="flex flex-col w-full sm:w-1/4">
+                <label htmlFor="start-date" className="text-sm font-bold dark:text-white mb-2">From</label>
+                <input
+                  id="start-date"
+                  type="date"
+                  className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col w-full sm:w-1/4">
+                <label htmlFor="end-date" className="text-sm font-bold dark:text-white mb-2">To</label>
+                <input
+                  id="end-date"
+                  type="date"
+                  className="w-full border border-gray-800 dark:border-white bg-transparent backdrop-blur-lg rounded-lg px-4 py-2 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 shadow-sm"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+
+              <Button
+                className="w-full sm:w-auto px-10 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onClick={handleSearch}
+              >
+                Filter
+              </Button>
+            </div>
           </div>
   
-          {/* Graph Section */}
           <div className="mt-6">
             <h3 className="text-lg font-bold text-gray-900 dark:text-gray-200 mb-4">Notification Trends</h3>
             <ResponsiveContainer width="100%" height={300}>
@@ -129,8 +154,7 @@ export default function Notifications() {
               </LineChart>
             </ResponsiveContainer>
           </div>
-  
-          {/* Notifications List */}
+
           <div className="mt-6">
             {loading ? (
               <div className="text-center">

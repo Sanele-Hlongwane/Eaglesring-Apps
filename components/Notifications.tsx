@@ -168,9 +168,18 @@ export default function Notifications() {
                   <li
                     key={notification.id}
                     className={`rounded-lg shadow-md p-4 border-l-4 ${
-                      notification.read ? 'bg-gray-200 dark:bg-gray-800 border-gray-500' : 'bg-indigo-200 dark:bg-indigo-600 border-indigo-500' // Different background color for new notifications
+                      notification.read
+                        ? 'bg-gray-200 dark:bg-gray-800 border-gray-500'
+                        : 'bg-indigo-200 dark:bg-indigo-600 border-indigo-500'
                     }`}
+                    role="button"
+                    tabIndex={0}
                     onClick={() => handleNotificationClick(notification.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        handleNotificationClick(notification.id);
+                      }
+                    }}
                     style={{ cursor: 'pointer' }}
                   >
                     <p className="text-lg font-semibold text-gray-900 dark:text-gray-200">

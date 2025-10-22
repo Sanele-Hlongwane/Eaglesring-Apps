@@ -1,4 +1,3 @@
-import { Footer } from "@/components/Footer";
 import { Metadata } from "next";
 import { ReactNode } from "react";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";

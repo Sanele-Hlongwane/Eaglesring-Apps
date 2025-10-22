@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/prisma'; // Make sure to import Prisma client
+import { db } from '@/lib/prisma';
 
 export async function POST(req: Request) {
   try {
-    const data = await req.json(); // Parse the incoming request JSON
+    const data = await req.json();
 
     const {
       amount,

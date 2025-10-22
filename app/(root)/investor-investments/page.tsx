@@ -1,6 +1,6 @@
 "use client";
 
-import InvestorInvestments from "@/components/InvestorInvestments"; // Adjust path if needed
+import InvestorInvestments from "@/components/InvestorInvestments";
 
 const InvestmentsPage = () => {
   return (

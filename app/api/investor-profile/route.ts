@@ -4,7 +4,6 @@ import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
-// GET request to fetch investor profile with read-only data
 export async function GET() {
   const user = await currentUser();
 

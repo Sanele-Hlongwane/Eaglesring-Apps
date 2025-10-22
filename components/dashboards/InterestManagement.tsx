@@ -1,5 +1,5 @@
 // components/InterestManagement.tsx
-import { Card } from '@nextui-org/react';
+import { Card } from '@heroui/react';
 
 interface Interest {
   id: number;

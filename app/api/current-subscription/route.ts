@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2025-08-27.basil",
 });
 
 const prisma = new PrismaClient();
@@ -82,8 +82,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       currentPlan: activeSubscription?.items.data[0]?.price.id,
-      nextBillingDate: activeSubscription?.current_period_end,
-      subscriptionStartDate: activeSubscription?.current_period_start,
+      nextBillingDate: activeSubscription?.ended_at,
+      subscriptionStartDate: activeSubscription?.start_date,
       status: activeSubscription?.status,
       paymentMethods: paymentMethodsWithDetails,
     });

@@ -1,7 +1,6 @@
-// File: pages/investments.tsx
 "use client";
 
-import EntrepreneurInvestments from "@/components/EntrepreneurInvestments"; // Adjust path if needed
+import EntrepreneurInvestments from "@/components/EntrepreneurInvestments";
 
 const InvestmentsPage = () => {
   return (

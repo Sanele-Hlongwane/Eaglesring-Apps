@@ -4,7 +4,7 @@ import { db } from '@/lib/prisma'; // Adjust the import path according to your p
 import { currentUser } from '@clerk/nextjs/server'; // Import Clerk's currentUser function
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-06-20",
+  apiVersion: "2025-08-27.basil",
 });
 
 export async function POST(req: Request) {

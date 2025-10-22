@@ -2,7 +2,6 @@ import { Metadata } from "next";
 import { ReactNode } from "react";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/navbar";
-import Sidebar from "@/components/Sidebar";
 import { SignedOut, SignInButton, SignedIn } from "@clerk/nextjs";
 
 export const metadata: Metadata = {

@@ -4,11 +4,9 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
 
-// Register Chart.js components
 Chart.register(...registerables);
 
 const Overview: React.FC = () => {
-  // Sample data for charts
   const investmentsData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
     datasets: [

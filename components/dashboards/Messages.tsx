@@ -1,7 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { db } from '@/lib/prisma'; // Adjust the import path based on your project structure
-import { useUser } from '@clerk/nextjs';
 import { Investment, Feedback, Interest, Notification } from '@prisma/client';
 
 interface InvestmentOverviewProps {

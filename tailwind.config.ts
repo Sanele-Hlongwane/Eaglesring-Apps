@@ -66,7 +66,6 @@ const config: Config = {
   },
   plugins: [
     nextui(), // Integrates NextUI theme with Tailwind
-    require('tailwindcss-animate'), // Adds animation utilities
   ],
 };
 

@@ -5,7 +5,7 @@ import { useRef, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
-import LoadingDots from "@/components/ui/LoadingDots"; // Import LoadingDots component
+import LoadingDots from "@/components/ui/LoadingDots";
 
 export default function SelectRole() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -16,7 +16,7 @@ export default function SelectRole() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 30000);
+    setTimeout(() => setLoading(false), 300);
   }, []);
 
   useEffect(() => {

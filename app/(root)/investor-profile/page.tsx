@@ -8,16 +8,15 @@ import { v4 as uuidv4 } from "uuid";
 import supabase from "@/lib/supabaseClient";
 import Loader from "@/components/Loader";
 import LoadingDots from "@/components/ui/LoadingDots";
-import { useToast } from "@/components/ui/use-toast";
 
 export default function InvestorProfilePage() {
   const [bio, setBio] = useState("");
-  const [investmentStrategy, setInvestmentStrategy] = useState(""); // New state variable
+  const [investmentStrategy, setInvestmentStrategy] = useState(""); 
   const [linkedinUrl, setLinkedinUrl] = useState("");
   const [imageUrl, setImageUrl] = useState("");
-  const [preferredIndustries, setPreferredIndustries] = useState<string[]>([]); // New state variable for preferred industries
-  const [riskTolerance, setRiskTolerance] = useState(""); // New state variable for risk tolerance
-  const [investmentAmountRange, setInvestmentAmountRange] = useState<number[]>([]); // New state variable for investment amount range
+  const [preferredIndustries, setPreferredIndustries] = useState<string[]>([]);
+  const [riskTolerance, setRiskTolerance] = useState("");
+  const [investmentAmountRange, setInvestmentAmountRange] = useState<number[]>([]);
   const [profile, setProfile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -36,12 +35,12 @@ export default function InvestorProfilePage() {
           toast.error(data.error);
         } else {
           setBio(data.bio || "");
-          setInvestmentStrategy(data.investmentStrategy || ""); // Set investmentStrategy
+          setInvestmentStrategy(data.investmentStrategy || ""); 
           setLinkedinUrl(data.linkedinUrl || "");
           setImageUrl(data.imageUrl || "");
-          setPreferredIndustries(data.preferredIndustries || []); // Set preferredIndustries
-          setRiskTolerance(data.riskTolerance || ""); // Set riskTolerance
-          setInvestmentAmountRange(data.investmentAmountRange || []); // Set investmentAmountRange
+          setPreferredIndustries(data.preferredIndustries || []); 
+          setRiskTolerance(data.riskTolerance || ""); 
+          setInvestmentAmountRange(data.investmentAmountRange || []); 
           setProfile(data);
         }
       } catch (error) {
@@ -96,12 +95,12 @@ export default function InvestorProfilePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bio,
-          investmentStrategy, // Updated field
+          investmentStrategy, 
           linkedinUrl,
           imageUrl: tempImageUrl || imageUrl,
-          preferredIndustries, // Updated field
-          riskTolerance, // Updated field
-          investmentAmountRange, // Updated field
+          preferredIndustries, 
+          riskTolerance, 
+          investmentAmountRange, 
         }),
       });
 
@@ -254,7 +253,7 @@ export default function InvestorProfilePage() {
                   <input
                     type="text"
                     id="preferredIndustries"
-                    value={preferredIndustries.join(", ")} // Convert array to string for input
+                    value={preferredIndustries.join(", ")} 
                     onChange={(e) =>
                       setPreferredIndustries(e.target.value.split(",").map((industry) => industry.trim()))
                     }
@@ -263,7 +262,7 @@ export default function InvestorProfilePage() {
                   />
                   <button
                     type="button"
-                    onClick={() => setPreferredIndustries([])} // Clear the input field
+                    onClick={() => setPreferredIndustries([])} 
                     className="ml-3 p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors duration-300"
                   >
                     Clear

@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@nextui-org/react";
+import { Link } from "@heroui/react";
 import { FaInfoCircle, FaCheckCircle } from "react-icons/fa";
 import { features } from "@/constants/features";
 

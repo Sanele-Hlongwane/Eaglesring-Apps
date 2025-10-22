@@ -1,8 +1,7 @@
-// components/NotificationsAlerts.tsx
 import React from 'react';
 
 interface NotificationsAlertsProps {
-  alerts: any; // Define the structure of your alerts data here
+  alerts: any; 
 }
 
 const NotificationsAlerts: React.FC<NotificationsAlertsProps> = ({ alerts }) => {

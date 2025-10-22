@@ -1,5 +1,5 @@
 // components/FeedbacksReceived.tsx
-import { Card } from '@nextui-org/react';
+import { Card } from '@heroui/react';
 
 interface Feedback {
   id: number;

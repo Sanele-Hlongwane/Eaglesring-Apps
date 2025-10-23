@@ -13,7 +13,6 @@ const PitchForm = () => {
     setLoading(true);
 
     try {
-      // Call API to save the pitch
       toast.success("Pitch submitted successfully!");
     } catch (error) {
       toast.error("Failed to submit pitch");

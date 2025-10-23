@@ -5,7 +5,8 @@ import { Navbar } from "@/components/navbar";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "We care about your privacy here at Eagles Rings. Read and undersatnd our policies.",
+  description:
+    "We care about your privacy here at Eagles Rings. Read and undersatnd our policies.",
 };
 
 const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {

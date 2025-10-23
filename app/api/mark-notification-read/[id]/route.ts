@@ -5,14 +5,20 @@ import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { id: string } },
+) {
   const { id } = params;
 
   // Convert the string id to a number
   const notificationId = parseInt(id, 10);
 
   if (isNaN(notificationId)) {
-    return NextResponse.json({ message: "Invalid notification ID" }, { status: 400 });
+    return NextResponse.json(
+      { message: "Invalid notification ID" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -31,6 +37,9 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     return NextResponse.json(updatedNotification);
   } catch (error) {
     console.error("Error updating notification:", error); // Log the error for debugging
-    return NextResponse.json({ message: "Error marking notification as read" }, { status: 500 });
+    return NextResponse.json(
+      { message: "Error marking notification as read" },
+      { status: 500 },
+    );
   }
 }

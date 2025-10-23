@@ -28,14 +28,20 @@ interface PusherEvent {
 
 export default function InvestorsPage() {
   const [investments, setInvestments] = useState<Investment[]>([]);
-  const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null);
+  const [selectedInvestment, setSelectedInvestment] =
+    useState<Investment | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [newInvestment, setNewInvestment] = useState<{ title: string; description: string }>({
+  const [newInvestment, setNewInvestment] = useState<{
+    title: string;
+    description: string;
+  }>({
     title: "",
     description: "",
   });
   const [isCreating, setIsCreating] = useState<boolean>(false);
-  const [expandedInvestmentId, setExpandedInvestmentId] = useState<number | null>(null);
+  const [expandedInvestmentId, setExpandedInvestmentId] = useState<
+    number | null
+  >(null);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +55,8 @@ export default function InvestorsPage() {
         const result = await response.json();
         setInvestments(result.investments);
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "Failed to load investments";
+        const errorMessage =
+          error instanceof Error ? error.message : "Failed to load investments";
         toast.error(errorMessage);
       }
     }
@@ -62,13 +69,13 @@ export default function InvestorsPage() {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
     });
 
-    const channel = pusher.subscribe('my-channel');
-    channel.bind('update', (data: any) => {
-      console.log('Event received:', data); // Log data to see if the event is triggered
+    const channel = pusher.subscribe("my-channel");
+    channel.bind("update", (data: any) => {
+      console.log("Event received:", data); // Log data to see if the event is triggered
     });
 
     return () => {
-      pusher.unsubscribe('my-channel');
+      pusher.unsubscribe("my-channel");
     };
   }, []);
 
@@ -99,7 +106,8 @@ export default function InvestorsPage() {
       window.location.reload();
       router.refresh(); // Refresh the page
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to create investment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to create investment";
       toast.error(errorMessage);
     }
   };
@@ -108,13 +116,16 @@ export default function InvestorsPage() {
     if (!selectedInvestment) return;
 
     try {
-      const response = await fetch(`/api/investments/${selectedInvestment.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `/api/investments/${selectedInvestment.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(selectedInvestment),
         },
-        body: JSON.stringify(selectedInvestment),
-      });
+      );
 
       if (!response.ok) {
         const errorMessage = await response.text(); // Get error message from the response
@@ -126,7 +137,8 @@ export default function InvestorsPage() {
       toast.success("Investment updated successfully");
       window.location.reload();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to update investment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to update investment";
       setSelectedInvestment(null);
       setIsEditing(false);
       toast.error(errorMessage);
@@ -146,7 +158,8 @@ export default function InvestorsPage() {
       router.refresh(); // Refresh the page
       window.location.reload();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Failed to delete investment";
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to delete investment";
       toast.error(errorMessage);
     }
   };
@@ -169,7 +182,9 @@ export default function InvestorsPage() {
   return (
     <div className="max-w-full px-6 py-8 mx-auto">
       <div className="max-w-7xl mx-auto py-10">
-        <h2 className="text-4xl font-extrabold mb-8 text-center">Investments Management</h2>
+        <h2 className="text-4xl font-extrabold mb-8 text-center">
+          Investments Management
+        </h2>
 
         {/* Create Investment Button */}
         <div className="mb-8 text-center">
@@ -187,10 +202,15 @@ export default function InvestorsPage() {
           <ul className="space-y-4">
             {investments.length > 0 ? (
               investments.map((investment) => (
-                <li key={investment.id} className="border rounded-lg p-4 shadow-sm">
+                <li
+                  key={investment.id}
+                  className="border rounded-lg p-4 shadow-sm"
+                >
                   <div className="flex justify-between items-center">
                     <div>
-                      <h4 className="text-xl font-semibold">{investment.title}</h4>
+                      <h4 className="text-xl font-semibold">
+                        {investment.title}
+                      </h4>
                       <p className="text-sm text-gray-600 dark:text-gray-200">
                         {new Date(investment.createdAt).toLocaleDateString()}
                       </p>
@@ -200,7 +220,9 @@ export default function InvestorsPage() {
                         onClick={() => handleViewDetails(investment.id)}
                         className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 text-white hover:opacity-90 transition-opacity duration-300"
                       >
-                        {expandedInvestmentId === investment.id ? "Hide" : "View"}
+                        {expandedInvestmentId === investment.id
+                          ? "Hide"
+                          : "View"}
                       </button>
                       <button
                         onClick={() => handleEditClick(investment)}
@@ -219,7 +241,9 @@ export default function InvestorsPage() {
                   {expandedInvestmentId === investment.id && (
                     <div className="mt-4 p-4 border-t border-gray-200">
                       <h5 className="text-lg font-semibold">Description</h5>
-                      <p className="text-gray-800 dark:text-gray-200">{investment.description}</p>
+                      <p className="text-gray-800 dark:text-gray-200">
+                        {investment.description}
+                      </p>
                     </div>
                   )}
                 </li>
@@ -240,13 +264,20 @@ export default function InvestorsPage() {
               type="text"
               placeholder="Title"
               value={newInvestment.title}
-              onChange={(e) => setNewInvestment({ ...newInvestment, title: e.target.value })}
+              onChange={(e) =>
+                setNewInvestment({ ...newInvestment, title: e.target.value })
+              }
               className="w-full p-2 border border-gray-300 rounded mb-4"
             />
             <textarea
               placeholder="Description"
               value={newInvestment.description}
-              onChange={(e) => setNewInvestment({ ...newInvestment, description: e.target.value })}
+              onChange={(e) =>
+                setNewInvestment({
+                  ...newInvestment,
+                  description: e.target.value,
+                })
+              }
               className="w-full p-2 border border-gray-300 rounded mb-4"
               rows={4}
             />
@@ -277,13 +308,23 @@ export default function InvestorsPage() {
               type="text"
               placeholder="Title"
               value={selectedInvestment.title}
-              onChange={(e) => setSelectedInvestment({ ...selectedInvestment, title: e.target.value })}
+              onChange={(e) =>
+                setSelectedInvestment({
+                  ...selectedInvestment,
+                  title: e.target.value,
+                })
+              }
               className="w-full p-2 border border-gray-300 rounded mb-4"
             />
             <textarea
               placeholder="Description"
               value={selectedInvestment.description}
-              onChange={(e) => setSelectedInvestment({ ...selectedInvestment, description: e.target.value })}
+              onChange={(e) =>
+                setSelectedInvestment({
+                  ...selectedInvestment,
+                  description: e.target.value,
+                })
+              }
               className="w-full p-2 border border-gray-300 rounded mb-4"
               rows={4}
             />

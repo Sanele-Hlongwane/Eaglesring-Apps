@@ -11,7 +11,7 @@ export async function GET() {
     console.log("User not logged in");
     return NextResponse.json(
       { error: "User not found. Please log in." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -34,7 +34,7 @@ export async function GET() {
       console.log("User not found in database with clerkId:", user.id);
       return NextResponse.json(
         { error: "User profile not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -42,17 +42,20 @@ export async function GET() {
       console.log("Investor profile not found for user ID:", existingUser.id);
       return NextResponse.json(
         { error: "Investor profile not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
-    console.log("Investor profile fetched successfully for user ID:", existingUser.id);
+    console.log(
+      "Investor profile fetched successfully for user ID:",
+      existingUser.id,
+    );
     return NextResponse.json(existingUser.investorProfile);
   } catch (error) {
     console.error("Error fetching investor profile:", error);
     return NextResponse.json(
       { error: "Failed to fetch investor profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -65,7 +68,7 @@ export async function POST(request: NextRequest) {
     console.log("User not logged in");
     return NextResponse.json(
       { error: "User not found. Please log in." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -103,7 +106,7 @@ export async function POST(request: NextRequest) {
       console.log("User profile not found with clerkId:", user.id);
       return NextResponse.json(
         { error: "User profile not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -143,7 +146,10 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    console.log("Investor profile updated successfully for user ID:", existingUser.id);
+    console.log(
+      "Investor profile updated successfully for user ID:",
+      existingUser.id,
+    );
     return NextResponse.json({
       message: "Investor profile updated successfully",
       investorProfile,
@@ -152,7 +158,7 @@ export async function POST(request: NextRequest) {
     console.error("Error updating investor profile:", error);
     return NextResponse.json(
       { error: "Failed to update investor profile" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

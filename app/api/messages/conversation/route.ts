@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   if (!user) {
     return NextResponse.json(
       { error: "User not authenticated." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     if (!dbUser) {
       return NextResponse.json(
         { error: "User not found in database." },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       include: {
         messages: {
           orderBy: {
-            sentAt: 'desc', // Get messages ordered by sentAt in descending order
+            sentAt: "desc", // Get messages ordered by sentAt in descending order
           },
           take: 1, // Only get the latest message
           include: {
@@ -64,7 +64,8 @@ export async function POST(request: Request) {
             },
           },
         },
-        participants: { // Include participant ids and names
+        participants: {
+          // Include participant ids and names
           select: {
             id: true, // Include participant id
             name: true, // Include participant name
@@ -74,18 +75,21 @@ export async function POST(request: Request) {
     });
 
     // Map the conversations to include the latest message and the user's name
-    const formattedConversations = conversations.map(conversation => ({
+    const formattedConversations = conversations.map((conversation) => ({
       conversationId: conversation.id,
       latestMessage: conversation.messages[0] || null, // Latest message or null if none
       participants: conversation.participants, // Include participants info
     }));
 
-    return NextResponse.json({ user: dbUser, conversations: formattedConversations });
+    return NextResponse.json({
+      user: dbUser,
+      conversations: formattedConversations,
+    });
   } catch (error) {
     console.error("Error fetching conversations:", error);
     return NextResponse.json(
       { error: "Failed to fetch conversations." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

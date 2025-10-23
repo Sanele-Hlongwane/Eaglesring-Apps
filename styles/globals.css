@@ -1,11 +1,10 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400; 
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
   font-style: normal;
 }
 .badge {
@@ -22,7 +21,8 @@ body {
 }
 
 @keyframes bounce-slow {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -63,30 +63,36 @@ body {
   animation: spin-slow 10s infinite linear;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Roboto', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Roboto", sans-serif;
   font-weight: 700;
 }
 
-code, pre {
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400; 
+code,
+pre {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
 }
 
 .clerk-wrapper {
-  border: 2px solid #0E78F9; 
-  padding: 20px; 
-  border-radius: 8px; 
+  border: 2px solid #0e78f9;
+  padding: 20px;
+  border-radius: 8px;
   background-color: black;
 }
 
 .invert-on-dark {
-transition: filter 0.3s ease;
+  transition: filter 0.3s ease;
 }
 
 /* Tailwind uses dark: to apply styles in dark mode */
 .dark .invert-on-dark {
-filter: invert(1);
+  filter: invert(1);
 }
 
 @keyframes spin {
@@ -113,40 +119,44 @@ filter: invert(1);
   }
 }
 
-
 /* Add this to your global CSS file or a specific module CSS file */
 @keyframes scroll-text {
-0% {
-  transform: translateX(100%);
-}
-100% {
-  transform: translateX(-100%);
-}
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .animated-text {
-position: absolute;
-white-space: nowrap;
-overflow: hidden;
-animation: scroll-text 15s linear infinite;
-background: linear-gradient(to left, transparent, rgba(255, 2, 2, 0.87), transparent);
+  position: absolute;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: scroll-text 15s linear infinite;
+  background: linear-gradient(
+    to left,
+    transparent,
+    rgba(255, 2, 2, 0.87),
+    transparent
+  );
 }
 
 .animate-scroll-text {
-display: flex;
-animation: scroll-text 30s linear infinite;
+  display: flex;
+  animation: scroll-text 30s linear infinite;
 }
 
 .overflow-hidden {
-overflow: hidden;
+  overflow: hidden;
 }
 
 .flex {
-display: flex;
+  display: flex;
 }
 
 .flex-shrink-0 {
-flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 @keyframes scrollFeatures {
@@ -163,17 +173,15 @@ flex-shrink: 0;
   animation: scrollFeatures 30s linear infinite;
 }
 
-
 /* styles/globals.css or a CSS module */
 .no-scroll {
   overflow: hidden;
 }
 
-
 @media (prefers-color-scheme: dark) {
   .Toastify__toast {
     background: black !important; /* Dark mode background */
-    color: #ddd !important; 
+    color: #ddd !important;
   }
 }
 
@@ -182,7 +190,9 @@ flex-shrink: 0;
   display: inline-block;
   padding: 0.5rem 1rem;
   color: #333;
-  transition: color 0.3s, border-bottom 0.3s;
+  transition:
+    color 0.3s,
+    border-bottom 0.3s;
 }
 
 .navbar-link:hover {
@@ -190,7 +200,7 @@ flex-shrink: 0;
 }
 
 .navbar-link::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   bottom: -2px;
@@ -201,16 +211,12 @@ flex-shrink: 0;
 }
 
 .navbar-link:hover::after {
-  background-color: #0070f3; 
+  background-color: #0070f3;
 }
 
 .navbar-link.active::after {
   background-color: #0070f3;
 }
-
-
-
-
 
 * {
   margin: 0;
@@ -320,7 +326,6 @@ flex-shrink: 0;
     width: 100%;
   }
 }
-
 
 /* global styles */
 .Toastify__toast {

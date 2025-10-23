@@ -1,11 +1,18 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { format } from 'date-fns';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import LoadingDots from './ui/LoadingDots';
-import { Button } from '@nextui-org/react';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { format } from "date-fns";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import LoadingDots from "./ui/LoadingDots";
+import { Button } from "@nextui-org/react";
 
 interface Notification {
   id: string;
@@ -16,24 +23,28 @@ interface Notification {
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([]);
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [startDate, setStartDate] = useState<string>('');
-  const [endDate, setEndDate] = useState<string>('');
+  const [filteredNotifications, setFilteredNotifications] = useState<
+    Notification[]
+  >([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [graphData, setGraphData] = useState<{ date: string; count: number }[]>([]);
+  const [graphData, setGraphData] = useState<{ date: string; count: number }[]>(
+    [],
+  );
 
   useEffect(() => {
     async function fetchNotifications() {
       setLoading(true);
       try {
-        const response = await axios.get('/api/get-notifications');
+        const response = await axios.get("/api/get-notifications");
         setNotifications(response.data.notifications);
         setFilteredNotifications(response.data.notifications);
         generateGraphData(response.data.notifications);
       } catch (err) {
-        setError('Failed to fetch notifications');
+        setError("Failed to fetch notifications");
       } finally {
         setLoading(false);
       }
@@ -43,13 +54,16 @@ export default function Notifications() {
 
   const generateGraphData = (notifications: Notification[]) => {
     const data: { [key: string]: number } = {};
-    
-    notifications.forEach(notification => {
-      const date = format(new Date(notification.createdAt), 'yyyy-MM-dd');
+
+    notifications.forEach((notification) => {
+      const date = format(new Date(notification.createdAt), "yyyy-MM-dd");
       data[date] = (data[date] || 0) + 1;
     });
 
-    const graphData = Object.entries(data).map(([date, count]) => ({ date, count }));
+    const graphData = Object.entries(data).map(([date, count]) => ({
+      date,
+      count,
+    }));
     setGraphData(graphData);
   };
 
@@ -57,20 +71,21 @@ export default function Notifications() {
     let filtered = notifications;
 
     if (searchTerm) {
-      filtered = filtered.filter(notification =>
-        notification.content.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter((notification) =>
+        notification.content.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
     if (startDate) {
-      filtered = filtered.filter(notification =>
-        new Date(notification.createdAt) >= new Date(startDate)
+      filtered = filtered.filter(
+        (notification) =>
+          new Date(notification.createdAt) >= new Date(startDate),
       );
     }
 
     if (endDate) {
-      filtered = filtered.filter(notification =>
-        new Date(notification.createdAt) <= new Date(endDate)
+      filtered = filtered.filter(
+        (notification) => new Date(notification.createdAt) <= new Date(endDate),
       );
     }
 
@@ -80,23 +95,28 @@ export default function Notifications() {
   const handleNotificationClick = async (id: string) => {
     // Immediately update the local state to reflect the change
     setFilteredNotifications((prev) =>
-      prev.map((notification) =>
-        notification.id === id ? { ...notification, read: true } : notification // Mark as read
-      )
+      prev.map(
+        (notification) =>
+          notification.id === id
+            ? { ...notification, read: true }
+            : notification, // Mark as read
+      ),
     );
-  
+
     try {
       await axios.post(`/api/mark-notification-read/${id}`);
     } catch (error) {
       console.error("Failed to mark notification as read:", error);
       setFilteredNotifications((prev) =>
-        prev.map((notification) =>
-          notification.id === id ? { ...notification, read: false } : notification // Revert on error
-        )
+        prev.map(
+          (notification) =>
+            notification.id === id
+              ? { ...notification, read: false }
+              : notification, // Revert on error
+        ),
       );
     }
   };
-  
 
   return (
     <div className="min-h-screen w-full p-0 m-0">
@@ -104,12 +124,17 @@ export default function Notifications() {
         <div className="p-6 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-800 text-gray-900 dark:text-white text-3xl font-semibold text-center">
           Notifications
         </div>
-  
+
         <div className="p-6">
           <div className="p-6 space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-transparent bg-opacity-20 backdrop-filter backdrop-blur-lg p-6 rounded-lg ">
               <div className="flex flex-col w-full sm:w-1/4">
-                <label htmlFor="start-date" className="text-sm font-bold dark:text-white mb-2">From</label>
+                <label
+                  htmlFor="start-date"
+                  className="text-sm font-bold dark:text-white mb-2"
+                >
+                  From
+                </label>
                 <input
                   id="start-date"
                   type="date"
@@ -120,7 +145,12 @@ export default function Notifications() {
               </div>
 
               <div className="flex flex-col w-full sm:w-1/4">
-                <label htmlFor="end-date" className="text-sm font-bold dark:text-white mb-2">To</label>
+                <label
+                  htmlFor="end-date"
+                  className="text-sm font-bold dark:text-white mb-2"
+                >
+                  To
+                </label>
                 <input
                   id="end-date"
                   type="date"
@@ -138,19 +168,29 @@ export default function Notifications() {
               </Button>
             </div>
           </div>
-  
+
           <div className="mt-6">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-200 mb-4">Notification Trends</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-200 mb-4">
+              Notification Trends
+            </h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={graphData}>
                 <XAxis dataKey="date" stroke="#A0AEC0" />
                 <YAxis stroke="#A0AEC0" />
-                <Tooltip 
-                  contentStyle={{ backgroundColor: '#2D3748', borderColor: '#4A5568' }} 
-                  labelStyle={{ color: '#EDF2F7' }} 
-                  itemStyle={{ color: '#BEE3F8' }} 
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#2D3748",
+                    borderColor: "#4A5568",
+                  }}
+                  labelStyle={{ color: "#EDF2F7" }}
+                  itemStyle={{ color: "#BEE3F8" }}
                 />
-                <Line type="monotone" dataKey="count" stroke="#4A5568" strokeWidth={2} />
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke="#4A5568"
+                  strokeWidth={2}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -161,7 +201,9 @@ export default function Notifications() {
                 <LoadingDots />
               </div>
             ) : error ? (
-              <p className="text-center text-xl font-bold text-red-500">{error}</p>
+              <p className="text-center text-xl font-bold text-red-500">
+                {error}
+              </p>
             ) : filteredNotifications.length > 0 ? (
               <ul className="space-y-4">
                 {filteredNotifications.map((notification) => (
@@ -169,8 +211,8 @@ export default function Notifications() {
                     key={notification.id}
                     className={`w-full text-left rounded-lg shadow-md p-4 border-l-4 ${
                       notification.read
-                        ? 'bg-gray-200 dark:bg-gray-800 border-gray-500'
-                        : 'bg-indigo-200 dark:bg-indigo-600 border-indigo-500'
+                        ? "bg-gray-200 dark:bg-gray-800 border-gray-500"
+                        : "bg-indigo-200 dark:bg-indigo-600 border-indigo-500"
                     }`}
                     onClick={() => handleNotificationClick(notification.id)}
                   >
@@ -178,7 +220,7 @@ export default function Notifications() {
                       {notification.content}
                     </p>
                     <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                      {format(new Date(notification.createdAt), 'PPPpp')}
+                      {format(new Date(notification.createdAt), "PPPpp")}
                     </p>
                   </button>
                 ))}
@@ -193,4 +235,4 @@ export default function Notifications() {
       </div>
     </div>
   );
-}  
+}

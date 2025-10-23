@@ -65,7 +65,6 @@ const AcceptedRequestsPage = () => {
             : request.receiver;
 
         return (
-          
           <div
             key={user.id}
             className="relative bg-gradient-to-r from-gray-300 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 shadow-xl transition-transform transform"

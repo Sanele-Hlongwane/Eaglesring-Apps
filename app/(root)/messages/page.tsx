@@ -47,7 +47,6 @@ const MessagesPage = () => {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [navVisible, setNavVisible] = useState(true);
   const [blockedUsers, setBlockedUsers] = useState([]);
-  
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,7 +58,7 @@ const MessagesPage = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
-    
+
     // Cleanup the event listener
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -82,14 +81,22 @@ const MessagesPage = () => {
       const response = await fetch("/api/messages/chats");
       if (!response.ok) throw new Error("Failed to fetch chats");
       const chatData = await response.json();
-      
-      const chatList: Chat[] = chatData.conversations.map((conversation: Conversation) => ({
-        id: conversation.id,
-        name: conversation.participants[0]?.name || "",
-        lastMessage: conversation.latestMessage ? conversation.latestMessage.content : "",
-        lastMessageTime: formatMessageTime(conversation.latestMessage?.sentAt || ""),
-        lastMessageStatus: conversation.latestMessage ? conversation.latestMessage.status : "SENT",
-      }));
+
+      const chatList: Chat[] = chatData.conversations.map(
+        (conversation: Conversation) => ({
+          id: conversation.id,
+          name: conversation.participants[0]?.name || "",
+          lastMessage: conversation.latestMessage
+            ? conversation.latestMessage.content
+            : "",
+          lastMessageTime: formatMessageTime(
+            conversation.latestMessage?.sentAt || "",
+          ),
+          lastMessageStatus: conversation.latestMessage
+            ? conversation.latestMessage.status
+            : "SENT",
+        }),
+      );
 
       setChats(chatList);
       setConversations(chatData.conversations);
@@ -119,7 +126,7 @@ const MessagesPage = () => {
 
       const messagesData: Message[] = await response.json();
       setActiveChat((prevChat) =>
-        prevChat ? { ...prevChat, messages: messagesData } : null
+        prevChat ? { ...prevChat, messages: messagesData } : null,
       );
     } catch (error) {
       console.error("Error fetching messages:", error);
@@ -130,21 +137,23 @@ const MessagesPage = () => {
     const now = new Date();
     const messageDate = new Date(time);
     const isToday = now.toDateString() === messageDate.toDateString();
-  
+
     if (isToday) {
       const hours = messageDate.getHours().toString().padStart(2, "0");
       const minutes = messageDate.getMinutes().toString().padStart(2, "0");
       return `Today at ${hours}:${minutes}`;
     }
-  
+
     // Format for dates that are not today
-    return messageDate.toLocaleDateString("en-GB", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    }) + ` at ${messageDate.getHours().toString().padStart(2, "0")}:${messageDate.getMinutes().toString().padStart(2, "0")}`;
+    return (
+      messageDate.toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      }) +
+      ` at ${messageDate.getHours().toString().padStart(2, "0")}:${messageDate.getMinutes().toString().padStart(2, "0")}`
+    );
   };
-  
 
   const handleSendMessage = async () => {
     if (!newMessage || !activeChat) return;
@@ -174,7 +183,7 @@ const MessagesPage = () => {
               };
             }
             return conversation;
-          })
+          }),
         );
         setNewMessage(""); // Clear the message input
       } else {
@@ -186,7 +195,7 @@ const MessagesPage = () => {
   };
 
   const handleChatClick = (chat: Chat) => {
-    const conversation = conversations.find(conv => conv.id === chat.id);
+    const conversation = conversations.find((conv) => conv.id === chat.id);
     if (conversation) {
       setActiveChat(conversation);
     }
@@ -202,14 +211,14 @@ const MessagesPage = () => {
     setShowNewChatList(false);
   };
 
-  
-  
   return (
     <div className="">
       <Navbar />
       <div className="relative flex flex-col md:flex-row h-screen dark:bg-gray-900">
         {/* Chat List */}
-        <div className={`w-full md:w-1/3 bg-gray-100 dark:bg-gray-800 p-4 border-r border-gray-300 dark:border-gray-700 ${activeChat ? "hidden md:block" : "block"}`}>
+        <div
+          className={`w-full md:w-1/3 bg-gray-100 dark:bg-gray-800 p-4 border-r border-gray-300 dark:border-gray-700 ${activeChat ? "hidden md:block" : "block"}`}
+        >
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold dark:text-gray-200">Chats</h2>
             <button
@@ -231,40 +240,52 @@ const MessagesPage = () => {
                     >
                       <div className="flex justify-between items-center">
                         <div>
-                          <div className="font-bold dark:text-gray-300">{chat.name}</div>
-                          <div className="text-sm text-gray-600 dark:text-gray-400">{chat.lastMessage}</div>
-                          <div className="text-xs text-gray-400 dark:text-gray-500">{chat.lastMessageTime}</div>
+                          <div className="font-bold dark:text-gray-300">
+                            {chat.name}
+                          </div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">
+                            {chat.lastMessage}
+                          </div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">
+                            {chat.lastMessageTime}
+                          </div>
                         </div>
                         <div className="text-gray-500 dark:text-gray-400">
                           {chat.lastMessageStatus === "SENT" && <FaCheck />}
-                          {chat.lastMessageStatus === "RECEIVED" && <FaCheckDouble />}
-                          {chat.lastMessageStatus === "READ" && <FaCheckDouble className="text-green-600 dark:text-green-500" />}  
+                          {chat.lastMessageStatus === "RECEIVED" && (
+                            <FaCheckDouble />
+                          )}
+                          {chat.lastMessageStatus === "READ" && (
+                            <FaCheckDouble className="text-green-600 dark:text-green-500" />
+                          )}
                         </div>
                       </div>
                     </button>
                   </li>
                 ))}
-            </ul>
-          ) : (
-            <ul>
-              {friends.map((friend) => (
-                <li key={friend.id} className="mb-2">
-                  <button
-                    type="button" // Specify the button type
-                    onClick={() => handleNewChatClick(friend)}
-                    className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
-                  >
-                    {friend.name}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+              </ul>
+            ) : (
+              <ul>
+                {friends.map((friend) => (
+                  <li key={friend.id} className="mb-2">
+                    <button
+                      type="button" // Specify the button type
+                      onClick={() => handleNewChatClick(friend)}
+                      className="w-full p-4 bg-white dark:bg-gray-700 rounded-lg shadow hover:bg-gray-200 dark:hover:bg-gray-600 text-left"
+                    >
+                      {friend.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
         {/* Chat Messages */}
-        <div className={`w-full md:w-2/3 flex flex-col ${activeChat ? "block" : "hidden md:block"}`}>
+        <div
+          className={`w-full md:w-2/3 flex flex-col ${activeChat ? "block" : "hidden md:block"}`}
+        >
           {activeChat ? (
             <>
               <div className="p-4 bg-gray-200 dark:bg-gray-800 border-b border-gray-300 dark:border-gray-700 flex items-center">
@@ -280,7 +301,9 @@ const MessagesPage = () => {
                   className="rounded-full mr-4"
                 />
                 <div>
-                  <h2 className="text-lg font-bold dark:text-gray-300">{activeChat.participants[0]?.name || ""}</h2>
+                  <h2 className="text-lg font-bold dark:text-gray-300">
+                    {activeChat.participants[0]?.name || ""}
+                  </h2>
                 </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4">
@@ -288,7 +311,9 @@ const MessagesPage = () => {
                   <div
                     key={message.id}
                     className={`flex items-end mb-4 ${
-                      message.senderId === activeChat.participants[0].id ? "justify-start" : "justify-end"
+                      message.senderId === activeChat.participants[0].id
+                        ? "justify-start"
+                        : "justify-end"
                     }`}
                   >
                     <div
@@ -303,9 +328,15 @@ const MessagesPage = () => {
                         <span>{formatMessageTime(message.sentAt)}</span>
                         {message.senderId !== activeChat.participants[0].id && (
                           <>
-                            {message.status === "SENT" && <FaCheck className="ml-2" />}
-                            {message.status === "RECEIVED" && <FaCheckDouble className="ml-2" />}
-                            {message.status === "READ" && <FaCheckDouble className="ml-2 text-green-600 dark:text-green-500" />}
+                            {message.status === "SENT" && (
+                              <FaCheck className="ml-2" />
+                            )}
+                            {message.status === "RECEIVED" && (
+                              <FaCheckDouble className="ml-2" />
+                            )}
+                            {message.status === "READ" && (
+                              <FaCheckDouble className="ml-2 text-green-600 dark:text-green-500" />
+                            )}
                           </>
                         )}
                       </div>
@@ -321,14 +352,19 @@ const MessagesPage = () => {
                   onChange={(e) => setNewMessage(e.target.value)}
                   className="flex-1 p-2 border border-gray-400 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 dark:text-white"
                 />
-                <button onClick={handleSendMessage} className="p-2 ml-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition">
+                <button
+                  onClick={handleSendMessage}
+                  className="p-2 ml-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"
+                >
                   <FaPaperPlane />
                 </button>
               </div>
             </>
           ) : (
             <div className="flex flex-col items-center justify-center h-full">
-              <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-300">Select a chat to start messaging</h2>
+              <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-300">
+                Select a chat to start messaging
+              </h2>
               <button
                 className="mt-4 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
                 onClick={() => setShowNewChatList(true)}

@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { currentUser } from '@clerk/nextjs/server';
-import sgMail from '@sendgrid/mail';
-import Stripe from 'stripe';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
+import sgMail from "@sendgrid/mail";
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-08-27.basil',
+  apiVersion: "2025-08-27.basil",
 });
 
 const prisma = new PrismaClient();
@@ -15,14 +15,20 @@ export async function POST(request: Request) {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: 'User not authenticated.' }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not authenticated." },
+      { status: 401 },
+    );
   }
 
   const { pitchId, amount, pitchTitle } = await request.json();
 
   // Validate input
   if (!pitchId || !amount) {
-    return NextResponse.json({ error: 'Pitch ID and amount are required' }, { status: 400 });
+    return NextResponse.json(
+      { error: "Pitch ID and amount are required" },
+      { status: 400 },
+    );
   }
 
   try {
@@ -34,7 +40,10 @@ export async function POST(request: Request) {
     });
 
     if (!dbUser) {
-      return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
+      return NextResponse.json(
+        { error: "User not found in database." },
+        { status: 404 },
+      );
     }
 
     // Fetch the pitch and its entrepreneur profile including user model
@@ -51,7 +60,7 @@ export async function POST(request: Request) {
     });
 
     if (!pitch) {
-      return NextResponse.json({ error: 'Pitch not found.' }, { status: 404 });
+      return NextResponse.json({ error: "Pitch not found." }, { status: 404 });
     }
 
     const entrepreneurProfile = pitch.entrepreneur;
@@ -66,8 +75,8 @@ export async function POST(request: Request) {
       investorProfile = await prisma.investorProfile.create({
         data: {
           userId: dbUser.id,
-          investmentStrategy: '',
-          linkedinUrl: '',
+          investmentStrategy: "",
+          linkedinUrl: "",
         },
       });
     }
@@ -113,7 +122,7 @@ export async function POST(request: Request) {
     let customerId = dbUser.stripeCustomerId;
 
     if (!customerId) {
-      const email = user.primaryEmailAddress?.emailAddress || '';
+      const email = user.primaryEmailAddress?.emailAddress || "";
 
       // Search for an existing Stripe customer using email
       const existingCustomers = await stripe.customers.list({
@@ -127,7 +136,7 @@ export async function POST(request: Request) {
         // Create a new Stripe customer
         const newCustomer = await stripe.customers.create({
           email: email,
-          name: user.fullName || '',
+          name: user.fullName || "",
           metadata: {
             clerkId: clerkId,
           },
@@ -144,23 +153,23 @@ export async function POST(request: Request) {
 
     // Create a new Checkout Session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
       line_items: [
         {
           price_data: {
-            currency: 'zar',
+            currency: "zar",
             product_data: {
               name: `Pitch: ${pitchTitle}`,
             },
-            unit_amount: amount,  // Stripe expects the amount in cents
+            unit_amount: amount, // Stripe expects the amount in cents
           },
           quantity: 1,
         },
       ],
-      mode: 'payment',
+      mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_URL}/invested`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL}/cancel`,
-      customer: customerId,  // Attach the customer to the session
+      customer: customerId, // Attach the customer to the session
       metadata: {
         pitchId: pitchId.toString(),
         pitchTitle: pitchTitle,
@@ -186,7 +195,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ id: session.id });
   } catch (error) {
-    console.error('Error creating checkout session:', error);
-    return NextResponse.json({ error: 'Failed to create checkout session' }, { status: 500 });
+    console.error("Error creating checkout session:", error);
+    return NextResponse.json(
+      { error: "Failed to create checkout session" },
+      { status: 500 },
+    );
   }
 }

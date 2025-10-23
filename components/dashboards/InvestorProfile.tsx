@@ -3,7 +3,14 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { FaLightbulb, FaLinkedin, FaBriefcase, FaShieldAlt, FaMoneyBillWave, FaEdit } from "react-icons/fa";
+import {
+  FaLightbulb,
+  FaLinkedin,
+  FaBriefcase,
+  FaShieldAlt,
+  FaMoneyBillWave,
+  FaEdit,
+} from "react-icons/fa";
 import Loader from "@/components/Loader";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/react";
@@ -55,20 +62,19 @@ export default function InvestorProfileCard() {
 
   const handleOutsideClick = (e: React.MouseEvent | React.KeyboardEvent) => {
     // For mouse click events
-    if ('clientX' in e) {
+    if ("clientX" in e) {
       console.log("Mouse click event triggered");
       // You can handle mouse event logic here (e.g., closing the modal)
       setIsPopupOpen(false);
     }
-  
+
     // For keyboard events (Enter or Space)
-    if ('key' in e && (e.key === 'Enter' || e.key === ' ')) {
+    if ("key" in e && (e.key === "Enter" || e.key === " ")) {
       console.log("Keyboard event triggered");
       // Handle keyboard event logic here (e.g., closing the modal)
       setIsPopupOpen(false);
     }
   };
-  
 
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
@@ -94,7 +100,9 @@ export default function InvestorProfileCard() {
             onClick={(e) => handleOutsideClick(e)}
             role="button"
             tabIndex={0}
-            onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && handleOutsideClick(e)}
+            onKeyPress={(e) =>
+              (e.key === "Enter" || e.key === " ") && handleOutsideClick(e)
+            }
           >
             <div className="relative">
               <img
@@ -133,7 +141,9 @@ export default function InvestorProfileCard() {
           <div className="flex items-center bg-gray-200 dark:bg-gray-700 p-4 rounded-lg ">
             <FaLinkedin className="text-blue-600 mr-3 w-8 h-8" />
             <div>
-              <p className="font-semibold text-gray-700 dark:text-gray-300">LinkedIn:</p>
+              <p className="font-semibold text-gray-700 dark:text-gray-300">
+                LinkedIn:
+              </p>
               <a
                 href={profile?.linkedinUrl || "#"}
                 target="_blank"
@@ -148,7 +158,9 @@ export default function InvestorProfileCard() {
           <div className="flex items-center bg-gray-200 dark:bg-gray-700 p-4 rounded-lg ">
             <FaBriefcase className="text-blue-600 mr-3 w-8 h-8" />
             <div>
-              <p className="font-semibold text-gray-700 dark:text-gray-300">Preferred Industries:</p>
+              <p className="font-semibold text-gray-700 dark:text-gray-300">
+                Preferred Industries:
+              </p>
               <p className="text-gray-600 dark:text-gray-400">
                 {profile?.preferredIndustries.length
                   ? profile.preferredIndustries.join(", ")
@@ -160,7 +172,9 @@ export default function InvestorProfileCard() {
           <div className="flex items-center bg-gray-200 dark:bg-gray-700 p-4 rounded-lg ">
             <FaShieldAlt className="text-blue-600 mr-3 w-8 h-8" />
             <div>
-              <p className="font-semibold text-gray-700 dark:text-gray-300">Risk Tolerance:</p>
+              <p className="font-semibold text-gray-700 dark:text-gray-300">
+                Risk Tolerance:
+              </p>
               <p className="text-gray-600 dark:text-gray-400">
                 {profile?.riskTolerance || "Not specified"}
               </p>
@@ -170,10 +184,14 @@ export default function InvestorProfileCard() {
           <div className="flex items-center bg-gray-200 dark:bg-gray-700 p-4 rounded-lg ">
             <FaMoneyBillWave className="text-blue-600 mr-3 w-8 h-8" />
             <div>
-              <p className="font-semibold text-gray-700 dark:text-gray-300">Investment Amount Range:</p>
+              <p className="font-semibold text-gray-700 dark:text-gray-300">
+                Investment Amount Range:
+              </p>
               <p className="text-gray-600 dark:text-gray-400">
                 {profile?.investmentAmountRange.length
-                  ? profile.investmentAmountRange.map(amount => formatAmount(amount)).join(" - ")
+                  ? profile.investmentAmountRange
+                      .map((amount) => formatAmount(amount))
+                      .join(" - ")
                   : "Not specified"}
               </p>
             </div>

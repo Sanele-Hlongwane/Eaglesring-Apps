@@ -1,5 +1,5 @@
 // components/UpcomingEvents.tsx
-import { Card } from '@nextui-org/react';
+import { Card } from "@nextui-org/react";
 
 interface Event {
   id: number;
@@ -14,11 +14,7 @@ const UpcomingEvents: React.FC = () => {
     // Add more events as needed
   ];
 
-  return (
-    <Card>
-      
-    </Card>
-  );
+  return <Card></Card>;
 };
 
 export default UpcomingEvents;

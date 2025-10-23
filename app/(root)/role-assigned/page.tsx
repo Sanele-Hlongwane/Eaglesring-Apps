@@ -39,7 +39,8 @@ export default function SuccessPage() {
           </h1>
         </div>
         <p className="text-gray-600 dark:text-gray-300 text-center text-lg">
-          Your role has been successfully assigned. You will be redirected shortly.
+          Your role has been successfully assigned. You will be redirected
+          shortly.
         </p>
       </div>
     </div>

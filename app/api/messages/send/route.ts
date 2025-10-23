@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   if (!user) {
     return NextResponse.json(
       { error: "User not authenticated." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     if (!receiverId || !content) {
       return NextResponse.json(
         { error: "Invalid input data." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     if (!dbUser) {
       return NextResponse.json(
         { error: "User not found in database." },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -54,10 +54,7 @@ export async function POST(request: Request) {
       conversation = await prisma.conversation.create({
         data: {
           participants: {
-            connect: [
-              { id: dbUser.id },
-              { id: receiverId },
-            ],
+            connect: [{ id: dbUser.id }, { id: receiverId }],
           },
         },
         include: {
@@ -85,7 +82,6 @@ export async function POST(request: Request) {
       },
     });
 
-
     // Get the receiver's email to send the email notification
     const receiverUser = await prisma.user.findUnique({
       where: { id: receiverId },
@@ -109,7 +105,7 @@ export async function POST(request: Request) {
     console.error("Error sending message:", error);
     return NextResponse.json(
       { error: "Unable to send message." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

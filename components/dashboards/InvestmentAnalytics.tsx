@@ -1,11 +1,13 @@
 // components/InvestmentAnalytics.tsx
-import React from 'react';
+import React from "react";
 
 interface InvestmentAnalyticsProps {
   analytics: any; // Define the structure of your analytics data here
 }
 
-const InvestmentAnalytics: React.FC<InvestmentAnalyticsProps> = ({ analytics }) => {
+const InvestmentAnalytics: React.FC<InvestmentAnalyticsProps> = ({
+  analytics,
+}) => {
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-bold mb-4">Investment Analytics</h2>

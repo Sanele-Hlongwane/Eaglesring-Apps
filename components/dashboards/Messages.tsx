@@ -1,4 +1,4 @@
-import { Investment, Feedback, Interest, Notification } from '@prisma/client';
+import { Investment, Feedback, Interest, Notification } from "@prisma/client";
 
 interface InvestmentOverviewProps {
   investments: Investment[];
@@ -7,7 +7,12 @@ interface InvestmentOverviewProps {
   notifications: Notification[];
 }
 
-const InvestmentOverview: React.FC<InvestmentOverviewProps> = ({ investments, feedbacks, interests, notifications }) => {
+const InvestmentOverview: React.FC<InvestmentOverviewProps> = ({
+  investments,
+  feedbacks,
+  interests,
+  notifications,
+}) => {
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Investment Overview</h2>
@@ -47,7 +52,10 @@ const InvestmentOverview: React.FC<InvestmentOverviewProps> = ({ investments, fe
             <li key={interest.id} className="mb-2">
               <div className="flex flex-col">
                 <p className="font-medium">Pitch ID: {interest.pitchId}</p>
-                <p>Interested since: {new Date(interest.createdAt).toLocaleDateString()}</p>
+                <p>
+                  Interested since:{" "}
+                  {new Date(interest.createdAt).toLocaleDateString()}
+                </p>
               </div>
             </li>
           ))}
@@ -61,7 +69,10 @@ const InvestmentOverview: React.FC<InvestmentOverviewProps> = ({ investments, fe
             <li key={notification.id} className="mb-2">
               <div className="flex flex-col">
                 <p className="font-medium">Content: {notification.content}</p>
-                <p className="text-sm text-gray-500">Created at: {new Date(notification.createdAt).toLocaleDateString()}</p>
+                <p className="text-sm text-gray-500">
+                  Created at:{" "}
+                  {new Date(notification.createdAt).toLocaleDateString()}
+                </p>
               </div>
             </li>
           ))}

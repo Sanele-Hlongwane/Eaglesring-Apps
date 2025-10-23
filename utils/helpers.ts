@@ -1,17 +1,17 @@
-'use server';
+"use server";
 
-import { clerkClient, currentUser } from '@clerk/nextjs/server';
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 
-import Stripe from 'stripe';
+import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2024-06-20',
+  apiVersion: "2024-06-20",
 });
 
 export async function AddFreeCredits() {
   const user = await currentUser();
 
   if (!user) {
-    return { success: false, error: 'You need to sign in first.' };
+    return { success: false, error: "You need to sign in first." };
   }
 
   await clerkClient.users.updateUserMetadata(user.id, {
@@ -28,13 +28,13 @@ type LineItem = Stripe.Checkout.SessionCreateParams.LineItem;
 export async function createStripeCheckoutSession(lineItems: LineItem[]) {
   const user = await currentUser();
   if (!user) {
-    return { sessionId: null, checkoutError: 'You need to sign in first.' };
+    return { sessionId: null, checkoutError: "You need to sign in first." };
   }
 
   const origin = process.env.NEXT_PUBLIC_SITE_URL as string;
 
   const session = await stripe.checkout.sessions.create({
-    mode: 'subscription',
+    mode: "subscription",
     line_items: lineItems,
     success_url: `${origin}/checkout?sessionId={CHECKOUT_SESSION_ID}`,
     cancel_url: origin,
@@ -46,16 +46,16 @@ export async function createStripeCheckoutSession(lineItems: LineItem[]) {
 
 export async function retrieveStripeCheckoutSession(sessionId: string) {
   if (!sessionId) {
-    return { success: false, error: 'No session ID provided.' };
+    return { success: false, error: "No session ID provided." };
   }
 
   const user = await currentUser();
   if (!user) {
-    return { success: false, error: 'You need to sign in first.' };
+    return { success: false, error: "You need to sign in first." };
   }
 
   const previousCheckoutSessionIds = Array.isArray(
-    user.publicMetadata.checkoutSessionIds
+    user.publicMetadata.checkoutSessionIds,
   )
     ? user.publicMetadata.checkoutSessionIds
     : [];
@@ -68,7 +68,7 @@ export async function retrieveStripeCheckoutSession(sessionId: string) {
   }
 
   const session = await stripe.checkout.sessions.retrieve(sessionId, {
-    expand: ['subscription'],
+    expand: ["subscription"],
   });
 
   await clerkClient.users.updateUserMetadata(user.id, {
@@ -77,11 +77,11 @@ export async function retrieveStripeCheckoutSession(sessionId: string) {
       checkoutSessionIds: [...previousCheckoutSessionIds, sessionId],
       stripeCustomerId: session.customer,
       stripeSubscriptionId:
-        typeof session.subscription === 'string'
+        typeof session.subscription === "string"
           ? session.subscription
           : session.subscription?.id,
       stripeCurrentPeriodEnd:
-        typeof session.subscription === 'string'
+        typeof session.subscription === "string"
           ? undefined
           : session.subscription?.current_period_end,
     },
@@ -90,34 +90,28 @@ export async function retrieveStripeCheckoutSession(sessionId: string) {
   return { success: true, error: null };
 }
 
-export const getURL = (path: string = '') => {
+export const getURL = (path: string = "") => {
   let url =
     process?.env?.NEXT_PUBLIC_SITE_URL &&
-    process.env.NEXT_PUBLIC_SITE_URL.trim() !== ''
+    process.env.NEXT_PUBLIC_SITE_URL.trim() !== ""
       ? process.env.NEXT_PUBLIC_SITE_URL
       : process?.env?.NEXT_PUBLIC_VERCEL_URL &&
-        process.env.NEXT_PUBLIC_VERCEL_URL.trim() !== ''
-      ? process.env.NEXT_PUBLIC_VERCEL_URL
-      : 'http://localhost:3000/';
+          process.env.NEXT_PUBLIC_VERCEL_URL.trim() !== ""
+        ? process.env.NEXT_PUBLIC_VERCEL_URL
+        : "http://localhost:3000/";
 
-  url = url.replace(/\/+$/, '');
-  url = url.includes('http') ? url : `https://${url}`;
-  path = path.replace(/^\/+/, '');
+  url = url.replace(/\/+$/, "");
+  url = url.includes("http") ? url : `https://${url}`;
+  path = path.replace(/^\/+/, "");
 
   return path ? `${url}/${path}` : url;
 };
 
-export const postData = async ({
-  url,
-  data,
-}: {
-  url: string;
-  data?: any;
-}) => {
+export const postData = async ({ url, data }: { url: string; data?: any }) => {
   const res = await fetch(url, {
-    method: 'POST',
-    headers: new Headers({ 'Content-Type': 'application/json' }),
-    credentials: 'same-origin',
+    method: "POST",
+    headers: new Headers({ "Content-Type": "application/json" }),
+    credentials: "same-origin",
     body: JSON.stringify(data),
   });
 
@@ -131,7 +125,7 @@ export const toDateTime = (secs: number) => {
 };
 
 export const calculateTrialEndUnixTimestamp = (
-  trialPeriodDays: number | null | undefined
+  trialPeriodDays: number | null | undefined,
 ) => {
   if (
     trialPeriodDays === null ||
@@ -143,23 +137,23 @@ export const calculateTrialEndUnixTimestamp = (
 
   const currentDate = new Date();
   const trialEnd = new Date(
-    currentDate.getTime() + (trialPeriodDays + 1) * 24 * 60 * 60 * 1000
+    currentDate.getTime() + (trialPeriodDays + 1) * 24 * 60 * 60 * 1000,
   );
   return Math.floor(trialEnd.getTime() / 1000);
 };
 
 const toastKeyMap: { [key: string]: string[] } = {
-  status: ['status', 'status_description'],
-  error: ['error', 'error_description'],
+  status: ["status", "status_description"],
+  error: ["error", "error_description"],
 };
 
 const getToastRedirect = (
   path: string,
   toastType: string,
   toastName: string,
-  toastDescription: string = '',
+  toastDescription: string = "",
   disableButton: boolean = false,
-  arbitraryParams: string = ''
+  arbitraryParams: string = "",
 ): string => {
   const [nameKey, descriptionKey] = toastKeyMap[toastType];
 
@@ -167,7 +161,7 @@ const getToastRedirect = (
 
   if (toastDescription) {
     redirectPath += `&${descriptionKey}=${encodeURIComponent(
-      toastDescription
+      toastDescription,
     )}`;
   }
 
@@ -185,31 +179,31 @@ const getToastRedirect = (
 export const getStatusRedirect = (
   path: string,
   statusName: string,
-  statusDescription: string = '',
+  statusDescription: string = "",
   disableButton: boolean = false,
-  arbitraryParams: string = ''
+  arbitraryParams: string = "",
 ) =>
   getToastRedirect(
     path,
-    'status',
+    "status",
     statusName,
     statusDescription,
     disableButton,
-    arbitraryParams
+    arbitraryParams,
   );
 
 export const getErrorRedirect = (
   path: string,
   errorName: string,
-  errorDescription: string = '',
+  errorDescription: string = "",
   disableButton: boolean = false,
-  arbitraryParams: string = ''
+  arbitraryParams: string = "",
 ) =>
   getToastRedirect(
     path,
-    'error',
+    "error",
     errorName,
     errorDescription,
     disableButton,
-    arbitraryParams
+    arbitraryParams,
   );

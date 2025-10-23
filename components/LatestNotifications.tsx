@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // Define the structure of a Notification
 interface Notification {
@@ -15,7 +15,7 @@ const LatestNotifications: React.FC = () => {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      const response = await fetch('/api/get-notifications');
+      const response = await fetch("/api/get-notifications");
       const data = await response.json();
       setNotifications(data.notifications.slice(0, 5)); // Get only the latest 5 notifications
     };
@@ -31,19 +31,26 @@ const LatestNotifications: React.FC = () => {
       <div className="max-h-32 overflow-y-auto ">
         {notifications.length > 0 ? (
           notifications.map((notification) => (
-            <div key={notification.id} className="p-2 border-b border-gray-600 dark:border-gray-400">
-              <p className="text-gray-700 dark:text-gray-300">{notification.content}</p>
+            <div
+              key={notification.id}
+              className="p-2 border-b border-gray-600 dark:border-gray-400"
+            >
+              <p className="text-gray-700 dark:text-gray-300">
+                {notification.content}
+              </p>
               <span className="text-xs text-gray-500 dark:text-gray-400">
                 {new Date(notification.createdAt).toLocaleString()}
               </span>
             </div>
           ))
         ) : (
-          <p className="text-gray-500 dark:text-gray-400">No notifications available.</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            No notifications available.
+          </p>
         )}
       </div>
       <button
-        onClick={() => router.push('/notifications')}
+        onClick={() => router.push("/notifications")}
         className="mt-2 text-blue-600 dark:text-blue-400 hover:underline"
       >
         View All

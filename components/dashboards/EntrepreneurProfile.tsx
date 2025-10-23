@@ -4,7 +4,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { FaUser, FaBuilding, FaRocket, FaDollarSign, FaMoneyBillWave } from "react-icons/fa";
+import {
+  FaUser,
+  FaBuilding,
+  FaRocket,
+  FaDollarSign,
+  FaMoneyBillWave,
+} from "react-icons/fa";
 
 interface EntrepreneurProfile {
   id: number;
@@ -26,7 +32,9 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
 }) => {
   const { user } = useUser();
   const router = useRouter();
-  const [formData, setFormData] = useState<EntrepreneurProfile>(data || { id: 0 });
+  const [formData, setFormData] = useState<EntrepreneurProfile>(
+    data || { id: 0 },
+  );
   const [isPopupOpen, setIsPopupOpen] = useState(false); // For image popup
 
   useEffect(() => {
@@ -68,7 +76,10 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
     <div className="w-full mx-auto p-1 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-lg">
       <div className="flex items-center mb-4">
         {user?.imageUrl && (
-          <button onClick={() => setIsPopupOpen(true)} className="focus:outline-none">
+          <button
+            onClick={() => setIsPopupOpen(true)}
+            className="focus:outline-none"
+          >
             <img
               src={user.imageUrl}
               alt="Profile"
@@ -107,18 +118,24 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
       )}
 
       <div className="mb-6">
-        <p className="text-xs text-gray-800 dark:text-gray-300 mt-2">{data?.bio || "N/A"}</p>
+        <p className="text-xs text-gray-800 dark:text-gray-300 mt-2">
+          {data?.bio || "N/A"}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
         <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label htmlFor="company" className="block text-lg font-semibold mr-4">Company:</label>
+          <label htmlFor="company" className="block text-lg font-semibold mr-4">
+            Company:
+          </label>
           <FaBuilding className="text-blue-500 mr-2" />
           <span id="company">{data?.company || "N/A"}</span>
         </div>
 
         <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label htmlFor="revenue" className="block text-lg font-semibold mr-4">Annual Revenue:</label>
+          <label htmlFor="revenue" className="block text-lg font-semibold mr-4">
+            Annual Revenue:
+          </label>
           <FaMoneyBillWave className="text-green-500 mr-2" />
           <span id="revenue">
             {new Intl.NumberFormat("en-ZA", {
@@ -129,9 +146,16 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
         </div>
 
         <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label htmlFor="businessStage" className="block text-lg font-semibold mr-4">Stage:</label>
+          <label
+            htmlFor="businessStage"
+            className="block text-lg font-semibold mr-4"
+          >
+            Stage:
+          </label>
           <FaRocket className="text-blue-500 mr-2" />
-          <span id="businessStage" className="text-green-600">{data?.businessStage || "N/A"}</span>
+          <span id="businessStage" className="text-green-600">
+            {data?.businessStage || "N/A"}
+          </span>
         </div>
       </div>
 

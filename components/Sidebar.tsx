@@ -1,8 +1,8 @@
-'use client';
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { sidebarLinks } from '@/constants';
+import { sidebarLinks } from "@/constants";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ export const Tab: React.FC<TabProps> = ({ label, route, imgURL, onClick }) => {
         {
           "bg-primary": isActive,
           "hover:bg-gray-700": !isActive,
-        }
+        },
       )}
       role="button"
       tabIndex={0}
@@ -76,9 +76,10 @@ const SideNav = () => {
         className={cn(
           "fixed top-0 left-0 h-full bg-gray-900 text-white pt-5 select-none transition-transform duration-300 z-40",
           {
-            "w-[185px] md:w-[210px] lg:w-[250px] xl:w-[260px] translate-x-0": isOpen,
+            "w-[185px] md:w-[210px] lg:w-[250px] xl:w-[260px] translate-x-0":
+              isOpen,
             "w-0 md:w-0 lg:w-0 xl:w-0 -translate-x-full": !isOpen,
-          }
+          },
         )}
         role="navigation"
       >
@@ -134,7 +135,7 @@ const SideNav = () => {
           {
             "opacity-100": !isOpen,
             "opacity-0": isOpen,
-          }
+          },
         )}
         onClick={toggleSideNav}
       >

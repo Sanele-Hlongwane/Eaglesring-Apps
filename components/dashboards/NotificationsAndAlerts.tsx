@@ -1,10 +1,12 @@
-import React from 'react';
+import React from "react";
 
 interface NotificationsAlertsProps {
-  alerts: any; 
+  alerts: any;
 }
 
-const NotificationsAlerts: React.FC<NotificationsAlertsProps> = ({ alerts }) => {
+const NotificationsAlerts: React.FC<NotificationsAlertsProps> = ({
+  alerts,
+}) => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Notifications & Alerts</h2>

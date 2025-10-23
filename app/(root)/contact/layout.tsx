@@ -13,7 +13,7 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
   return (
     <main className="">
       <Navbar />
-        <div className=" m-5">{children}</div>
+      <div className=" m-5">{children}</div>
       <Footer />
     </main>
   );

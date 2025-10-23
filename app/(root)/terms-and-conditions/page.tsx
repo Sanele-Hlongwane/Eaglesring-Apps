@@ -40,8 +40,8 @@ const TermsAndConditions = () => {
               international law or regulation.
             </li>
             <li>
-              For the purpose of exploiting, harming, scamming or attempting to exploit
-              or harm minors in any way.
+              For the purpose of exploiting, harming, scamming or attempting to
+              exploit or harm minors in any way.
             </li>
             <li>
               To transmit, or procure the sending of, any advertising or

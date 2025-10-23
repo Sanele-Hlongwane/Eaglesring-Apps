@@ -62,10 +62,16 @@ const UserBlocker: React.FC<UserBlockerProps> = ({ userId }) => {
         className="border rounded p-2 mb-4 w-full"
       />
       <div className="flex justify-between">
-        <button onClick={blockUser} className="bg-red-500 text-white rounded p-2 hover:bg-red-600">
+        <button
+          onClick={blockUser}
+          className="bg-red-500 text-white rounded p-2 hover:bg-red-600"
+        >
           Block User
         </button>
-        <button onClick={unblockUser} className="bg-green-500 text-white rounded p-2 hover:bg-green-600">
+        <button
+          onClick={unblockUser}
+          className="bg-green-500 text-white rounded p-2 hover:bg-green-600"
+        >
           Unblock User
         </button>
       </div>

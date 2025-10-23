@@ -14,9 +14,9 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
         <SignedOut>
           <div className="flex justify-center items-center min-h-screen">
             <SignInButton mode="modal">
-            <button className="bg-white text-black dark:bg-black dark:text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:bg-gold-600 transition duration-200 ease-in-out">
-              Sign in to access your messages
-            </button>
+              <button className="bg-white text-black dark:bg-black dark:text-white font-bold px-6 py-3 rounded-lg shadow-lg hover:bg-gold-600 transition duration-200 ease-in-out">
+                Sign in to access your messages
+              </button>
             </SignInButton>
           </div>
         </SignedOut>

@@ -1,6 +1,6 @@
 // src/components/dashboards/Pitches.tsx
 
-import React from 'react';
+import React from "react";
 
 const Pitches: React.FC = () => {
   return (

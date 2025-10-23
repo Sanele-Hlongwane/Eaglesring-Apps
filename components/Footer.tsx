@@ -1,23 +1,28 @@
 "use client";
 
 import { Link } from "@nextui-org/link";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaTwitter,
+  FaLinkedinIn,
+  FaInstagram,
+} from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "react-toastify";
 
 export const Footer = () => {
-
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { user } = useUser();
   const [loading, setLoading] = useState<boolean>(true);
-
 
   useEffect(() => {
     const fetchCurrentPlan = async () => {
       if (user?.primaryEmailAddress?.emailAddress) {
         try {
-          const response = await fetch(`/api/current-subscription?email=${encodeURIComponent(user.primaryEmailAddress.emailAddress)}`);
+          const response = await fetch(
+            `/api/current-subscription?email=${encodeURIComponent(user.primaryEmailAddress.emailAddress)}`,
+          );
           const data = await response.json();
 
           if (response.ok) {
@@ -25,7 +30,10 @@ export const Footer = () => {
               console.log(data.currentPlan);
             }
           } else {
-            toast.error(data.message || "An error occurred while fetching the subscription plan.");
+            toast.error(
+              data.message ||
+                "An error occurred while fetching the subscription plan.",
+            );
           }
         } catch (error) {
           console.error("Error fetching current plan:", error);
@@ -64,33 +72,86 @@ export const Footer = () => {
                 className="flex items-center gap-1 text-current"
                 title="ICRD Group Holdings landing page"
               >
-                <span className="text-amber-700 dark:text-blue-300">Powered by</span>
-                <p className="text-amber-700 dark:text-amber-400 font-bold text-xl">ICRD Group Holdings</p>
+                <span className="text-amber-700 dark:text-blue-300">
+                  Powered by
+                </span>
+                <p className="text-amber-700 dark:text-amber-400 font-bold text-xl">
+                  ICRD Group Holdings
+                </p>
               </Link>
               <p className="mt-2 text-sm text-center">
-                Connecting entrepreneurs with world-class investors to create a brighter future.
+                Connecting entrepreneurs with world-class investors to create a
+                brighter future.
               </p>
             </div>
 
             <div className="flex flex-wrap justify-center text-sm gap-6 mb-6">
-              <Link href="/contact" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Contact</Link>
-              <Link href="/pricing" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Pricing</Link>
-              <Link href="/faqs" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">FAQs</Link>
-              <Link href="/features" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Features</Link>
+              <Link
+                href="/contact"
+                className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+              >
+                Contact
+              </Link>
+              <Link
+                href="/pricing"
+                className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/faqs"
+                className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+              >
+                FAQs
+              </Link>
+              <Link
+                href="/features"
+                className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+              >
+                Features
+              </Link>
             </div>
 
             <div className="flex gap-4 mb-6">
-              <Link aria-label="Facebook" href="https://www.facebook.com/eaglesring" isExternal>
-                <FaFacebookF size={24} className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors" />
+              <Link
+                aria-label="Facebook"
+                href="https://www.facebook.com/eaglesring"
+                isExternal
+              >
+                <FaFacebookF
+                  size={24}
+                  className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                />
               </Link>
-              <Link aria-label="Twitter" href="https://twitter.com/eaglesring" isExternal>
-                <FaTwitter size={24} className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors" />
+              <Link
+                aria-label="Twitter"
+                href="https://twitter.com/eaglesring"
+                isExternal
+              >
+                <FaTwitter
+                  size={24}
+                  className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                />
               </Link>
-              <Link aria-label="LinkedIn" href="https://www.linkedin.com/company/eaglesring" isExternal>
-                <FaLinkedinIn size={24} className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors" />
+              <Link
+                aria-label="LinkedIn"
+                href="https://www.linkedin.com/company/eaglesring"
+                isExternal
+              >
+                <FaLinkedinIn
+                  size={24}
+                  className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                />
               </Link>
-              <Link aria-label="Instagram" href="https://www.instagram.com/eaglesring" isExternal>
-                <FaInstagram size={24} className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors" />
+              <Link
+                aria-label="Instagram"
+                href="https://www.instagram.com/eaglesring"
+                isExternal
+              >
+                <FaInstagram
+                  size={24}
+                  className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                />
               </Link>
             </div>
           </div>
@@ -104,41 +165,108 @@ export const Footer = () => {
                 title="ICRD Group Holdings landing page"
               >
                 <span className="text-black dark:text-white">Powered by</span>
-                <p className="text-amber-500 dark:text-amber-400 font-bold text-xl">ICRD Group Holdings</p>
+                <p className="text-amber-500 dark:text-amber-400 font-bold text-xl">
+                  ICRD Group Holdings
+                </p>
               </Link>
               <p className="mb-4">
-                Connecting entrepreneurs with world-class investors to create a brighter future.
+                Connecting entrepreneurs with world-class investors to create a
+                brighter future.
               </p>
             </div>
 
             <div className="flex flex-col items-start">
               <p className="text-sm font-semibold mb-4">Quick Links</p>
               <div className="grid grid-cols-2 gap-x-6 gap-y-2 border-t text-sm border-gray-300 dark:border-gray-600 pt-4">
-                <Link href="/contact" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Contact</Link>
-                <Link href="/pricing" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Pricing</Link>
-                <Link href="/faqs" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">FAQs</Link>
-                <Link href="/features" className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors">Features</Link>
+                <Link
+                  href="/contact"
+                  className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                >
+                  Contact
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                >
+                  Pricing
+                </Link>
+                <Link
+                  href="/faqs"
+                  className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                >
+                  FAQs
+                </Link>
+                <Link
+                  href="/features"
+                  className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                >
+                  Features
+                </Link>
               </div>
             </div>
             <div className="flex flex-col items-start">
               <p className="text-lg font-semibold mb-2">Follow Us</p>
               <div className="flex gap-4 mb-4">
-                <Link aria-label="Facebook" href="https://www.facebook.com/eaglesring" isExternal>
-                  <FaFacebookF size={24} className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors" />
+                <Link
+                  aria-label="Facebook"
+                  href="https://www.facebook.com/eaglesring"
+                  isExternal
+                >
+                  <FaFacebookF
+                    size={24}
+                    className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                  />
                 </Link>
-                <Link aria-label="Twitter" href="https://twitter.com/eaglesring" isExternal>
-                  <FaTwitter size={24} className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors" />
+                <Link
+                  aria-label="Twitter"
+                  href="https://twitter.com/eaglesring"
+                  isExternal
+                >
+                  <FaTwitter
+                    size={24}
+                    className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                  />
                 </Link>
-                <Link aria-label="LinkedIn" href="https://www.linkedin.com/company/eaglesring" isExternal>
-                  <FaLinkedinIn size={24} className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors" />
+                <Link
+                  aria-label="LinkedIn"
+                  href="https://www.linkedin.com/company/eaglesring"
+                  isExternal
+                >
+                  <FaLinkedinIn
+                    size={24}
+                    className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                  />
                 </Link>
-                <Link aria-label="Instagram" href="https://www.instagram.com/eaglesring" isExternal>
-                  <FaInstagram size={24} className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors" />
+                <Link
+                  aria-label="Instagram"
+                  href="https://www.instagram.com/eaglesring"
+                  isExternal
+                >
+                  <FaInstagram
+                    size={24}
+                    className="hover:text-amber-400 dark:hover:text-amber-300 transition-colors"
+                  />
                 </Link>
               </div>
               <div className="text-gray-800 dark:text-gray-300 text-sm">
-                <p>Email: <a href="mailto:support@eaglesring.com" className="text-amber-800 dark:text-amber-300 hover:underline">support@eaglesring.com</a></p>
-                <p>Phone: <a href="tel:+1234567890" className="text-amber-800 dark:text-amber-300 hover:underline">+1 (234) 567-890</a></p>
+                <p>
+                  Email:{" "}
+                  <a
+                    href="mailto:support@eaglesring.com"
+                    className="text-amber-800 dark:text-amber-300 hover:underline"
+                  >
+                    support@eaglesring.com
+                  </a>
+                </p>
+                <p>
+                  Phone:{" "}
+                  <a
+                    href="tel:+1234567890"
+                    className="text-amber-800 dark:text-amber-300 hover:underline"
+                  >
+                    +1 (234) 567-890
+                  </a>
+                </p>
               </div>
             </div>
           </div>
@@ -149,9 +277,24 @@ export const Footer = () => {
             © {new Date().getFullYear()} Eagles Ring. All rights reserved.
           </p>
           <div className="flex gap-4 text-gray-700 dark:text-gray-300 text-xs">
-            <Link href="/privacy-policy" className="hover:text-gray-500 dark:hover:text-gray-500 transition-colors text-gray-800 dark:text-gray-300 text-sm">Privacy</Link>
-            <Link href="/terms-and-conditions" className="hover:text-gray-500 dark:hover:text-gray-500 transition-colors text-gray-800 dark:text-gray-300 text-sm">Terms</Link>
-            <Link href="/about" className="hover:text-gray-500 dark:hover:text-gray-500 transition-colors text-gray-800 dark:text-gray-300 text-sm">About</Link>
+            <Link
+              href="/privacy-policy"
+              className="hover:text-gray-500 dark:hover:text-gray-500 transition-colors text-gray-800 dark:text-gray-300 text-sm"
+            >
+              Privacy
+            </Link>
+            <Link
+              href="/terms-and-conditions"
+              className="hover:text-gray-500 dark:hover:text-gray-500 transition-colors text-gray-800 dark:text-gray-300 text-sm"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/about"
+              className="hover:text-gray-500 dark:hover:text-gray-500 transition-colors text-gray-800 dark:text-gray-300 text-sm"
+            >
+              About
+            </Link>
           </div>
         </div>
       </div>

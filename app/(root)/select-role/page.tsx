@@ -27,7 +27,9 @@ export default function SelectRole() {
     }
   }, [isLoaded, isSignedIn, user]);
 
-  const handleRoleAssignment = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleRoleAssignment = async (
+    event: React.FormEvent<HTMLFormElement>,
+  ) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
@@ -38,7 +40,11 @@ export default function SelectRole() {
       return;
     }
 
-    if (window.confirm(`Do you want to save ${roleName} as your role? This cannot be changed.`)) {
+    if (
+      window.confirm(
+        `Do you want to save ${roleName} as your role? This cannot be changed.`,
+      )
+    ) {
       setIsSubmitting(true);
 
       try {
@@ -77,9 +83,10 @@ export default function SelectRole() {
       <div className="mt-20">
         {isLoaded && isSignedIn && (
           <h2 className="text-3xl font-semibold text-gray-800 dark:text-gray-100 text-center">
-            Welcome to Eagles Ring, <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-700 via-orange-600 to-blue-800 dark:from-yellow-400 dark:via-pink-500 dark:to-purple-500">
-            {user.firstName} {user.lastName}
-              </span>
+            Welcome to Eagles Ring,{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-red-700 via-orange-600 to-blue-800 dark:from-yellow-400 dark:via-pink-500 dark:to-purple-500">
+              {user.firstName} {user.lastName}
+            </span>
           </h2>
         )}
         <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 text-center">
@@ -88,7 +95,11 @@ export default function SelectRole() {
         <p className="text-center text-gray-600 dark:text-gray-300">
           Choose your role to get started on your journey with us.
         </p>
-        <form ref={formRef} onSubmit={handleRoleAssignment} className="space-y-4">
+        <form
+          ref={formRef}
+          onSubmit={handleRoleAssignment}
+          className="space-y-4"
+        >
           <div className="relative">
             <select
               className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-md"

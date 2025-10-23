@@ -4,14 +4,17 @@ import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
   console.log("Received parameters:", params); // Log the params
   const user = await currentUser();
 
   if (!user) {
     return NextResponse.json(
       { error: "User not authenticated." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -24,7 +27,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     if (!dbUser) {
       return NextResponse.json(
         { error: "User not found in database." },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -49,7 +52,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
       include: {
         messages: {
           orderBy: {
-            sentAt: 'desc', // Get messages ordered by sentAt in descending order
+            sentAt: "desc", // Get messages ordered by sentAt in descending order
           },
           take: 1, // Only get the latest message
           include: {
@@ -67,7 +70,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
             },
           },
         },
-        participants: { // Include participant ids and names
+        participants: {
+          // Include participant ids and names
           select: {
             id: true, // Include participant id
             name: true, // Include participant name
@@ -77,10 +81,12 @@ export async function GET(request: Request, { params }: { params: { id: string }
     });
 
     // Map the conversations to include the latest message and the user's name
-    const formattedConversations = conversations.map(conversation => {
+    const formattedConversations = conversations.map((conversation) => {
       // Find the current user index
-      const userIndex = conversation.participants.findIndex(p => p.id === dbUser.id);
-      
+      const userIndex = conversation.participants.findIndex(
+        (p) => p.id === dbUser.id,
+      );
+
       // Reorder participants: if the user is found, rearrange
       const participants = [...conversation.participants];
 
@@ -100,10 +106,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     // Fetch messages where the user is either the sender or receiver
     const messages = await prisma.message.findMany({
       where: {
-        OR: [
-          { senderId: dbUser.id },
-          { receiverId: dbUser.id },
-        ],
+        OR: [{ senderId: dbUser.id }, { receiverId: dbUser.id }],
       },
       include: {
         sender: {
@@ -120,7 +123,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         },
       },
       orderBy: {
-        sentAt: 'desc', // Order messages by sentAt in descending order
+        sentAt: "desc", // Order messages by sentAt in descending order
       },
     });
 
@@ -134,7 +137,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     console.error("Error fetching conversations and messages:", error);
     return NextResponse.json(
       { error: "Failed to fetch conversations and messages." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

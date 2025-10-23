@@ -1,20 +1,20 @@
 "use client";
 
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-import { Chart, registerables } from 'chart.js';
+import React from "react";
+import { Line } from "react-chartjs-2";
+import { Chart, registerables } from "chart.js";
 
 Chart.register(...registerables);
 
 const Overview: React.FC = () => {
   const investmentsData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
     datasets: [
       {
-        label: 'Investment Growth ($)',
+        label: "Investment Growth ($)",
         data: [65000, 59000, 80000, 81000, 56000, 55000, 40000],
         fill: false,
-        borderColor: '#4b9cd3',
+        borderColor: "#4b9cd3",
         tension: 0.4,
       },
     ],

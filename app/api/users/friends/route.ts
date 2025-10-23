@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   if (!user) {
     return NextResponse.json(
       { error: "User not found. Please log in." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -34,10 +34,10 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(friends);
   } catch (error) {
-    console.error('Error fetching friends:', error); // Added logging for debugging
+    console.error("Error fetching friends:", error); // Added logging for debugging
     return NextResponse.json(
       { error: "Failed to fetch friends" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

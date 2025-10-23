@@ -1,22 +1,22 @@
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import VideoUploader from './VideoUploader';
-import LoadingDots from './ui/LoadingDots';
+import { useState } from "react";
+import { toast } from "react-toastify";
+import VideoUploader from "./VideoUploader";
+import LoadingDots from "./ui/LoadingDots";
 
 const PitchForm = () => {
   const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       // Call API to save the pitch
-      toast.success('Pitch submitted successfully!');
+      toast.success("Pitch submitted successfully!");
     } catch (error) {
-      toast.error('Failed to submit pitch');
+      toast.error("Failed to submit pitch");
     } finally {
       setLoading(false);
     }
@@ -25,7 +25,12 @@ const PitchForm = () => {
   return (
     <form onSubmit={handleSubmit} className="max-w-md mx-auto">
       <div className="mb-4">
-        <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+        <label
+          htmlFor="title"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Title
+        </label>
         <input
           type="text"
           id="title"
@@ -37,7 +42,12 @@ const PitchForm = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+        <label
+          htmlFor="description"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Description
+        </label>
         <textarea
           id="description"
           value={description}
@@ -54,7 +64,7 @@ const PitchForm = () => {
         className="mt-4 p-2 bg-gold text-white rounded-md"
         disabled={loading}
       >
-        {loading ? <LoadingDots /> : 'Submit Pitch'}
+        {loading ? <LoadingDots /> : "Submit Pitch"}
       </button>
     </form>
   );

@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { db } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { db } from "@/lib/prisma";
 
 export async function POST(req: Request) {
   try {
@@ -14,10 +14,16 @@ export async function POST(req: Request) {
     } = data;
 
     // Validate required fields
-    if (!amount || !investorProfileId || !entrepreneurProfileId || !investmentOpportunityId || !title) {
+    if (
+      !amount ||
+      !investorProfileId ||
+      !entrepreneurProfileId ||
+      !investmentOpportunityId ||
+      !title
+    ) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
+        { error: "Missing required fields" },
+        { status: 400 },
       );
     }
 
@@ -28,8 +34,8 @@ export async function POST(req: Request) {
 
     if (!investorProfile) {
       return NextResponse.json(
-        { error: 'Investor profile not found' },
-        { status: 404 }
+        { error: "Investor profile not found" },
+        { status: 404 },
       );
     }
 
@@ -40,8 +46,8 @@ export async function POST(req: Request) {
 
     if (!entrepreneurProfile) {
       return NextResponse.json(
-        { error: 'Entrepreneur profile not found' },
-        { status: 404 }
+        { error: "Entrepreneur profile not found" },
+        { status: 404 },
       );
     }
 
@@ -52,8 +58,8 @@ export async function POST(req: Request) {
 
     if (!investmentOpportunity) {
       return NextResponse.json(
-        { error: 'Investment opportunity not found' },
-        { status: 404 }
+        { error: "Investment opportunity not found" },
+        { status: 404 },
       );
     }
 
@@ -70,12 +76,11 @@ export async function POST(req: Request) {
 
     // Return the created investment
     return NextResponse.json(investment, { status: 201 });
-
   } catch (error) {
-    console.error('Error creating investment:', error);
+    console.error("Error creating investment:", error);
     return NextResponse.json(
-      { error: 'An error occurred while creating the investment' },
-      { status: 500 }
+      { error: "An error occurred while creating the investment" },
+      { status: 500 },
     );
   }
 }

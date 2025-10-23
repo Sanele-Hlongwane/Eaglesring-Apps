@@ -4,10 +4,11 @@ import { title } from "@/components/primitives";
 import Loader from "@/components/Loader";
 
 export default function AboutPage() {
-  
   return (
     <div className="max-w-ful mx-auto">
-      <h2 className={`${title()} text-center text-sm text-lg mb-8`}>About Eagles Ring</h2>
+      <h2 className={`${title()} text-center text-sm text-lg mb-8`}>
+        About Eagles Ring
+      </h2>
 
       <section className="mb-12">
         <h2 className="text-lg font-semibold mb-4">Welcome to Eagles Ring</h2>

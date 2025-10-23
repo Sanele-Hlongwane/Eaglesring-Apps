@@ -1,21 +1,21 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { currentUser } from '@clerk/nextjs/server';
-import Stripe from 'stripe';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { currentUser } from "@clerk/nextjs/server";
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-08-27.basil',
+  apiVersion: "2025-08-27.basil",
 });
 
 const prisma = new PrismaClient();
 
 interface InvestmentData {
-  amount: number;                     // Adjust based on your model
-  title: string;                      // Adjust based on your model
-  investorProfileId: number;          // Assuming this is a number
-  entrepreneurProfileId: number;       // Assuming this is a number
-  investmentOpportunityId: number;    // Assuming this is a number
-  pitchId?: number;                   // Optional if it can be null
+  amount: number; // Adjust based on your model
+  title: string; // Adjust based on your model
+  investorProfileId: number; // Assuming this is a number
+  entrepreneurProfileId: number; // Assuming this is a number
+  investmentOpportunityId: number; // Assuming this is a number
+  pitchId?: number; // Optional if it can be null
 }
 
 async function saveInvestment(investmentData: InvestmentData) {
@@ -28,7 +28,6 @@ async function saveInvestment(investmentData: InvestmentData) {
       ],
     },
   });
-
 
   // If it doesn't exist, create a new investment
   if (!existingInvestment) {
@@ -45,7 +44,10 @@ export async function GET(request: Request) {
   const user = await currentUser();
 
   if (!user) {
-    return NextResponse.json({ error: 'User not authenticated.' }, { status: 401 });
+    return NextResponse.json(
+      { error: "User not authenticated." },
+      { status: 401 },
+    );
   }
 
   try {
@@ -57,7 +59,10 @@ export async function GET(request: Request) {
     });
 
     if (!dbUser) {
-      return NextResponse.json({ error: 'User not found in database.' }, { status: 404 });
+      return NextResponse.json(
+        { error: "User not found in database." },
+        { status: 404 },
+      );
     }
 
     // Fetch investments made by the user from the database
@@ -72,7 +77,6 @@ export async function GET(request: Request) {
       },
     });
 
-
     // Optionally, fetch Stripe data if needed
     const stripeCustomerId = dbUser.stripeCustomerId;
 
@@ -82,7 +86,7 @@ export async function GET(request: Request) {
         limit: 100, // Limit to the number of charges you want to retrieve
       });
 
-      console.log('Stripe Charges:', charges.data);
+      console.log("Stripe Charges:", charges.data);
     }
 
     // Create and save new investments with metadata
@@ -101,7 +105,10 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ investments });
   } catch (error) {
-    console.error('Error fetching investments:', error);
-    return NextResponse.json({ error: 'Failed to fetch investments' }, { status: 500 });
+    console.error("Error fetching investments:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch investments" },
+      { status: 500 },
+    );
   }
 }

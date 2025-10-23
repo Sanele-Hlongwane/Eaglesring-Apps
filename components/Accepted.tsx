@@ -2,7 +2,17 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaBuilding, FaInfoCircle, FaTag, FaDollarSign, FaMoneyBillWave, FaLinkedin, FaChartPie, FaBullseye, FaUser } from "react-icons/fa";
+import {
+  FaBuilding,
+  FaInfoCircle,
+  FaTag,
+  FaDollarSign,
+  FaMoneyBillWave,
+  FaLinkedin,
+  FaChartPie,
+  FaBullseye,
+  FaUser,
+} from "react-icons/fa";
 import { useToast } from "@/components/ui/use-toast";
 import EmptyState from "@/components/EmptyState";
 import Loader from "@/components/Loader";
@@ -93,19 +103,19 @@ const AcceptedRequestsPage = () => {
 
   function formatInvestmentRange(range: number | null): string {
     if (!range) {
-      return 'N/A';
+      return "N/A";
     }
-  
-    const formattedRange = range.toLocaleString('en-ZA', {
-      style: 'currency',
-      currency: 'ZAR',
-      minimumFractionDigits: 0,
-    }).replace('ZAR', 'R');
-  
+
+    const formattedRange = range
+      .toLocaleString("en-ZA", {
+        style: "currency",
+        currency: "ZAR",
+        minimumFractionDigits: 0,
+      })
+      .replace("ZAR", "R");
+
     return formattedRange;
   }
-  
-  
 
   return (
     <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
@@ -121,7 +131,9 @@ const AcceptedRequestsPage = () => {
             key={user.id}
             className={`relative bg-gradient-to-r from-gray-300 to-gray-200 dark:from-gray-800 dark:to-gray-900 border border-${cardColor} dark:border-${cardColor} rounded-xl p-6 shadow-xl transition-transform transform`}
           >
-            <div className={`absolute top-2 right-2 bg-${cardRoleBg} text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md`}>
+            <div
+              className={`absolute top-2 right-2 bg-${cardRoleBg} text-white text-xs font-semibold px-3 py-1 rounded-lg shadow-md`}
+            >
               {user.role}
             </div>
 
@@ -131,10 +143,12 @@ const AcceptedRequestsPage = () => {
                   className="cursor-pointer transition-transform hover:scale-105 focus:outline-none"
                   onClick={() => togglePopup(user.id)}
                   tabIndex={0}
-                  onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && togglePopup(user.id)}
+                  onKeyPress={(e) =>
+                    (e.key === "Enter" || e.key === " ") && togglePopup(user.id)
+                  }
                   aria-label={`View ${user.name}'s profile image`}
                 >
-                <img
+                  <img
                     src={user.imageUrl}
                     alt={user.name}
                     className={`w-28 h-28 rounded-full border-4 border-${cardRoleBg} shadow-md object-cover`}
@@ -149,7 +163,9 @@ const AcceptedRequestsPage = () => {
                   onClick={() => togglePopup(null)}
                   role="button"
                   tabIndex={0}
-                  onKeyPress={(e) => (e.key === 'Enter' || e.key === ' ') && togglePopup(null)}
+                  onKeyPress={(e) =>
+                    (e.key === "Enter" || e.key === " ") && togglePopup(null)
+                  }
                 >
                   <div className="relative">
                     <img
@@ -159,7 +175,7 @@ const AcceptedRequestsPage = () => {
                       className={`w-96 h-96 rounded-full border-4 border-${cardRoleBg} shadow-lg object-cover`}
                     />
                     <button
-                      onClick={() => togglePopup(null)} 
+                      onClick={() => togglePopup(null)}
                       className="absolute top-0 right-0 text-gray-100 bg-red-800 bg-opacity-70 rounded-full p-2 m-2"
                     >
                       ✕
@@ -179,36 +195,53 @@ const AcceptedRequestsPage = () => {
                 {user.role === "ENTREPRENEUR" && user.entrepreneurProfile && (
                   <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl mb-6 border-t-4 border-blue-500 ">
                     <div className="mb-2">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Company:</h4>
+                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                        Company:
+                      </h4>
                       <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                         <FaBuilding className="text-blue-500 mr-2" />
-                        <span className="text-gray-800 dark:text-gray-300">{user.entrepreneurProfile.company}</span>
+                        <span className="text-gray-800 dark:text-gray-300">
+                          {user.entrepreneurProfile.company}
+                        </span>
                       </div>
                     </div>
 
                     <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Bio:</h4>
+                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                        Bio:
+                      </h4>
                       <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                         <FaInfoCircle className="text-blue-500 mr-2" />
-                        <span className="text-gray-700 dark:text-gray-400">{user.entrepreneurProfile.bio}</span>
+                        <span className="text-gray-700 dark:text-gray-400">
+                          {user.entrepreneurProfile.bio}
+                        </span>
                       </div>
                     </div>
 
                     <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Business Stage:</h4>
+                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                        Business Stage:
+                      </h4>
                       <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                         <FaTag className="text-blue-500 mr-2" />
-                        <span className="text-gray-700 dark:text-gray-400">{user.entrepreneurProfile.businessStage}</span>
+                        <span className="text-gray-700 dark:text-gray-400">
+                          {user.entrepreneurProfile.businessStage}
+                        </span>
                       </div>
                     </div>
 
                     <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">Revenue:</h4>
+                      <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
+                        Revenue:
+                      </h4>
                       <div className="flex items-center border-b-2 border-gray-300 dark:border-gray-600 pb-2">
                         <FaMoneyBillWave className="text-blue-500 mr-2" />
                         <span className="text-green-700 dark:text-green-800">
-                          R{user.entrepreneurProfile.revenue
-                            ? user.entrepreneurProfile.revenue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+                          R
+                          {user.entrepreneurProfile.revenue
+                            ? user.entrepreneurProfile.revenue
+                                .toString()
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, " ")
                             : "N/A"}
                         </span>
                       </div>
@@ -216,68 +249,98 @@ const AcceptedRequestsPage = () => {
                   </div>
                 )}
                 {user.role === "INVESTOR" && user.investorProfile && (
-                  <div className={`bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl mb-6 border-t-4 border-${cardRoleBg} dark:border-${cardRoleBg}`}>
+                  <div
+                    className={`bg-white dark:bg-gray-900 p-6 rounded-lg shadow-xl mb-6 border-t-4 border-${cardRoleBg} dark:border-${cardRoleBg}`}
+                  >
                     <div className="space-y-6">
-                    <div className="flex items-start space-x-4">
-                      <FaChartPie className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Focus</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentFocus}</p>
+                      <div className="flex items-start space-x-4">
+                        <FaChartPie className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                            Investment Focus
+                          </h3>
+                          <p className="text-gray-700 dark:text-gray-400">
+                            {user.investorProfile.investmentFocus}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-4">
+                        <FaUser className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                            Bio
+                          </h3>
+                          <p className="text-gray-700 dark:text-gray-400">
+                            {user.investorProfile.bio}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-4">
+                        <FaBullseye className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                            Investment Strategy
+                          </h3>
+                          <p className="text-gray-700 dark:text-gray-400">
+                            {user.investorProfile.investmentStrategy}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-4">
+                        <FaLinkedin className="text-blue-600 dark:text-blue-400 text-2xl" />
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                            LinkedIn
+                          </h3>
+                          <a
+                            href={user.investorProfile.linkedinUrl}
+                            className="text-blue-600 dark:text-blue-400 underline"
+                          >
+                            {user.investorProfile.linkedinUrl}
+                          </a>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-4">
+                        <FaBuilding className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                            Preferred Industries
+                          </h3>
+                          <p className="text-gray-700 dark:text-gray-400">
+                            {user.investorProfile.preferredIndustries}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-4">
+                        <FaShieldAlt className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                            Risk Tolerance
+                          </h3>
+                          <p className="text-gray-700 dark:text-gray-400">
+                            {user.investorProfile.riskTolerance}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start space-x-4">
+                        <FaMoneyBillWave className="text-green-600 dark:text-green-400 text-2xl" />
+                        <div>
+                          <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
+                            Investment Amount Range
+                          </h3>
+                          <p className="text-gray-700 dark:text-gray-400">
+                            {formatInvestmentRange(
+                              user.investorProfile.investmentAmountRange,
+                            )}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-start space-x-4">
-                      <FaUser className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Bio</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.bio}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaBullseye className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Strategy</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.investmentStrategy}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaLinkedin className="text-blue-600 dark:text-blue-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">LinkedIn</h3>
-                        <a href={user.investorProfile.linkedinUrl} className="text-blue-600 dark:text-blue-400 underline">
-                          {user.investorProfile.linkedinUrl}
-                        </a>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaBuilding className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Preferred Industries</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.preferredIndustries}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaShieldAlt className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Risk Tolerance</h3>
-                        <p className="text-gray-700 dark:text-gray-400">{user.investorProfile.riskTolerance}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-start space-x-4">
-                      <FaMoneyBillWave className="text-green-600 dark:text-green-400 text-2xl" />
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Investment Amount Range</h3>
-                        <p className="text-gray-700 dark:text-gray-400">
-                          {formatInvestmentRange(user.investorProfile.investmentAmountRange)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
                   </div>
                 )}
                 {user.role === "ENTREPRENEUR" && (
                   <a
-                    href={`/pitches/${user.id}`} 
+                    href={`/pitches/${user.id}`}
                     className={`mt-4 bg-${cardRoleBg} text-white py-2 px-4 rounded-lg shadow-md hover:bg-${cardColorHover}-700`}
                   >
                     View Pitches

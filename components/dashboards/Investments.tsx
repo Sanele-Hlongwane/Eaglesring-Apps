@@ -1,6 +1,6 @@
 // src/components/dashboards/Investments.tsx
 
-import React from 'react';
+import React from "react";
 
 const Investments: React.FC = () => {
   return (

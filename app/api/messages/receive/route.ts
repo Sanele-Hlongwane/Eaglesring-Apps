@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   if (!user) {
     return NextResponse.json(
       { error: "User not authenticated." },
-      { status: 401 }
+      { status: 401 },
     );
   }
 
@@ -23,17 +23,14 @@ export async function GET(request: Request) {
     if (!dbUser) {
       return NextResponse.json(
         { error: "User not found in database." },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Fetch messages where the user is the sender or receiver
     const messages = await prisma.message.findMany({
       where: {
-        OR: [
-          { senderId: dbUser.id },
-          { receiverId: dbUser.id },
-        ],
+        OR: [{ senderId: dbUser.id }, { receiverId: dbUser.id }],
       },
       include: {
         sender: {
@@ -53,7 +50,7 @@ export async function GET(request: Request) {
     console.error("Error fetching messages:", error);
     return NextResponse.json(
       { error: "Unable to fetch messages." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

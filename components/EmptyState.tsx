@@ -1,7 +1,7 @@
 "use client";
 
-import React from 'react';
-import { MdWarning } from 'react-icons/md';
+import React from "react";
+import { MdWarning } from "react-icons/md";
 
 interface EmptyStateProps {
   message: string;
@@ -16,7 +16,9 @@ const EmptyState: React.FC<EmptyStateProps> = ({ message }) => {
           <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
             {message}
           </h2>
-          <p className="text-gray-700 dark:text-gray-300">No data available here. Try again later.</p>
+          <p className="text-gray-700 dark:text-gray-300">
+            No data available here. Try again later.
+          </p>
         </div>
       </div>
     </div>

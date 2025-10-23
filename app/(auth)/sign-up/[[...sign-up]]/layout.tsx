@@ -15,8 +15,8 @@ const Layout = ({ children }: Readonly<{ children: ReactNode }>) => {
       <SignedIn>
         <Navbar />
       </SignedIn>
-        <div className="p-10">{children}</div>
-      <SignedIn >
+      <div className="p-10">{children}</div>
+      <SignedIn>
         <Footer />
       </SignedIn>
     </main>

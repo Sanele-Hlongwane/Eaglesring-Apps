@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
@@ -6,34 +6,40 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 // Import icons from react-icons
-import { FaHome, FaChartLine, FaBell, FaUser, FaDollarSign } from 'react-icons/fa';
+import {
+  FaHome,
+  FaChartLine,
+  FaBell,
+  FaUser,
+  FaDollarSign,
+} from "react-icons/fa";
 
 // Define sidenavLinks with react-icons
 export const sidenavLinks = [
   {
     imgURL: FaHome, // Overview icon
-    route: '/lol',
-    label: 'Overview',
+    route: "/lol",
+    label: "Overview",
   },
   {
     imgURL: FaDollarSign, // My Investments icon
-    route: '/investments',
-    label: 'My Investments',
+    route: "/investments",
+    label: "My Investments",
   },
   {
     imgURL: FaChartLine, // Performance Metrics icon
-    route: '/performance',
-    label: 'Performance Metrics',
+    route: "/performance",
+    label: "Performance Metrics",
   },
   {
     imgURL: FaBell, // Notifications icon
-    route: '/notifications',
-    label: 'Notifications',
+    route: "/notifications",
+    label: "Notifications",
   },
   {
     imgURL: FaUser, // Profile icon
-    route: '/profile',
-    label: 'Profile',
+    route: "/profile",
+    label: "Profile",
   },
 ];
 
@@ -45,7 +51,13 @@ interface TabProps {
   onClick: () => void;
 }
 
-export const Tab: React.FC<TabProps> = ({ label, route, imgURL: Icon, isActive, onClick }) => {
+export const Tab: React.FC<TabProps> = ({
+  label,
+  route,
+  imgURL: Icon,
+  isActive,
+  onClick,
+}) => {
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter" || event.key === " ") {
       onClick();
@@ -57,9 +69,10 @@ export const Tab: React.FC<TabProps> = ({ label, route, imgURL: Icon, isActive, 
       className={cn(
         "flex flex-col justify-center px-4 py-2 cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105",
         {
-          "bg-gradient-to-r from-blue-500 to-blue-700 text-white dark:bg-gradient-to-r dark:from-blue-400 dark:to-blue-600 dark:text-black shadow-lg": isActive,
+          "bg-gradient-to-r from-blue-500 to-blue-700 text-white dark:bg-gradient-to-r dark:from-blue-400 dark:to-blue-600 dark:text-black shadow-lg":
+            isActive,
           "hover:bg-blue-800 text-gray-300": !isActive,
-        }
+        },
       )}
       role="button"
       tabIndex={0}
@@ -69,7 +82,10 @@ export const Tab: React.FC<TabProps> = ({ label, route, imgURL: Icon, isActive, 
       <Link href={route} passHref>
         <div className="flex flex-col items-start">
           <Icon className="mb-1 text-xl text-black dark:text-white" />
-          <p className="text-xs font-semibold text-black dark:text-white">{label}</p> {/* Smaller text size */}
+          <p className="text-xs font-semibold text-black dark:text-white">
+            {label}
+          </p>{" "}
+          {/* Smaller text size */}
         </div>
       </Link>
     </div>
@@ -105,7 +121,7 @@ const SideNav = () => {
           {
             "w-20 lg:w-64": isOpen,
             "w-20 ": !isOpen,
-          }
+          },
         )}
         role="navigation"
       >

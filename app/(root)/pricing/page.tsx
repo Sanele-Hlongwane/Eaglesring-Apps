@@ -18,7 +18,9 @@ import {
   Button,
 } from "@heroui/react";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
+);
 
 const SubscriptionForm = () => {
   const { user } = useUser();
@@ -95,7 +97,9 @@ const SubscriptionForm = () => {
 
   return (
     <div className="py-8 px-4 bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 min-h-screen">
-      <h1 className="text-5xl font-extrabold mb-8 text-center text-gray-900 dark:text-white">Price plans</h1>
+      <h1 className="text-5xl font-extrabold mb-8 text-center text-gray-900 dark:text-white">
+        Price plans
+      </h1>
       <div className="flex justify-center mb-6">
         <button
           onClick={() => setIsYearly(false)}
@@ -107,7 +111,10 @@ const SubscriptionForm = () => {
           onClick={() => setIsYearly(true)}
           className={`px-8 py-3 rounded-r-lg transition duration-300 transform hover:scale-105 ${isYearly ? "bg-gradient-to-r from-blue-500 to-blue-700 text-white" : "bg-gray-200 text-gray-800"}`}
         >
-          Yearly <p className={`${isYearly ? "text-green-300" : "text-green-800"}`}>(Save~17%)</p>
+          Yearly{" "}
+          <p className={`${isYearly ? "text-green-300" : "text-green-800"}`}>
+            (Save~17%)
+          </p>
         </button>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -125,27 +132,34 @@ const SubscriptionForm = () => {
             <CardBody className="p-4">
               <p className="text-lg font-bold mb-4">
                 {isYearly ? (
-                <>
-                  <span className="line-through text-red-500">
-                    R{plan.monthlyPrice * 12}
-                  </span>{" "}
-                  <span className="text-green-500">R{plan.yearlyPrice}</span> per year
-                </>
-              ) : (
-                <>
-                  <span className="text-green-500">R{plan.monthlyPrice}</span> per month
-                </>
-              )}
-
+                  <>
+                    <span className="line-through text-red-500">
+                      R{plan.monthlyPrice * 12}
+                    </span>{" "}
+                    <span className="text-green-500">R{plan.yearlyPrice}</span>{" "}
+                    per year
+                  </>
+                ) : (
+                  <>
+                    <span className="text-green-500">R{plan.monthlyPrice}</span>{" "}
+                    per month
+                  </>
+                )}
               </p>
               <ul className="list-disc list-inside mb-4 space-y-2">
                 {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-900 dark:text-white">
+                  <li
+                    key={index}
+                    className="flex items-center text-gray-900 dark:text-white"
+                  >
                     <FaCheck className="text-green-500 mr-2" /> {feature}
                   </li>
                 ))}
                 {plan.unavailable.map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-400 line-through">
+                  <li
+                    key={index}
+                    className="flex items-center text-gray-400 line-through"
+                  >
                     <FaTimes className="text-red-500 mr-2" /> {feature}
                   </li>
                 ))}
@@ -155,7 +169,9 @@ const SubscriptionForm = () => {
             <CardFooter className="p-4">
               <Button
                 className={`w-full py-2 px-4 rounded-lg font-bold transition-colors duration-300 ${
-                  selectedPlan === plan.name ? "bg-green-600 text-white" : "bg-blue-800 text-gray-200"
+                  selectedPlan === plan.name
+                    ? "bg-green-600 text-white"
+                    : "bg-blue-800 text-gray-200"
                 }`}
                 onClick={(e) => {
                   e.stopPropagation();

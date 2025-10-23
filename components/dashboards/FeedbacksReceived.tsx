@@ -1,5 +1,5 @@
 // components/FeedbacksReceived.tsx
-import { Card } from '@heroui/react';
+import { Card } from "@heroui/react";
 
 interface Feedback {
   id: number;
@@ -13,11 +13,7 @@ interface FeedbacksReceivedProps {
 }
 
 const FeedbacksReceived: React.FC<FeedbacksReceivedProps> = ({ feedbacks }) => {
-  return (
-    <Card>
-      
-    </Card>
-  );
+  return <Card></Card>;
 };
 
 export default FeedbacksReceived;

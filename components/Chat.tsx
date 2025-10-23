@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-toastify';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface Message {
   id: number;
@@ -11,7 +11,7 @@ interface Message {
 
 const Chat = ({ otherUserId }: { otherUserId: number }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const router = useRouter();
 
   const fetchMessages = async () => {
@@ -20,7 +20,7 @@ const Chat = ({ otherUserId }: { otherUserId: number }) => {
       const data = await res.json();
       setMessages(data);
     } catch (error) {
-      toast.error('Failed to fetch messages');
+      toast.error("Failed to fetch messages");
     }
   };
 
@@ -33,15 +33,15 @@ const Chat = ({ otherUserId }: { otherUserId: number }) => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content: newMessage, receiverId: otherUserId }),
       });
-      setNewMessage('');
+      setNewMessage("");
       fetchMessages();
     } catch (error) {
-      toast.error('Failed to send message');
+      toast.error("Failed to send message");
     }
   };
 

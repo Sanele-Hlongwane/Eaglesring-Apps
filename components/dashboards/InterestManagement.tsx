@@ -1,5 +1,5 @@
 // components/InterestManagement.tsx
-import { Card } from '@heroui/react';
+import { Card } from "@heroui/react";
 
 interface Interest {
   id: number;
@@ -14,11 +14,7 @@ const InterestManagement: React.FC = () => {
     // Add more interests as needed
   ];
 
-  return (
-    <Card>
-      
-    </Card>
-  );
+  return <Card></Card>;
 };
 
 export default InterestManagement;

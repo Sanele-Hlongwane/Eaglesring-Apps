@@ -9,10 +9,10 @@ interface VideoUploaderProps {
 export default function VideoUploader({ onUpload }: VideoUploaderProps) {
   const [video, setVideo] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (!file) return;
 
     setVideo(file);
@@ -53,10 +53,12 @@ export default function VideoUploader({ onUpload }: VideoUploaderProps) {
           </>
         ) : (
           <video
-            src={preview}
             className="rounded-lg max-h-48 w-full object-cover"
             controls
-          />
+            src={preview}
+          >
+            <track kind="captions" src="" srcLang="en" label="English captions" />
+          </video>
         )}
         <input
           id="video-upload"
@@ -78,12 +80,6 @@ export default function VideoUploader({ onUpload }: VideoUploaderProps) {
           >
             Remove
           </button>
-        </div>
-      )}
-
-      {uploading && (
-        <div className="mt-4 w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div className="bg-blue-500 h-2 rounded-full w-1/2 animate-pulse" />
         </div>
       )}
     </div>

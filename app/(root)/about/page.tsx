@@ -4,14 +4,7 @@ import { title } from "@/components/primitives";
 import Loader from "@/components/Loader";
 
 export default function AboutPage() {
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 3000);
-  }, []);
-
-  if (loading) {
-    return <Loader />;
-  }
+  
   return (
     <div className="max-w-ful mx-auto">
       <h2 className={`${title()} text-center text-sm text-lg mb-8`}>About Eagles Ring</h2>

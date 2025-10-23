@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ClerkProvider, SignedIn, useUser } from "@clerk/nextjs";
+import { SignedIn, useUser } from "@clerk/nextjs";
 import { loadStripe } from "@stripe/stripe-js";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import CurrentPlan from "@/components/pricing/current-plan";
 import { plans } from "@/constants/plans";
-import { FaCheck, FaTimes, FaDollarSign, FaMoneyBillAlt, FaCalendar, FaCalendarAlt } from "react-icons/fa";
+import { FaCheck, FaTimes, FaDollarSign, FaMoneyBillAlt } from "react-icons/fa";
 import LoadingDots from "@/components/ui/LoadingDots";
 import {
   Card,
@@ -38,7 +38,7 @@ const SubscriptionForm = () => {
     const userEmail = user?.primaryEmailAddress?.emailAddress;
 
     if (!planName || !user?.id || !userEmail) {
-      toast.info("Please select a plan and ensure you are logged in.");
+      toast.info("Please sign-in first to continue.");
       setLoadingPlan(null);
       return;
     }
@@ -158,7 +158,7 @@ const SubscriptionForm = () => {
                   selectedPlan === plan.name ? "bg-green-600 text-white" : "bg-blue-800 text-gray-200"
                 }`}
                 onClick={(e) => {
-                  e.stopPropagation(); // Prevent triggering the card click event
+                  e.stopPropagation();
                   handleSubmit(plan.name);
                 }}
                 disabled={loadingPlan === plan.name}

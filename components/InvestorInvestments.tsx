@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Image from "next/image";
-import {} from "@nextui-org/user";
 import {
   RangeCalendar,
   Card,
@@ -11,7 +10,7 @@ import {
   Spacer,
   Skeleton,
   CardFooter,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,

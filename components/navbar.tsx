@@ -7,9 +7,8 @@ import {
   NavbarMenuToggle,
   NavbarBrand,
   NavbarItem,
-  NavbarMenuItem,
-} from "@nextui-org/navbar";
-import { Link } from "@nextui-org/link";
+  NavbarMenuItem, Link,
+} from "@heroui/react";
 import { ThemeSwitch } from "@/components/theme-switch";
 import {
   SignInButton,

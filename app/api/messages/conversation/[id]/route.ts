@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } },
+  context: any,
 ) {
-  console.log("Received id:", params.id); // Log the conversation ID received
+  console.log("Received id:", context.id); // Log the conversation ID received
 
   const user = await currentUser();
 
@@ -42,12 +42,12 @@ export async function GET(
       },
     });
 
-    const conversationId = parseInt(params.id, 10);
+    const conversationId = parseInt(context.id, 10);
     console.log("Fetching messages for conversation ID:", conversationId);
 
     // Check if conversationId is a valid number
     if (isNaN(conversationId) || conversationId <= 0) {
-      console.error("Invalid conversation ID:", params.id);
+      console.error("Invalid conversation ID:", context.id);
       return NextResponse.json(
         { error: "Invalid conversation ID." },
         { status: 400 },

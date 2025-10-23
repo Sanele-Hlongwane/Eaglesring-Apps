@@ -7,9 +7,9 @@ const prisma = new PrismaClient();
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  context : any,
 ) {
-  const { id } = params;
+  const { id } = context;
 
   // Convert the string id to a number
   const notificationId = parseInt(id, 10);

@@ -15,7 +15,6 @@ export async function GET() {
   }
 
   try {
-    // Fetch the user's data including related profiles
     const existingUser = await prisma.user.findUnique({
       where: { clerkId: user.id },
       include: {

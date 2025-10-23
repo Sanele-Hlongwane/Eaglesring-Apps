@@ -12,7 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import LoadingDots from "./ui/LoadingDots";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 
 interface Notification {
   id: string;

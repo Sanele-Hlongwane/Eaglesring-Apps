@@ -6,41 +6,38 @@ const prisma = new PrismaClient();
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+  context: any
+): Promise<NextResponse> {
+  const { id } = context.params; // ✅ Correct access pattern for Next 15
+
   try {
     const user = await currentUser();
 
     if (!user) {
       console.error("User not authenticated");
       return NextResponse.json(
-        {
-          error: "User not authenticated",
-        },
-        { status: 401 },
+        { error: "User not authenticated" },
+        { status: 401 }
       );
     }
 
-    const clerkId = user.id;
-
-    // Fetch the receiver (current user) from the database using clerkId
     const receiver = await prisma.user.findUnique({
-      where: { clerkId: clerkId },
+      where: { clerkId: user.id },
     });
 
     if (!receiver) {
       console.error("Receiver user not found");
       return NextResponse.json(
-        {
-          error: "Receiver user not found",
-        },
-        { status: 404 },
+        { error: "Receiver user not found" },
+        { status: 404 }
       );
     }
 
-    const senderId = parseInt(params.id, 10); // Ensure senderId is a number
+    const senderId = parseInt(id, 10);
+    if (isNaN(senderId)) {
+      return NextResponse.json({ error: "Invalid sender ID" }, { status: 400 });
+    }
 
-    // Fetch the friend request using both senderId and receiverId
     const friendRequest = await prisma.friendRequest.findUnique({
       where: {
         senderId_receiverId: {
@@ -55,14 +52,11 @@ export async function DELETE(
     if (!friendRequest) {
       console.error("Friend request not found");
       return NextResponse.json(
-        {
-          error: "Friend request not found",
-        },
-        { status: 404 },
+        { error: "Friend request not found" },
+        { status: 404 }
       );
     }
 
-    // Delete the friend request
     await prisma.friendRequest.delete({
       where: {
         senderId_receiverId: {
@@ -74,7 +68,6 @@ export async function DELETE(
 
     console.debug(`Friend request with Sender ID ${senderId} deleted`);
 
-    // Fetch the sender's details
     const sender = await prisma.user.findUnique({
       where: { id: senderId },
     });
@@ -82,23 +75,20 @@ export async function DELETE(
     if (!sender) {
       console.error("Sender user not found");
       return NextResponse.json(
-        {
-          error: "Sender user not found",
-        },
-        { status: 404 },
+        { error: "Sender user not found" },
+        { status: 404 }
       );
     }
 
-    // Create a notification for the sender, notifying them that their friend request was deleted
     await prisma.notification.create({
       data: {
         content: `${receiver.name} has deleted your friend request. You can resend it if you wish.`,
-        userId: senderId, // Send the notification to the sender
+        userId: senderId,
       },
     });
 
     console.debug(
-      `Notification sent to Sender ID ${senderId}: "${receiver.name} has deleted your friend request. You can resend it if you wish."`,
+      `Notification sent to Sender ID ${senderId}: "${receiver.name} has deleted your friend request. You can resend it if you wish."`
     );
 
     return NextResponse.json({ success: true });
@@ -107,9 +97,9 @@ export async function DELETE(
     return NextResponse.json(
       {
         error: "Failed to delete friend request",
-        details: (error as any).message,
+        details: (error as Error).message,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

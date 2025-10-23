@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } },
+ context : any,
 ) {
-  console.log("Received parameters:", params); // Log the params
+  console.log("Received parameters:", context); // Log the context
   const user = await currentUser();
 
   if (!user) {

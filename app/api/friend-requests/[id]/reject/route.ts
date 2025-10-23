@@ -6,45 +6,42 @@ const prisma = new PrismaClient();
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+  context: any
+): Promise<NextResponse> {
+  const { id } = context.params; // ✅ Correctly access params
+
   try {
     const user = await currentUser();
 
     if (!user) {
       console.error("User not authenticated");
       return NextResponse.json(
-        {
-          error: "User not authenticated",
-        },
-        { status: 401 },
+        { error: "User not authenticated" },
+        { status: 401 }
       );
     }
 
-    const clerkId = user.id;
-
-    // Fetch the receiver (current user) from the database using clerkId
     const receiver = await prisma.user.findUnique({
-      where: { clerkId: clerkId },
+      where: { clerkId: user.id },
     });
 
     if (!receiver) {
       console.error("Receiver user not found");
       return NextResponse.json(
-        {
-          error: "Receiver user not found",
-        },
-        { status: 404 },
+        { error: "Receiver user not found" },
+        { status: 404 }
       );
     }
 
-    const senderId = parseInt(params.id, 10);
+    const senderId = parseInt(id, 10);
+    if (isNaN(senderId)) {
+      return NextResponse.json({ error: "Invalid sender ID" }, { status: 400 });
+    }
 
-    // Fetch the friend request using both senderId and receiverId
     const friendRequest = await prisma.friendRequest.findUnique({
       where: {
         senderId_receiverId: {
-          senderId: senderId,
+          senderId,
           receiverId: receiver.id,
         },
       },
@@ -55,18 +52,15 @@ export async function POST(
     if (!friendRequest) {
       console.error("Friend request not found");
       return NextResponse.json(
-        {
-          error: "Friend request not found",
-        },
-        { status: 404 },
+        { error: "Friend request not found" },
+        { status: 404 }
       );
     }
 
-    // Update the status of the friend request to 'REJECTED'
     const updatedFriendRequest = await prisma.friendRequest.update({
       where: {
         senderId_receiverId: {
-          senderId: senderId,
+          senderId,
           receiverId: receiver.id,
         },
       },
@@ -75,7 +69,6 @@ export async function POST(
 
     console.debug(`Friend request with Sender ID ${senderId} rejected`);
 
-    // Fetch the sender details
     const sender = await prisma.user.findUnique({
       where: { id: senderId },
     });
@@ -83,23 +76,20 @@ export async function POST(
     if (!sender) {
       console.error("Sender user not found");
       return NextResponse.json(
-        {
-          error: "Sender user not found",
-        },
-        { status: 404 },
+        { error: "Sender user not found" },
+        { status: 404 }
       );
     }
 
-    // Create a notification for the sender, notifying them that their friend request was rejected
     await prisma.notification.create({
       data: {
         content: `${receiver.name} has rejected your friend request.`,
-        userId: senderId, // Send the notification to the sender
+        userId: senderId,
       },
     });
 
     console.debug(
-      `Notification sent to Sender ID ${senderId}: "${receiver.name} has rejected your friend request."`,
+      `Notification sent to Sender ID ${senderId}: "${receiver.name} has rejected your friend request."`
     );
 
     return NextResponse.json({
@@ -111,9 +101,9 @@ export async function POST(
     return NextResponse.json(
       {
         error: "Failed to reject friend request",
-        details: (error as any).message,
+        details: (error as Error).message,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

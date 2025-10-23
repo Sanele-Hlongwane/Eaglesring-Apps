@@ -1,14 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { currentUser } from "@clerk/nextjs/server";
 
 const prisma = new PrismaClient();
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } },
+  request: NextRequest,
+  context : any,
 ) {
-  console.log("Received pitch id:", params.id); // Log the pitch ID received
+  console.log("Received pitch id:", context.id); // Log the pitch ID received
 
   const user = await currentUser();
 
@@ -33,9 +33,9 @@ export async function GET(
     }
 
     // Check if the pitchId is valid
-    const pitchId = parseInt(params.id, 10);
+    const pitchId = parseInt(context.id, 10);
     if (isNaN(pitchId) || pitchId <= 0) {
-      console.error("Invalid pitch ID:", params.id);
+      console.error("Invalid pitch ID:", context.id);
       return NextResponse.json({ error: "Invalid pitch ID." }, { status: 400 });
     }
 

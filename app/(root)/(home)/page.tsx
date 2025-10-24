@@ -1,5 +1,8 @@
 "use client";
 
+
+import ResponsiveNav from "@/components/ResponsiveNav";
+
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
@@ -33,6 +36,7 @@ import {
   FaMedal,
 } from "react-icons/fa";
 import InvestorProfileCard from "@/components/dashboards/InvestorProfile";
+import Investments from "@/components/dashboards/Investments";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -43,7 +47,7 @@ export default function DashboardPage() {
   const [data, setData] = useState<any>(null);
   const [form, setForm] = useState<{ [key: string]: any }>({});
   const [editing, setEditing] = useState<{ [key: string]: any }>({});
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeSection, setActiveSection] = useState("overview");
 
   useEffect(() => {
     async function fetchUserRole() {
@@ -80,119 +84,9 @@ export default function DashboardPage() {
     fetchUserRole();
   }, [router]);
 
-  const handleCreate = async (type: string, payload: any) => {
-    try {
-      const response = await fetch(`/api/${type}-create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (response.ok) {
-        const result = await response.json();
-        setData((prevData: any) => ({
-          ...prevData,
-          [type]: [...(prevData[type] || []), result],
-        }));
-        toast.success(
-          `${type.charAt(0).toUpperCase() + type.slice(1)} created successfully!`,
-        );
-      }
-    } catch (error) {
-      console.error(`Failed to create ${type}`, error);
-      toast.error(`Failed to create ${type}.`);
-    }
-  };
-
-  const handleUpdate = async (type: string, id: number, payload: any) => {
-    try {
-      const response = await fetch(`/api/${type}-update/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (response.ok) {
-        const result = await response.json();
-        setData((prevData: any) => ({
-          ...prevData,
-          [type]: prevData[type].map((item: any) =>
-            item.id === id ? result : item,
-          ),
-        }));
-        toast.success(
-          `${type.charAt(0).toUpperCase() + type.slice(1)} updated successfully!`,
-        );
-      }
-    } catch (error) {
-      console.error(`Failed to update ${type}`, error);
-      toast.error(`Failed to update ${type}.`);
-    }
-  };
-
-  const handleDelete = async (type: string, id: number) => {
-    try {
-      const response = await fetch(`/api/${type}-delete/${id}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setData((prevData: any) => ({
-          ...prevData,
-          [type]: prevData[type].filter((item: any) => item.id !== id),
-        }));
-        toast.success(
-          `${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully!`,
-        );
-      }
-    } catch (error) {
-      console.error(`Failed to delete ${type}`, error);
-      toast.error(`Failed to delete ${type}.`);
-    }
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setForm((prevForm) => ({
-      ...prevForm,
-      [name]: value,
-    }));
-  };
-
   const handleEdit = (item: any) => {
     setEditing(item);
     setForm(item);
-  };
-
-  const handleSubmit = async (
-    e: FormEvent<HTMLFormElement>,
-    type: string,
-    id?: number,
-  ) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    try {
-      const response = await fetch(`/api/${type}-create`, {
-        method: "POST",
-        body: formData,
-      });
-      if (response.ok) {
-        const result = await response.json();
-        setData((prevData: any) => ({
-          ...prevData,
-          [type]: [...prevData[type], result],
-        }));
-        toast.success("Proposal submitted successfully!");
-      } else {
-        throw new Error("Failed to submit proposal");
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(`Error: ${error.message}`);
-      } else {
-        toast.error("An unknown error occurred.");
-      }
-    }
   };
 
   useEffect(() => {
@@ -225,16 +119,27 @@ export default function DashboardPage() {
   if (role === "INVESTOR") {
     return (
       <div className="relative min-h-screen bg-gradient-to-br from-gray-100 to-blue-100 dark:from-gray-900 dark:to-blue-900 text-gray-900 dark:text-white">
+        <ResponsiveNav
+          activeSection={activeSection}
+          onSelect={(section) => setActiveSection(section)}
+        />
         <main className="flex flex-col items-center justify-center w-full h-full px-6 py-16 text-center">
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <InvestorProfileCard />
-          <LatestNotifications />
+          {activeSection === "overview" && <ProfileOverview />}
+          {activeSection === "profile" && (
+            <InvestorProfileCard />
+          )}
+          {activeSection === "investments" && <Investments />}
+          {activeSection === "analytics" && <Investments />}
+          {activeSection === "notifications" && <LatestNotifications />}
+          {activeSection === "settings" && <InterestManagement />}
+          
         </main>
       </div>
     );
   } else if (role === "ENTREPRENEUR") {
     return (
       <div className="relative min-h-screen ">
+        
         {/* Background Icons */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
           <FaGlobe className="text-blue-400 absolute bottom-28 right-14 text-[100px] rotate-12" />

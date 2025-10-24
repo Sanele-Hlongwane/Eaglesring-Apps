@@ -1,16 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import {
-  FaUser,
-  FaBuilding,
-  FaRocket,
-  FaDollarSign,
-  FaMoneyBillWave,
-} from "react-icons/fa";
+import { FaBuilding, FaRocket, FaMoneyBillWave } from "react-icons/fa";
 
 interface EntrepreneurProfile {
   id: number;
@@ -32,140 +25,108 @@ const EntrepreneurProfile: React.FC<EntrepreneurProfileProps> = ({
 }) => {
   const { user } = useUser();
   const router = useRouter();
-  const [formData, setFormData] = useState<EntrepreneurProfile>(
-    data || { id: 0 },
-  );
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // For image popup
+  const [formData, setFormData] = useState<EntrepreneurProfile>(data || { id: 0 });
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
 
   useEffect(() => {
-    if (data) {
-      setFormData(data);
-    }
+    if (data) setFormData(data);
   }, [data]);
 
-  const handleEditClick = () => {
-    router.push("/profile");
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("/api/entrepreneur-profile", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        toast.success(result.message || "Profile updated successfully!");
-        onEdit(result.profile);
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.error || "Failed to update profile");
-      }
-    } catch (error) {
-      toast.error("Failed to update profile");
-      console.error(error);
-    }
-  };
+  const handleEditClick = () => router.push("/profile");
 
   return (
-    <div className="w-full mx-auto p-1 bg-gradient-to-br from-gray-300 via-gray-400 to-gray-300 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 rounded-lg">
-      <div className="flex items-center mb-4">
-        {user?.imageUrl && (
+    <>
+      {/* Fixed profile image top-right */}
+      {user?.imageUrl && (
+        <div className="fixed top-4 right-4 z-40">
           <button
             onClick={() => setIsPopupOpen(true)}
-            className="focus:outline-none"
+            className="focus:outline-none rounded-full ring-2 ring-offset-2 ring-green-500 hover:ring-blue-500 transition-all"
           >
             <img
               src={user.imageUrl}
               alt="Profile"
-              className="w-20 h-20 rounded-full border-4 border-gradient-to-r from-blue-500 to-green-500 shadow-md cursor-pointer"
+              className="w-14 h-14 rounded-full shadow-md hover:scale-105 transition-transform"
             />
           </button>
-        )}
-        <div>
-          <h2 className="text-xl lg:text-2xl ml-4 font-extrabold text-gray-900 dark:text-white animate-pulse">
-            {user?.firstName} {user?.lastName}
-          </h2>
-          <p className="text-l lg:text-xl font-bold text-blue-700 italic">
-            {data?.company || "Company Unavailable"}
-          </p>
         </div>
-      </div>
+      )}
 
-      {/* Image Popup */}
+      {/* Profile Popup (Modal) */}
       {isPopupOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-85 flex items-center justify-center z-50">
-          <div className="relative">
-            <img
-              src={user?.imageUrl}
-              alt="Profile"
-              className="w-96 h-96 object-cover rounded-lg shadow-lg"
-            />
+        <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50">
+          {/* 🔥 Responsive Width Control */}
+          <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-xl shadow-2xl 
+                          w-full sm:w-11/12 md:w-4/5 lg:w-1/2 xl:w-2/5 
+                          h-auto max-h-[90vh] overflow-y-auto relative p-6 mx-4 animate-fade-in">
+            
+            {/* Close Button */}
             <button
-              className="absolute top-4 right-4 text-red-600 dark:text-red-400 text-2xl"
+              className="absolute top-3 right-3 text-3xl text-gray-500 hover:text-red-500 transition"
               onClick={() => setIsPopupOpen(false)}
               title="Close"
             >
               &times;
             </button>
+
+            {/* Header */}
+            <div className="flex flex-col items-center text-center mb-6">
+              <img
+                src={user?.imageUrl}
+                alt="Profile"
+                className="w-28 h-28 rounded-full border-4 border-green-500 shadow-lg mb-3"
+              />
+              <h2 className="text-2xl font-bold">
+                {user?.firstName} {user?.lastName}
+              </h2>
+              <p className="text-blue-600 dark:text-blue-400 font-medium">
+                {data?.company || "Company Unavailable"}
+              </p>
+            </div>
+
+            {/* Details */}
+            <div className="space-y-4 text-left border-t border-gray-300 dark:border-gray-700 pt-4">
+              <p className="text-sm italic text-gray-600 dark:text-gray-400 mb-3">
+                {data?.bio || "No biography available."}
+              </p>
+
+              <div className="flex items-center gap-3">
+                <FaBuilding className="text-blue-500" />
+                <span className="font-semibold">Company:</span>
+                <span>{data?.company || "N/A"}</span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <FaMoneyBillWave className="text-green-500" />
+                <span className="font-semibold">Annual Revenue:</span>
+                <span>
+                  {new Intl.NumberFormat("en-ZA", {
+                    style: "currency",
+                    currency: "ZAR",
+                  }).format(data?.revenue || 0)}
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <FaRocket className="text-purple-500" />
+                <span className="font-semibold">Stage:</span>
+                <span>{data?.businessStage || "N/A"}</span>
+              </div>
+            </div>
+
+            {/* Edit Button */}
+            <div className="mt-6 text-center">
+              <button
+                onClick={handleEditClick}
+                className="px-6 py-2 rounded-md bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold shadow-md hover:shadow-lg hover:from-green-400 hover:to-blue-400 transition-transform active:scale-95"
+              >
+                Edit Profile
+              </button>
+            </div>
           </div>
         </div>
       )}
-
-      <div className="mb-6">
-        <p className="text-xs text-gray-800 dark:text-gray-300 mt-2">
-          {data?.bio || "N/A"}
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4">
-        <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label htmlFor="company" className="block text-lg font-semibold mr-4">
-            Company:
-          </label>
-          <FaBuilding className="text-blue-500 mr-2" />
-          <span id="company">{data?.company || "N/A"}</span>
-        </div>
-
-        <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label htmlFor="revenue" className="block text-lg font-semibold mr-4">
-            Annual Revenue:
-          </label>
-          <FaMoneyBillWave className="text-green-500 mr-2" />
-          <span id="revenue">
-            {new Intl.NumberFormat("en-ZA", {
-              style: "currency",
-              currency: "ZAR",
-            }).format(data?.revenue || 0)}
-          </span>
-        </div>
-
-        <div className="flex items-center text-gray-700 dark:text-gray-300">
-          <label
-            htmlFor="businessStage"
-            className="block text-lg font-semibold mr-4"
-          >
-            Stage:
-          </label>
-          <FaRocket className="text-blue-500 mr-2" />
-          <span id="businessStage" className="text-green-600">
-            {data?.businessStage || "N/A"}
-          </span>
-        </div>
-      </div>
-
-      <button
-        onClick={handleEditClick}
-        className="mt-4 w-full py-2 border border-gray-800 text-white bg-gradient-to-r from-green-500 to-green-600 rounded-md transition-transform transform hover:bg-gradient-to-r hover:from-green-400 hover:to-green-500 active:scale-95 active:bg-gradient-to-r active:from-green-600 active:to-green-700 shadow-lg hover:shadow-xl active:shadow-md"
-      >
-        Edit Profile
-      </button>
-    </div>
+    </>
   );
 };
 
